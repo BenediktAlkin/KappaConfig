@@ -13,5 +13,8 @@ class KCDict(KCObject):
     def __contains__(self, item):
         return item in self.dict
 
+    def items(self):
+        return self.dict.items()
+
     def resolve(self):
         return {key: value.resolve() for key, value in self.dict.items()}

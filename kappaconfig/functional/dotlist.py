@@ -1,10 +1,6 @@
 from .util import apply, accessors_to_string, string_to_accessors
+from ..entities.kc_object import KCObject
 import yaml
-
-def to_dotlist(root_node):
-    container = dict(accessors=[], result=[])
-    apply(root_node, pre_fn=_to_dotlist_pre_fn, post_fn=_to_dotlist_post_fn, container=container)
-    return container["result"]
 
 def from_dotlist(dotlist):
     result = dict(root={})
@@ -55,6 +51,14 @@ def from_dotlist(dotlist):
             prev_node[last_accessor] = parsed_value
 
     return result["root"]
+
+
+def to_dotlist(root_node):
+    if isinstance(root_node, KCObject):
+        root_node = root_node.resolve()
+    container = dict(accessors=[], result=[])
+    apply(root_node, pre_fn=_to_dotlist_pre_fn, post_fn=_to_dotlist_post_fn, container=container)
+    return container["result"]
 
 
 def _to_dotlist_pre_fn(node, parent_accessor, container, **_):

@@ -1,3 +1,6 @@
+from ..entities.kc_list import KCList
+from ..entities.kc_dict import KCDict
+
 def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None):
     # do something before traversing the node
     if pre_fn is not None:
@@ -7,10 +10,10 @@ def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=Non
             node = parent_node[parent_accessor]
 
     # traverse
-    if isinstance(node, dict):
+    if isinstance(node, KCDict) or isinstance(node, dict):
         for key, value in node.items():
             apply(value, pre_fn=pre_fn, post_fn=post_fn, parent_node=node, parent_accessor=key, container=container)
-    elif isinstance(node, list):
+    elif isinstance(node, KCList) or isinstance(node, list):
         for i, item in enumerate(node):
             apply(item, pre_fn=pre_fn, post_fn=post_fn, parent_node=node, parent_accessor=i, container=container)
 
