@@ -1,2 +1,3 @@
 class KCObject:
-    pass
+    def resolve(self):
+        raise NotImplementedError

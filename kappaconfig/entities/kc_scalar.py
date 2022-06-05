@@ -5,4 +5,8 @@ class KCScalar(KCObject):
         self.value = value
 
     def resolve(self):
-        pass
+        if not isinstance(self.value, str):
+            return self.value
+
+        # TODO
+        return self.value

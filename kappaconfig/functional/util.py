@@ -30,6 +30,9 @@ def accessors_to_string(accessors):
             result += f".{accessor}"
     return result
 
+def no_closing_bracket_msg(bracket_split):
+    return f"expected ']' at last position of accessor '{bracket_split}'"
+
 def string_to_accessors(accessor_str):
     if accessor_str == "": return []
 
@@ -45,7 +48,7 @@ def string_to_accessors(accessor_str):
         for bracket_split in bracket_splits[1:]:
             # remove closing bracket (']')
             if bracket_split[-1] != "]":
-                raise ValueError(f"expected ']' at last position of accessor '{bracket_split}'")
+                raise ValueError(no_closing_bracket_msg(bracket_split))
             list_accessor = bracket_split[:-1]
             result.append(int(list_accessor))
     return result

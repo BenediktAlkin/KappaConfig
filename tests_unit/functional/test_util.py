@@ -18,4 +18,4 @@ class TestUtil(unittest.TestCase):
         accessor_string = "some.asd[1"
         with self.assertRaises(ValueError) as ex:
             util.string_to_accessors(accessor_string)
-            self.assertEqual("expected ']' at last position of accessor '[1'", str(ex.exception))
+            self.assertEqual(util.no_closing_bracket_msg("[1"), str(ex.exception))
