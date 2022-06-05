@@ -1,0 +1,11 @@
+some_string: some_value
+some_int: 5
+some_double: 5.
+some_list:
+  - a
+  - b
+  - c
+  - 5
+some_dict:
+  some_nested_dict:
+    some_nested_dict_value: 5
