@@ -1,5 +1,5 @@
-from .util import apply, accessors_to_string
-from collections import defaultdict
+from .util import apply, accessors_to_string, string_to_accessors
+import yaml
 
 def to_dotlist(root_node):
     container = dict(accessors=[], result=[])
@@ -7,7 +7,54 @@ def to_dotlist(root_node):
     return container["result"]
 
 def from_dotlist(dotlist):
-    result = defaultdict(dict)
+    result = dict(root={})
+    for entry in dotlist:
+        accessor_value_split = entry.split("=")
+        if len(accessor_value_split) != 2:
+            raise ValueError("every entry in a dotlist requires a '=' character")
+        accessor_string, value = accessor_value_split
+        accessors = string_to_accessors(accessor_string)
+
+        # create missing parent objects
+        prev_node = result["root"]
+        for accessor_idx in range(len(accessors[:-1])):
+            cur_accessor = accessors[accessor_idx]
+            next_accessor = accessors[accessor_idx + 1]
+
+            # create missing datastructures
+            if isinstance(next_accessor, int):
+                # create list (if it doesn't exist already)
+                if isinstance(cur_accessor, int):
+                    if len(prev_node) != cur_accessor:
+                        raise ValueError
+                    prev_node.append([])
+                elif cur_accessor not in prev_node:
+                    prev_node[cur_accessor] = []
+            else:
+                # create dict (if it doesn't exist already)
+                if isinstance(cur_accessor, int):
+                    if len(prev_node != cur_accessor):
+                        raise ValueError
+                    prev_node.append({})
+                elif cur_accessor not in prev_node:
+                    prev_node[cur_accessor] = {}
+
+            # progress to next accessor
+            prev_node = prev_node[cur_accessor]
+
+        # parse value
+        parsed_value = yaml.safe_load(value)
+
+        # insert current value
+        last_accessor = accessors[-1]
+        if isinstance(last_accessor, int):
+            if len(prev_node) != last_accessor:
+                raise ValueError("dotlist with list accessors has to be in sequential order")
+            prev_node.append(parsed_value)
+        else:
+            prev_node[last_accessor] = parsed_value
+
+    return result["root"]
 
 
 def _to_dotlist_pre_fn(node, parent_accessor, container, **_):
