@@ -2,6 +2,12 @@ import unittest
 import kappaconfig.functional.util as util
 
 class TestUtil(unittest.TestCase):
+    def test_accessors_to_string(self):
+        accessors = ["some", "asd", 1, 3, "q", 3]
+        expected = "some.asd[1][3].q[3]"
+        actual = util.accessors_to_string(accessors)
+        self.assertEqual(expected, actual)
+
     def test_string_to_accessors(self):
         accessor_string = "some.asd[1][3].q[3]"
         expected = ["some", "asd", 1, 3, "q", 3]
