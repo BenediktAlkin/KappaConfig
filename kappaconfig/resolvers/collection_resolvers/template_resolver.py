@@ -2,11 +2,16 @@ from .collection_resolver import CollectionResolver
 from ...entities.wrappers import KCDict, KCScalar
 from ...functional.util import mask_in, mask_out, merge
 from ...functional.convert import from_primitive
+from ..resolver import Resolver
+from ..scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
 
 class TemplateResolver(CollectionResolver):
-    def __init__(self, resolver=None):
+    def __init__(self, resolver=None, template_path=None, **templates):
         super().__init__()
+        # resolver for
         self.resolver = resolver
+        # nested yaml templates are resolved after loading/merging with template parameters
+        self.nested_yaml_resolver = Resolver(yaml=NestedYamlResolver(template_path=template_path, **templates))
 
     def preorder_resolve(self, node, root_node, result, trace):
         if isinstance(node, KCDict):
@@ -31,18 +36,22 @@ class TemplateResolver(CollectionResolver):
                     #   template: ${yaml:some_template.yaml}
                     #   template.vars:
                     #     param: 5
-                    if self.resolver is None:
-                        raise ValueError
-                    resolved_scalar = self.resolver.resolve_scalar(template, root_node=root_node)
+                    resolved_scalar = self.nested_yaml_resolver.resolve_scalar(template, root_node=root_node)
                     # merge template parameters into template
                     template_params_keys = list(filter(lambda key: key.startswith("template."), node.keys()))
                     template_params = mask_in(node, template_params_keys)
                     template_params_to_merge = {k.replace("template.", ""): v for k, v in template_params.items()}
-                    merged_template = merge(from_primitive(resolved_scalar), template_params_to_merge)
+                    kc_resolved_scalar = from_primitive(resolved_scalar)
+                    merged_template = merge(kc_resolved_scalar, template_params_to_merge)
 
                     # remove template params from node
                     node_without_template_params = mask_out(node, template_params_keys)
-                    resolved_template = merged_template
+
+                    # resolve template with template root as root (for resolving parameterized templates)
+                    if self.resolver is None:
+                        raise ValueError
+                    resolved_template_primitive = self.resolver.resolve(merged_template)
+                    resolved_template = from_primitive(resolved_template_primitive)
                 else:
                     # KCList not implemented yet
                     raise NotImplementedError

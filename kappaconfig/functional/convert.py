@@ -13,5 +13,5 @@ def _from_primitive_fn(node, parent_node, parent_accessor, **_):
         parent_node[parent_accessor] = KCDict(**node)
     elif isinstance(node, list):
         parent_node[parent_accessor] = KCList(*node)
-    else:
+    elif not isinstance(node, (KCDict, KCList, KCScalar)):
         parent_node[parent_accessor] = KCScalar(node)

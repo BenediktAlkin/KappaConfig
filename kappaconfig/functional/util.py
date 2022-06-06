@@ -63,7 +63,9 @@ def select(root_node, accessors):
 
 def merge(base, to_merge):
     for key, value in to_merge.items():
-        base[key] = value
+        accessors = string_to_accessors(key)
+        node = select(base, accessors[:-1])
+        node[accessors[-1]] = value
     return base
 
 def mask_out(dict_, keys_to_mask_out):
