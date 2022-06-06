@@ -72,3 +72,10 @@ def mask_out(dict_, keys_to_mask_out):
         if key not in keys_to_mask_out:
             masked_dict[key] = value
     return masked_dict
+
+def mask_in(dict_, keys_to_mask_in):
+    masked_dict = type(dict_)()
+    for key, value in dict_.items():
+        if key in keys_to_mask_in:
+            masked_dict[key] = value
+    return masked_dict

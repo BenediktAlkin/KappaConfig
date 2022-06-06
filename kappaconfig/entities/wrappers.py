@@ -30,6 +30,9 @@ class KCDict(KCObject):
     def __contains__(self, item):
         return item in self.dict
 
+    def keys(self):
+        return self.dict.keys()
+
     def items(self):
         return self.dict.items()
 

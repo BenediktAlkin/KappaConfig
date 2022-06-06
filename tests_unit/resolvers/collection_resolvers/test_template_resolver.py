@@ -48,10 +48,28 @@ class TestTemplateResolver(unittest.TestCase):
         some_obj:
           template: ${yaml:tmp.yaml}
           template_key: 5
+          other_key: 120
         """
         expected = dict(
             some_obj=dict(
                 template_key=5,
+                other_key=120,
+            ),
+        )
+        templates = {"tmp.yaml": "template_key: 10"}
+        self._resolve_and_assert(input_, expected, templates)
+
+    def test_overwrite_template_value(self):
+        input_ = """
+        some_obj:
+          template: ${yaml:tmp.yaml}
+          template.template_key: 20
+          other_key: 120
+        """
+        expected = dict(
+            some_obj=dict(
+                template_key=20,
+                other_key=120,
             ),
         )
         templates = {"tmp.yaml": "template_key: 10"}
