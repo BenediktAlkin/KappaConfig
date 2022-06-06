@@ -65,14 +65,20 @@ class Resolver:
             else:
                 resolve_result = self.resolve_scalar(node.value, root_node=root_node)
 
-            # set value
-            parent_accessor = trace[-1][1]
-            if isinstance(parent_accessor, int):
-                if len(result) != parent_accessor:
-                    raise IndexError
-                result.append(resolve_result)
+            # resolved value might be a KCObject (e.g. when loading a nested yaml)
+            if isinstance(resolve_result, KCObject):
+                parent, accessor = trace.pop()
+                trace.append((resolve_result, accessor))
+                self._resolve_collection(resolve_result, root_node=root_node, result=result, trace=trace)
             else:
-                result[parent_accessor] = resolve_result
+                # set value
+                parent_accessor = trace[-1][1]
+                if isinstance(parent_accessor, int):
+                    if len(result) != parent_accessor:
+                        raise IndexError
+                    result.append(resolve_result)
+                else:
+                    result[parent_accessor] = resolve_result
         else:
             raise TypeError
 

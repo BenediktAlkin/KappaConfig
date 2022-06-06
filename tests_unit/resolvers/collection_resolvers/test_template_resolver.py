@@ -12,7 +12,7 @@ class TestTemplateResolver(unittest.TestCase):
         resolver = Resolver(eval=EvalResolver(), default_scalar_resolver=InterpolationResolver())
         template_resolver = TemplateResolver(resolver=resolver, **(templates or {}))
         resolver.collection_resolvers.append(template_resolver)
-        resolver.scalar_resolvers["yaml"] = NestedYamlResolver(resolver=resolver, **(templates if templates else {}))
+        resolver.scalar_resolvers["yaml"] = NestedYamlResolver(**(templates if templates else {}))
         actual = resolver.resolve(from_string(input_))
         self.assertEqual(expected, actual)
 
