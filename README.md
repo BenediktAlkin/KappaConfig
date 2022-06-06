@@ -55,14 +55,14 @@ hp = resolver.resolve(hp)
 Inspired by [OmegaConf](https://github.com/omry/omegaconf)/[Hydra](https://github.com/facebookresearch/hydra)
 nodes can reference other nodes.
 ```
+# input
 batch_size: 64
 train_loader:
   batch_size: ${batch_size}
 test_loader:
   batch_size: ${batch_size}
-```
-will evaluate to () 
-```
+---
+# resolved
 batch_size: 64
 train_loader:
   batch_size: 64
@@ -70,4 +70,12 @@ test_loader:
   batch_size: 64
 ```
 
-## Templates
+## Write python code in yaml
+```
+# input 
+seeds: ${eval:list(range(5))}
+---
+# resolved
+seeds: [0, 1, 2, 3, 4] 
+```
+
