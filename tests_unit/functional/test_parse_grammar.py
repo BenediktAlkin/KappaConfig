@@ -1,10 +1,10 @@
 import unittest
-from kappaconfig.grammar.tree_parser import TreeParser
+from kappaconfig.functional.parse_grammar import parse_grammar
 from kappaconfig.entities.grammar_tree_nodes import InterpolatedNode, FixedNode
 
-class TestTreeParser(unittest.TestCase):
+class TestParseGrammar(unittest.TestCase):
     def test_single_interpolation(self):
-        tree = TreeParser.parse("${obj.key}")
+        tree = parse_grammar("${obj.key}")
         self.assertEqual(1, len(tree.children))
         interp_node = tree.children[0]
         self.assertTrue(isinstance(interp_node, InterpolatedNode))
@@ -15,7 +15,7 @@ class TestTreeParser(unittest.TestCase):
         self.assertEqual("obj.key", fixed_node.value)
 
     def test_single_resolver(self):
-        tree = TreeParser.parse("${eval:obj.key}")
+        tree = parse_grammar("${eval:obj.key}")
         self.assertEqual(1, len(tree.children))
         interp_node = tree.children[0]
         self.assertTrue(isinstance(interp_node, InterpolatedNode))
@@ -26,7 +26,7 @@ class TestTreeParser(unittest.TestCase):
         self.assertEqual("obj.key", fixed_node.value)
 
     def test_nested(self):
-        tree = TreeParser.parse("${eval:${obj.key}/5}")
+        tree = parse_grammar("${eval:${obj.key}/5}")
 
         # check ${eval:}
         self.assertEqual(1, len(tree.children))
@@ -49,7 +49,7 @@ class TestTreeParser(unittest.TestCase):
         self.assertEqual("/5", fixed_node.value)
 
     def test_mixed_root(self):
-        tree = TreeParser.parse("start${obj.key}${eval:vars.variable}end")
+        tree = parse_grammar("start${obj.key}${eval:vars.variable}end")
 
         self.assertEqual(4, len(tree.children))
         self.assertTrue(isinstance(tree.children[0], FixedNode))

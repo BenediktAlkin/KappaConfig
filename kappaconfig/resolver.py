@@ -1,5 +1,5 @@
 from .entities.wrappers import KCDict, KCList, KCScalar
-from .grammar.tree_parser import TreeParser
+from .functional.parse_grammar import parse_grammar
 from .entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from .functional.util import string_to_accessors, select
 
@@ -56,7 +56,7 @@ class Resolver:
                 resolve_result = node.value
             else:
                 # resolve scalar
-                grammar_tree = TreeParser.parse(node.value)
+                grammar_tree = parse_grammar(node.value)
                 resolve_result = self._resolve_scalar(grammar_tree, root_node=root_node)
 
             # set value
