@@ -4,9 +4,11 @@ from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from ..functional.util import string_to_accessors, select
 
 class Resolver:
-    def __init__(self):
-        self.collection_resolvers = []
-        self.scalar_resolvers = {}
+    def __init__(self, default_scalar_resolver=None, *collection_resolvers, **scalar_resolvers):
+        self.collection_resolvers = collection_resolvers
+        self.scalar_resolvers = scalar_resolvers
+        if default_scalar_resolver is not None:
+            self.scalar_resolvers[None] = default_scalar_resolver
 
 
     def resolve(self, node):
@@ -83,7 +85,7 @@ class Resolver:
             resolve_result = self._merge_scalar_resolve_results(resolve_results)
             # resolve cur node
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
-            return scalar_resolver(resolve_result, root_node=root_node)
+            return scalar_resolver.resolve(resolve_result, root_node=root_node)
         else:
             raise TypeError
 
