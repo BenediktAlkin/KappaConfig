@@ -9,3 +9,65 @@ With support for many use-cases out-of-the-box (which you can use, but don't hav
 - reuse defined dict/list/primities via cross reference or templating
 - write python expressions in yaml
 - use yamls from multiple sources to compose one large yaml during program execution
+
+
+## TODO title
+Lots of configurations consist of a small part that varies between different configurations and a large part that stays 
+the same or only few variables of it change. 
+For example: when running machine learning experiments the core of a dataset configuration (e.g. normalization, splits) 
+stays largely the same but things like preprocessing might change between different experiments.
+
+```
+cifar10:
+  train:
+    split: train # use train split
+    normalization: range # normalize to range [-1;1]
+    filter: # use 45.000 samples for training
+      index_from: 0
+      index_to: 45000
+  valid:
+    split: train  # use train split (most datasets don't have a dedicated validation split)
+    normalization: range
+    filter: # use remaining 5.000 samples for validation
+      index_from: 45000
+      index_to: 50000
+  test:
+    split: test # use test split
+    normalization: range
+```
+TODO continue example
+
+
+# Usage
+```
+import kappaconfig as kc
+
+# load yaml from file
+kc_hp = kc.from_file_uri("hyperparams.yaml")
+# initialize default resolver
+resolver = kc.DefaultResolver()
+# resolve to primitive types
+hp = resolver.resolve(hp)
+```
+
+# Examples
+## Reference existing nodes
+Inspired by [OmegaConf](https://github.com/omry/omegaconf)/[Hydra](https://github.com/facebookresearch/hydra)
+nodes can reference other nodes.
+```
+batch_size: 64
+train_loader:
+  batch_size: ${batch_size}
+test_loader:
+  batch_size: ${batch_size}
+```
+will evaluate to () 
+```
+batch_size: 64
+train_loader:
+  batch_size: 64
+test_loader:
+  batch_size: 64
+```
+
+## Templates
