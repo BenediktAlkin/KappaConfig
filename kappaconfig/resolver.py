@@ -7,50 +7,97 @@ from .functional.util import string_to_accessors, select
 
 class Resolver:
     def __init__(self):
-        self.resolvers = {}
+        self.collection_resolvers = []
+        self.scalar_resolvers = {}
 
 
-    def resolve(self, node, root_node=None):
-        if root_node is None:
-            root_node = node
+    def resolve(self, node):
+        result = {}
+        wrapped_node = KCDict(root=node)
+        self._resolve_collection(node, root_node=node, result=result, trace=[(wrapped_node, "root")])
+        return result["root"]
 
+
+    def _resolve_collection(self, node, root_node, result, trace):
         if isinstance(node, KCDict):
-            return {key: self.resolve(value, root_node=root_node) for key, value in self.dict.items()}
+            parent_accessor = trace[-1][1]
+            result[parent_accessor] = {}
+            # preorder
+            for tree_resolver in self.collection_resolvers:
+                tree_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
+
+            # traverse
+            for accessor, subnode in node.dict.items():
+                trace.append((node, accessor))
+                self._resolve_collection(subnode, root_node=root_node, result=result[parent_accessor], trace=trace)
+                trace.pop()
+
+            # postorder
+            for tree_resolver in self.collection_resolvers:
+                tree_resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace)
         elif isinstance(node, KCList):
-            return [self.resolve(item, root_node=root_node) for item in self.list]
-        else:
-            # node is a KCScalar
+            parent_accessor = trace[-1][1]
+            result[parent_accessor] = []
+            # preorder
+            for tree_resolver in self.collection_resolvers:
+                tree_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
+
+            # traverse
+            for i, subnode in enumerate(node.list):
+                trace.append((subnode, i))
+                self._resolve_collection(subnode, root_node=root_node, result=result[parent_accessor], trace=trace)
+                trace.pop()
+
+            # postorder
+            for tree_resolver in self.collection_resolvers:
+                tree_resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace)
+        elif isinstance(node, KCScalar):
+            if not (isinstance(result, list) or isinstance(result, dict)):
+                raise TypeError
             if not isinstance(node.value, str):
-                return self.value
+                resolve_result = node.value
+            else:
+                # resolve scalar
+                grammar_tree = TreeParser.parse(node.value)
+                resolve_result = self._resolve_scalar(grammar_tree, root_node=root_node)
 
-            # resolve interpolations/grammar
-            tree = TreeParser.parse(self.value)
-            self.resolve_grammar(tree, data_root_node=root_node)
+            # set value
+            parent_accessor = trace[-1][1]
+            if isinstance(parent_accessor, int):
+                if len(result) != parent_accessor:
+                    raise IndexError
+                result.append(resolve_result)
+            else:
+                result[parent_accessor] = resolve_result
+        else:
+            raise TypeError
 
-            return self.value
 
-    def resolve_grammar(self, grammar_node, data_root_node):
+    def _resolve_scalar(self, grammar_node, root_node):
         if isinstance(grammar_node, RootNode):
-            return self.resolve_grammar_children(grammar_node, data_root_node=data_root_node)
+            resolve_results = [self._resolve_scalar(child, root_node=root_node) for child in grammar_node.children]
+            return self._merge_grammar_resolve_results(resolve_results)
         elif isinstance(grammar_node, FixedNode):
             return grammar_node.value
         elif isinstance(grammar_node, InterpolatedNode):
-            resolved = self.resolve_grammar_children(grammar_node, data_root_node=data_root_node)
+            resolve_results = [self._resolve_scalar(child, root_node=root_node) for child in grammar_node.children]
+            resolve_result = self._merge_grammar_resolve_results(resolve_results)
             if grammar_node.resolver_key is None:
                 # interpolation
-                accessors = string_to_accessors(resolved)
+                accessors = string_to_accessors(resolve_result)
                 return select(root_node=root_node, accessors=accessors)
             else:
                 # custom resolver
-                resolver = self.resolvers[grammar_node.resolver_key]
-                return resolver
-                # TODO
-                raise NotImplementedError
+                resolver = self.scalar_resolvers[grammar_node.resolver_key]
+                return resolver(resolve_result, root_node=root_node)
+        else:
+            raise TypeError
 
-    def resolve_grammar_children(self, grammar_node, data_root_node):
-        if len(grammar_node.children) == 1:
-            # keep datatype of single child
-            return GrammarResolver.resolve(grammar_node.children[0], data_root_node)
+    @staticmethod
+    def _merge_grammar_resolve_results(resolve_results):
+        if len(resolve_results) == 1:
+            # keep datatype of single result
+            return resolve_results[0]
         else:
             # concat as string
-            return "".join(map(lambda child: self.resolve_grammar(child, data_root_node), grammar_node.children))
+            return "".join(map(str, resolve_results))

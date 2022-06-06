@@ -4,3 +4,6 @@ from ..grammar.tree_parser import TreeParser
 class KCScalar(KCObject):
     def __init__(self, value):
         self.value = value
+
+    def __repr__(self):
+        return repr(self.value)

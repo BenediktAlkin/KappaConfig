@@ -4,6 +4,9 @@ class KCList(KCObject):
     def __init__(self, *args):
         self.list = list(args)
 
+    def __repr__(self):
+        return repr(self.list)
+
     def _check_accessor(self, accessor):
         if not isinstance(accessor, int):
             raise ValueError(f"expected int argument but got '{accessor}'")

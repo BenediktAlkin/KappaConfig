@@ -1,7 +1,8 @@
 import unittest
-import kappaconfig as kc
+import kappaconfig.functional.load as load
+from kappaconfig.resolver import Resolver
 
-class TestYamlLoader(unittest.TestCase):
+class TestLoad(unittest.TestCase):
     def test_basic_load(self):
         expected = dict(
             some_string="some_value",
@@ -14,5 +15,5 @@ class TestYamlLoader(unittest.TestCase):
                 )
             ),
         )
-        actual = kc.YamlLoader.from_uri("res/basic.yaml")
+        actual = Resolver().resolve(load.from_file_uri("res/basic.yaml"))
         self.assertEqual(expected, actual)

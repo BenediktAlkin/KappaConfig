@@ -4,6 +4,9 @@ class KCDict(KCObject):
     def __init__(self, **kwargs):
         self.dict = kwargs
 
+    def __repr__(self):
+        return repr(self.dict)
+
     def __setitem__(self, key, value):
         self.dict[key] = value
 

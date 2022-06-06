@@ -19,12 +19,12 @@ class TestConvert(unittest.TestCase):
         - 6
         """)
         converted = convert.from_primitive(primitive)
-        self.assertEqual(5, converted[0].resolve())
-        self.assertEqual(6, converted[1].resolve())
+        self.assertEqual(5, converted[0].value)
+        self.assertEqual(6, converted[1].value)
 
     def test_from_primitive_dict_root(self):
         primitive = yaml.safe_load("""
         some: value
         """)
         converted = convert.from_primitive(primitive)
-        self.assertEqual("value", converted["some"].resolve())
+        self.assertEqual("value", converted["some"].value)
