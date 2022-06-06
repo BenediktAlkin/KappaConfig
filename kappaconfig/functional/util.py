@@ -60,3 +60,8 @@ def select(root_node, accessors):
     for accessor in accessors:
         cur_node = cur_node[accessor]
     return cur_node
+
+def merge(base, to_merge):
+    for key, value in to_merge.items():
+        base[key] = value
+    return base

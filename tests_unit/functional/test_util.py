@@ -19,3 +19,16 @@ class TestUtil(unittest.TestCase):
         with self.assertRaises(ValueError) as ex:
             util.string_to_accessors(accessor_string)
             self.assertEqual(util.no_closing_bracket_msg("[1"), str(ex.exception))
+
+    def test_merge_primitive(self):
+        base = dict(
+            some_key=5,
+            other_key=6
+        )
+        to_merge = dict(other_key=10)
+        expected = dict(
+            some_key=5,
+            other_key=10,
+        )
+        actual = util.merge(base, to_merge)
+        self.assertEqual(expected, actual)
