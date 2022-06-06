@@ -6,7 +6,9 @@ from kappaconfig.resolvers.resolver import Resolver
 
 class TestTemplateResolver(unittest.TestCase):
     def _resolve_and_assert(self, input_, expected):
-        resolver = Resolver(TemplateResolver())
+        resolver = Resolver()
+        template_resolver = TemplateResolver(resolver=resolver)
+        resolver.collection_resolvers.append(template_resolver)
         actual = resolver.resolve(from_string(input_))
         self.assertEqual(expected, actual)
 

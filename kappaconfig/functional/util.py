@@ -65,3 +65,10 @@ def merge(base, to_merge):
     for key, value in to_merge.items():
         base[key] = value
     return base
+
+def mask_out(dict_, keys_to_mask_out):
+    masked_dict = type(dict_)()
+    for key, value in dict_.items():
+        if key not in keys_to_mask_out:
+            masked_dict[key] = value
+    return masked_dict

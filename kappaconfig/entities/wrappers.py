@@ -7,6 +7,7 @@ class KCObject:
 
 class KCScalar(KCObject):
     def __init__(self, value):
+        super().__init__()
         self.value = value
 
     def __repr__(self):
@@ -14,6 +15,7 @@ class KCScalar(KCObject):
 
 class KCDict(KCObject):
     def __init__(self, **kwargs):
+        super().__init__()
         self.dict = kwargs
 
     def __repr__(self):
@@ -33,6 +35,7 @@ class KCDict(KCObject):
 
 class KCList(KCObject):
     def __init__(self, *args):
+        super().__init__()
         self.list = list(args)
 
     def __repr__(self):

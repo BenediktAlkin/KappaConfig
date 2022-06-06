@@ -5,26 +5,30 @@ from ..functional.util import string_to_accessors, select
 
 class Resolver:
     def __init__(self, *collection_resolvers, default_scalar_resolver=None, **scalar_resolvers):
-        self.collection_resolvers = collection_resolvers
+        self.collection_resolvers = list(collection_resolvers)
         self.scalar_resolvers = scalar_resolvers
         if default_scalar_resolver is not None:
             self.scalar_resolvers[None] = default_scalar_resolver
 
 
-    def resolve(self, node):
+    def resolve(self, node, root_node=None):
         result = {}
+        if root_node is None:
+            root_node = node
         wrapped_node = KCDict(root=node)
-        self._resolve_collection(node, root_node=node, result=result, trace=[(wrapped_node, "root")])
+        self._resolve_collection(node, root_node=root_node, result=result, trace=[(wrapped_node, "root")])
         return result["root"]
 
 
     def _resolve_collection(self, node, root_node, result, trace):
         if isinstance(node, KCDict):
-            parent_accessor = trace[-1][1]
+            parent, parent_accessor = trace[-1]
             result[parent_accessor] = {}
             # preorder
             for collection_resolver in self.collection_resolvers:
                 collection_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
+                # preorder is allowed to change the current node
+                node = parent[parent_accessor]
 
             # traverse
             for accessor, subnode in node.dict.items():
@@ -36,11 +40,13 @@ class Resolver:
             for collection_resolver in self.collection_resolvers:
                 collection_resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace)
         elif isinstance(node, KCList):
-            parent_accessor = trace[-1][1]
+            parent, parent_accessor = trace[-1]
             result[parent_accessor] = []
             # preorder
             for collection_resolver in self.collection_resolvers:
                 collection_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
+                # preorder is allowed to change the current node
+                node = parent[parent_accessor]
 
             # traverse
             for i, subnode in enumerate(node.list):
@@ -57,9 +63,7 @@ class Resolver:
             if not isinstance(node.value, str):
                 resolve_result = node.value
             else:
-                # resolve scalar
-                grammar_tree = parse_grammar(node.value)
-                resolve_result = self._resolve_scalar(grammar_tree, root_node=root_node)
+                resolve_result = self.resolve_scalar(node.value, root_node=root_node)
 
             # set value
             parent_accessor = trace[-1][1]
@@ -72,6 +76,9 @@ class Resolver:
         else:
             raise TypeError
 
+    def resolve_scalar(self, value, root_node):
+        grammar_tree = parse_grammar(value)
+        return self._resolve_scalar(grammar_tree, root_node=root_node)
 
     def _resolve_scalar(self, grammar_node, root_node):
         if isinstance(grammar_node, RootNode):
