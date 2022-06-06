@@ -78,16 +78,12 @@ class Resolver:
         elif isinstance(grammar_node, FixedNode):
             return grammar_node.value
         elif isinstance(grammar_node, InterpolatedNode):
+            # resolve children
             resolve_results = [self._resolve_scalar(child, root_node=root_node) for child in grammar_node.children]
             resolve_result = self._merge_scalar_resolve_results(resolve_results)
-            if grammar_node.resolver_key is None:
-                # interpolation
-                accessors = string_to_accessors(resolve_result)
-                return select(root_node=root_node, accessors=accessors)
-            else:
-                # custom resolver
-                scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
-                return scalar_resolver(resolve_result, root_node=root_node)
+            # resolve cur node
+            scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
+            return scalar_resolver(resolve_result, root_node=root_node)
         else:
             raise TypeError
 

@@ -1,5 +1,7 @@
 from .scalar_resolver import ScalarResolver
+from ...functional.util import string_to_accessors
 
 class InterpolationResolver(ScalarResolver):
-    def inorder_resolve(self, node, root_node, result):
-        raise NotImplementedError
+    def resolve(self, value, root_node):
+        accessors = string_to_accessors(value)
+        return select(root_node=root_node, accessors=accessors)
