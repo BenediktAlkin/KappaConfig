@@ -3,7 +3,7 @@ import kappaconfig.functional.load as load
 from kappaconfig.resolver import Resolver
 
 class TestLoad(unittest.TestCase):
-    def test_basic_load(self):
+    def test_from_file_uri(self):
         expected = dict(
             some_string="some_value",
             some_int=5,
@@ -16,4 +16,21 @@ class TestLoad(unittest.TestCase):
             ),
         )
         actual = Resolver().resolve(load.from_file_uri("res/basic.yaml"))
+        self.assertEqual(expected, actual)
+
+    def test_from_string(self):
+        expected = dict(
+            some_string="some_value",
+            some_int=5,
+            some_double=5.,
+            some_list=["a", "b", "c", 5],
+            some_dict=dict(
+                some_nested_dict=dict(
+                    some_nested_dict_value=5
+                )
+            ),
+        )
+        with open("res/basic.yaml") as f:
+            input_ = f.read()
+        actual = Resolver().resolve(load.from_string(input_))
         self.assertEqual(expected, actual)
