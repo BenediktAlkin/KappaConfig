@@ -4,7 +4,7 @@ from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from ..functional.util import string_to_accessors, select
 
 class Resolver:
-    def __init__(self, default_scalar_resolver=None, *collection_resolvers, **scalar_resolvers):
+    def __init__(self, *collection_resolvers, default_scalar_resolver=None, **scalar_resolvers):
         self.collection_resolvers = collection_resolvers
         self.scalar_resolvers = scalar_resolvers
         if default_scalar_resolver is not None:
@@ -23,8 +23,8 @@ class Resolver:
             parent_accessor = trace[-1][1]
             result[parent_accessor] = {}
             # preorder
-            for tree_resolver in self.collection_resolvers:
-                tree_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
+            for collection_resolver in self.collection_resolvers:
+                collection_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
 
             # traverse
             for accessor, subnode in node.dict.items():
@@ -33,14 +33,14 @@ class Resolver:
                 trace.pop()
 
             # postorder
-            for tree_resolver in self.collection_resolvers:
-                tree_resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace)
+            for collection_resolver in self.collection_resolvers:
+                collection_resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace)
         elif isinstance(node, KCList):
             parent_accessor = trace[-1][1]
             result[parent_accessor] = []
             # preorder
-            for tree_resolver in self.collection_resolvers:
-                tree_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
+            for collection_resolver in self.collection_resolvers:
+                collection_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
 
             # traverse
             for i, subnode in enumerate(node.list):
@@ -49,8 +49,8 @@ class Resolver:
                 trace.pop()
 
             # postorder
-            for tree_resolver in self.collection_resolvers:
-                tree_resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace)
+            for collection_resolver in self.collection_resolvers:
+                collection_resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace)
         elif isinstance(node, KCScalar):
             if not (isinstance(result, list) or isinstance(result, dict)):
                 raise TypeError
