@@ -31,7 +31,7 @@ jobs:
       id: tagName
     # update versions locally
     - name: update application version
-      run: python .github/.buildscripts/update_version.py --tagname ${{ steps.tagName.outputs.tag }}
+      run: python .github/scripts/update_version.py --tagname ${{ steps.tagName.outputs.tag }}
     # push updated version
     - name: push updated version number
       uses: test-room-7/action-update-file@v1
