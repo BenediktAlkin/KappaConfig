@@ -1,0 +1,61 @@
+name: Test, update version number and release to PyPI
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  package-name: kappaconfig
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+
+    # run unittests
+    - name: tests_unit
+      run: python -m unittest discover --start-directory ./tests_unit
+
+
+    # prepare version update
+    - name: extract tag
+      uses: olegtarasov/get-tag@v2.1
+      id: tagName
+    # update versions locally
+    - name: update application version
+      run: python .buildscripts/update_version.py --tagname ${{ steps.tagName.outputs.tag }}
+    # push updated version
+    - name: push updated version number
+      uses: test-room-7/action-update-file@v1
+      with:
+          file-path: setup.cfg
+          commit-msg: update version number
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    # install build tools
+    - name: install build tools
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade build
+        python -m pip install --upgrade twine
+    # build
+    - name: build
+      run: |
+        python -m build
+    # upload to pypi
+    - name: upload to pypi
+      run: |
+        python -m twine upload dist/*
+      env:
+        TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.TWINE_TEST_TOKEN }}
+        TWINE_REPOSITORY: testpypi

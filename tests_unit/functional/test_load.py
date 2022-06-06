@@ -19,12 +19,12 @@ class TestLoad(unittest.TestCase):
 
     def test_from_file_uri(self):
         expected = self._basic_yaml_dict()
-        actual = Resolver().resolve(load.from_file_uri("res/basic.yaml"))
+        actual = Resolver().resolve(load.from_file_uri("tests_unit/res/basic.yaml"))
         self.assertEqual(expected, actual)
 
     def test_from_string(self):
         expected = self._basic_yaml_dict()
-        with open("res/basic.yaml") as f:
+        with open("tests_unit/res/basic.yaml") as f:
             input_ = f.read()
         actual = Resolver().resolve(load.from_string(input_))
         self.assertEqual(expected, actual)
