@@ -1,6 +1,6 @@
 import unittest
 import kappaconfig.functional.load as load
-from kappaconfig.resolver import Resolver
+from kappaconfig.resolvers.resolver import Resolver
 
 class TestLoad(unittest.TestCase):
     @staticmethod

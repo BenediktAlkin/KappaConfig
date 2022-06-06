@@ -1,7 +1,7 @@
 import unittest
 
 from kappaconfig.entities.wrappers import KCDict, KCList, KCScalar
-from kappaconfig.resolver import Resolver
+from kappaconfig.resolvers.resolver import Resolver
 
 class TestResolver(unittest.TestCase):
     def test_resolve_scalar_root(self):

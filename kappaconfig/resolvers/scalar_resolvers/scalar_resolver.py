@@ -1,4 +1,4 @@
-class ResolverBase:
+class ScalarResolver:
     def preorder_resolve(self, node, root_node, result):
         pass
 

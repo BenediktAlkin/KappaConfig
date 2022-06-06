@@ -1,7 +1,7 @@
-from .entities.wrappers import KCDict, KCList, KCScalar
-from .functional.parse_grammar import parse_grammar
-from .entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
-from .functional.util import string_to_accessors, select
+from ..entities.wrappers import KCDict, KCList, KCScalar
+from ..functional.parse_grammar import parse_grammar
+from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
+from ..functional.util import string_to_accessors, select
 
 class Resolver:
     def __init__(self):
