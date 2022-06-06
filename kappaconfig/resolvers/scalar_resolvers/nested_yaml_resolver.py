@@ -7,6 +7,8 @@ class NestedYamlResolver(ScalarResolver):
         super().__init__()
         self.template_path = template_path
         self.templates = templates
+        if any(map(lambda template_value: not isinstance(template_value, str), templates.values())):
+            raise TypeError
 
     def resolve(self, value, *_, **__):
         if isinstance(value, KCScalar):

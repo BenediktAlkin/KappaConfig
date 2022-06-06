@@ -6,14 +6,12 @@ from ..resolver import Resolver
 from ..scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
 
 class TemplateResolver(CollectionResolver):
-    def __init__(self, resolver=None, template_path=None, **templates):
+    def __init__(self, template_path=None, **templates):
         super().__init__()
-        # resolver for
-        self.resolver = resolver
         # nested yaml templates are resolved after loading/merging with template parameters
         self.nested_yaml_resolver = Resolver(yaml=NestedYamlResolver(template_path=template_path, **templates))
 
-    def preorder_resolve(self, node, root_node, result, trace):
+    def preorder_resolve(self, node, root_node, result, trace, root_resolver):
         if isinstance(node, KCDict):
             while True:
                 if "template" not in node:
@@ -48,9 +46,7 @@ class TemplateResolver(CollectionResolver):
                     node_without_template_params = mask_out(node, template_params_keys)
 
                     # resolve template with template root as root (for resolving parameterized templates)
-                    if self.resolver is None:
-                        raise ValueError
-                    resolved_template_primitive = self.resolver.resolve(merged_template)
+                    resolved_template_primitive = root_resolver.resolve(merged_template)
                     resolved_template = from_primitive(resolved_template_primitive)
                 else:
                     # KCList not implemented yet

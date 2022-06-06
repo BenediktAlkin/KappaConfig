@@ -1,9 +1,6 @@
 class CollectionResolver:
-    def preorder_resolve(self, node, root_node, result, trace):
+    def preorder_resolve(self, node, root_node, result, trace, root_resolver):
         pass
 
-    def inorder_resolve(self, node, root_node, result, trace):
-        pass
-
-    def postorder_resolve(self, node, root_node, result, trace):
+    def postorder_resolve(self, node, root_node, result, trace, root_resolver):
         pass

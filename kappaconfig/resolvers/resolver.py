@@ -25,8 +25,8 @@ class Resolver:
             parent, parent_accessor = trace[-1]
             result[parent_accessor] = {}
             # preorder
-            for collection_resolver in self.collection_resolvers:
-                collection_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
+            for resolver in self.collection_resolvers:
+                resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
                 # preorder is allowed to change the current node
                 node = parent[parent_accessor]
 
@@ -37,14 +37,14 @@ class Resolver:
                 trace.pop()
 
             # postorder
-            for collection_resolver in self.collection_resolvers:
-                collection_resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace)
+            for resolver in self.collection_resolvers:
+                resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
         elif isinstance(node, KCList):
             parent, parent_accessor = trace[-1]
             result[parent_accessor] = []
             # preorder
-            for collection_resolver in self.collection_resolvers:
-                collection_resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace)
+            for resolver in self.collection_resolvers:
+                resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
                 # preorder is allowed to change the current node
                 node = parent[parent_accessor]
 
@@ -55,8 +55,8 @@ class Resolver:
                 trace.pop()
 
             # postorder
-            for collection_resolver in self.collection_resolvers:
-                collection_resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace)
+            for resolver in self.collection_resolvers:
+                resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
         elif isinstance(node, KCScalar):
             if not (isinstance(result, list) or isinstance(result, dict)):
                 raise TypeError
