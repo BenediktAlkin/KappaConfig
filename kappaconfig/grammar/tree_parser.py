@@ -1,4 +1,4 @@
-from .tree_nodes import RootNode, InterpolatedNode, FixedNode
+from ..entities.grammar_tree_nodes import RootNode, InterpolatedNode, FixedNode
 
 class TreeParser:
     @staticmethod

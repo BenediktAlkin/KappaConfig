@@ -1,5 +1,4 @@
-from ..entities.kc_list import KCList
-from ..entities.kc_dict import KCDict
+from ..entities.wrappers import KCDict, KCList
 
 def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None):
     # do something before traversing the node

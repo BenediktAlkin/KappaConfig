@@ -1,8 +1,6 @@
 from .util import apply
 from copy import deepcopy
-from ..entities.kc_dict import KCDict
-from ..entities.kc_list import KCList
-from ..entities.kc_scalar import KCScalar
+from ..entities.wrappers import KCDict, KCList, KCScalar
 
 def from_primitive(root_node):
     root_node = deepcopy(root_node)

@@ -1,8 +1,6 @@
 import unittest
 
-from kappaconfig.entities.kc_dict import KCDict
-from kappaconfig.entities.kc_list import KCList
-from kappaconfig.entities.kc_scalar import KCScalar
+from kappaconfig.entities.wrappers import KCDict, KCList, KCScalar
 from kappaconfig.resolver import Resolver
 
 class TestResolver(unittest.TestCase):

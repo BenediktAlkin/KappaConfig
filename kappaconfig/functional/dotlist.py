@@ -1,5 +1,5 @@
 from .util import apply, accessors_to_string, string_to_accessors
-from ..entities.kc_object import KCObject
+from ..entities.wrappers import KCObject
 import yaml
 
 def from_dotlist(dotlist):

@@ -1,6 +1,6 @@
 import unittest
 from kappaconfig.grammar.tree_parser import TreeParser
-from kappaconfig.grammar.tree_nodes import InterpolatedNode, FixedNode
+from kappaconfig.entities.grammar_tree_nodes import InterpolatedNode, FixedNode
 
 class TestTreeParser(unittest.TestCase):
     def test_single_interpolation(self):

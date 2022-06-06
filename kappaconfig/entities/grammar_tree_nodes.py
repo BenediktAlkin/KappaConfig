@@ -1,11 +1,11 @@
-class TreeNode:
+class GrammarTreeNode:
     def __repr__(self):
         raise NotImplementedError
 
     def __str__(self):
         return repr(self)
 
-class RootNode(TreeNode):
+class RootNode(GrammarTreeNode):
     def __init__(self):
         super().__init__()
         self.children = []
@@ -13,7 +13,7 @@ class RootNode(TreeNode):
     def __repr__(self):
         return "".join(map(str, self.children))
 
-class FixedNode(TreeNode):
+class FixedNode(GrammarTreeNode):
     def __init__(self, value):
         super().__init__()
         self.value = value
@@ -21,7 +21,7 @@ class FixedNode(TreeNode):
     def __repr__(self):
         return self.value
 
-class InterpolatedNode(TreeNode):
+class InterpolatedNode(GrammarTreeNode):
     def __init__(self, resolver_key):
         super().__init__()
         self.children = []

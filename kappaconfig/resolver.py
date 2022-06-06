@@ -1,8 +1,6 @@
-from .entities.kc_dict import KCDict
-from .entities.kc_list import KCList
-from .entities.kc_scalar import KCScalar
+from .entities.wrappers import KCDict, KCList, KCScalar
 from .grammar.tree_parser import TreeParser
-from .grammar.tree_nodes import RootNode, FixedNode, InterpolatedNode
+from .entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from .functional.util import string_to_accessors, select
 
 class Resolver:
