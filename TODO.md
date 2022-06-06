@@ -1,1 +1,2 @@
-error messages should be seperate file
+- error messages should be seperate file
+- ??? for missing values

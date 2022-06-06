@@ -47,7 +47,9 @@ class TemplateResolver(CollectionResolver):
 
                     # resolve template with template root as root (for resolving parameterized templates)
                     resolved_template_primitive = root_resolver.resolve(merged_template)
-                    resolved_template = from_primitive(resolved_template_primitive)
+                    # remove "vars" field in template
+                    resolved_template_primitive_no_vars = mask_out(resolved_template_primitive, ["vars"])
+                    resolved_template = from_primitive(resolved_template_primitive_no_vars)
                 else:
                     # KCList not implemented yet
                     raise NotImplementedError

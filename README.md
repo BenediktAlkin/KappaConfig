@@ -79,3 +79,53 @@ seeds: ${eval:list(range(5))}
 seeds: [0, 1, 2, 3, 4] 
 ```
 
+## Parameterize templates
+```
+# warmup_cosine_schedule.yaml
+vars: # vars is a special node that is removed after resolving a template
+  # default values
+  epochs: 100
+  warmup_factor: 0.05
+kind: sequential_schedule
+sub_schedules:
+- kind: warmup_schedule
+  epochs: ${eval:${vars.epochs}*${vars.warmup_factor}}
+- kind: cosine_schedule
+  epochs: ${eval:${vars.epochs}*${eval:1-${vars.warmup_factor}}}
+---
+# template_default_params.yaml
+optimizer:
+  kind: SGD
+  schedule:
+    template: ${yaml:warmup_cosine_schedule.yaml}
+---
+# template_default_params.yaml resolved
+optimizer:
+  kind: SGD
+  schedule:
+    kind: sequential_schedule
+    sub_schedules:
+    - kind: warmup_schedule
+      epochs: 5
+    - kind: cosine_schedule
+      epochs: 95
+---
+# template_custom_params.yaml
+optimizer:
+  kind: SGD
+  schedule:
+    template: ${yaml:warmup_cosine_schedule.yaml}
+    template.vars.epochs: 200
+---
+# template_custom_params.yaml resolved
+optimizer:
+  kind: SGD
+  schedule:
+    kind: sequential_schedule
+    sub_schedules:
+    - kind: warmup_schedule
+      epochs: 10
+    - kind: cosine_schedule
+      epochs: 190
+---
+```

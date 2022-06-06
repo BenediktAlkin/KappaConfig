@@ -87,9 +87,6 @@ class TestTemplateResolver(unittest.TestCase):
         """
         expected = dict(
             schedule=dict(
-                vars=dict(
-                    total_epochs=20,
-                ),
                 warmup_epochs=1,
                 cosine_epochs=19,
             )
