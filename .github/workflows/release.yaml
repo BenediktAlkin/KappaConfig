@@ -51,7 +51,7 @@ jobs:
       run: python -m build
     # upload to pypi
     - name: upload to pypi
-      run: python -m twine upload dist/*
+      run: python -m twine upload dist/* --verbose
       env:
         TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.TWINE_TEST_TOKEN }}
