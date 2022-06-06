@@ -1,4 +1,5 @@
 from ..entities.grammar_tree_nodes import RootNode, InterpolatedNode, FixedNode
+from ..entities.wrappers import KCScalar
 
 def parse_grammar(value):
     root_node = RootNode()
@@ -7,6 +8,8 @@ def parse_grammar(value):
 
 
 def _parse(value, parent_node):
+    if isinstance(value, KCScalar):
+        value = value.value
     if not isinstance(value, str):
         raise TypeError
 
