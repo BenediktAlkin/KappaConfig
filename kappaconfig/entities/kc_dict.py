@@ -15,6 +15,3 @@ class KCDict(KCObject):
 
     def items(self):
         return self.dict.items()
-
-    def resolve(self):
-        return {key: value.resolve() for key, value in self.dict.items()}

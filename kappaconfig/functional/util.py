@@ -55,3 +55,9 @@ def string_to_accessors(accessor_str):
             list_accessor = bracket_split[:-1]
             result.append(int(list_accessor))
     return result
+
+def select(root_node, accessors):
+    cur_node = root_node
+    for accessor in accessors:
+        cur_node = cur_node[accessor]
+    return cur_node

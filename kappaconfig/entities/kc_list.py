@@ -16,6 +16,3 @@ class KCList(KCObject):
 
     def __getitem__(self, item):
         return self.list[item]
-
-    def resolve(self):
-        return [item.resolve() for item in self.list]
