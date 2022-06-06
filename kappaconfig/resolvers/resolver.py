@@ -1,4 +1,4 @@
-from ..entities.wrappers import KCDict, KCList, KCScalar
+from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
 from ..functional.parse_grammar import parse_grammar
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from ..functional.util import string_to_accessors, select
