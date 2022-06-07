@@ -39,9 +39,6 @@ class TestComplexYamls(unittest.TestCase):
             expected = yaml.safe_load(f)
         self.assertEqual(expected, resolver.resolve(kc_obj))
 
-    def test_schedule(self):
-        self.resolve_yaml("schedule.yaml")
-
     def test_loggers_default_epochs(self):
         self.resolve_yaml("loggers/default_epochs.yaml")
 
@@ -50,3 +47,9 @@ class TestComplexYamls(unittest.TestCase):
 
     def test_loggers_discriminator_epochs(self):
         self.resolve_yaml("loggers/discriminator_epochs.yaml")
+
+    def test_optim_scaled_lr(self):
+        self.resolve_yaml("optims/scaled_lr.yaml")
+
+    def test_schedule_warmup_cosine(self):
+        self.resolve_yaml("schedules/warmup_cosine.yaml")

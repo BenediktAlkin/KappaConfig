@@ -1,3 +1,4 @@
 - test error messages
 - navigate to parent with . in interpolation (e.g. ${eval:${vars.total_epochs}-${..[0].max_epoch}})
 - maybe remove None nodes
+- check if ${${yaml:optims/common}.mae_pretrain} is possible (i think it is, but not 100% sure)

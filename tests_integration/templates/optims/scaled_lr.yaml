@@ -1,0 +1,6 @@
+vars:
+  batch_size: ???
+  base_lr: ???
+
+kind: SGD
+lr: ${eval:${vars.batch_size}*${vars.base_lr}/256}
