@@ -7,7 +7,7 @@ def get_tagname():
     return args.tagname.replace("v", "")
 
 with open("setup.cfg") as f:
-    lines = f.readlines()
+    lines = f.read().splitlines()
 
 for i in range(len(lines)):
     if lines[i].startswith("version"):
