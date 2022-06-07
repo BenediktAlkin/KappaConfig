@@ -20,8 +20,8 @@ class Resolver:
 
 
     def _resolve_collection(self, node, root_node, result, trace):
+        parent, parent_accessor = trace[-1]
         if isinstance(node, KCDict):
-            parent, parent_accessor = trace[-1]
             result[parent_accessor] = {}
             # preorder
             for resolver in self.collection_resolvers:
@@ -39,7 +39,6 @@ class Resolver:
             for resolver in self.collection_resolvers:
                 resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
         elif isinstance(node, KCList):
-            parent, parent_accessor = trace[-1]
             result[parent_accessor] = []
             # preorder
             for resolver in self.collection_resolvers:
@@ -57,6 +56,12 @@ class Resolver:
             for resolver in self.collection_resolvers:
                 resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
         elif isinstance(node, KCScalar):
+            # preorder
+            for resolver in self.collection_resolvers:
+                resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
+                # preorder is allowed to change the current node
+                node = parent[parent_accessor]
+
             if not isinstance(node.value, str):
                 resolve_result = node.value
             else:
@@ -76,8 +81,13 @@ class Resolver:
                     result.append(resolve_result)
                 else:
                     result[parent_accessor] = resolve_result
+
+            # postorder
+            for resolver in self.collection_resolvers:
+                resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
         else:
-            raise TypeError
+            from ..errors import unexpected_type_error
+            raise unexpected_type_error([KCDict, KCList, KCScalar], node)
 
     def resolve_scalar(self, value, root_node):
         grammar_tree = parse_grammar(value)

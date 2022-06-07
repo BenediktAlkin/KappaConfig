@@ -30,3 +30,9 @@ def missing_closing_brace_error(value):
 
 def missing_closing_bracket_error(value):
     return ValueError(f"missing ']' in '{value}'")
+
+class MissingValueError(Exception):
+    pass
+
+def missing_value_error(full_accessor):
+    return MissingValueError(full_accessor)

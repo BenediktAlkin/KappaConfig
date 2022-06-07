@@ -53,6 +53,16 @@ def string_to_accessors(accessor_str):
             result.append(int(list_accessor))
     return result
 
+def trace_to_full_accessor(trace):
+    full_accessor = ""
+    for trace_entry in trace[1:]:
+        trace_accessor = trace_entry[1]
+        if isinstance(trace_accessor, int):
+            full_accessor += f"[{trace_accessor}]"
+        else:
+            full_accessor += trace_accessor
+    return full_accessor
+
 def select(root_node, accessors):
     cur_node = root_node
     for accessor in accessors:
