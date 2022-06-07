@@ -53,6 +53,6 @@ jobs:
     - name: upload to pypi
       run: python -m twine upload dist/* --verbose
       env:
-        TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+        TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.TWINE_TEST_TOKEN }}
         TWINE_REPOSITORY: testpypi
