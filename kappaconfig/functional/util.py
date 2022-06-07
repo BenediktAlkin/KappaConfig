@@ -24,7 +24,10 @@ def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=Non
 def accessors_to_string(accessors):
     if len(accessors) == 0: return ""
 
-    result = f"{accessors[0]}"
+    if isinstance(accessors[0], int):
+        result = f"[{accessors[0]}]"
+    else:
+        result = f"{accessors[0]}"
     for accessor in accessors[1:]:
         if isinstance(accessor, int):
             result += f"[{accessor}]"
@@ -54,14 +57,8 @@ def string_to_accessors(accessor_str):
     return result
 
 def trace_to_full_accessor(trace):
-    full_accessor = ""
-    for trace_entry in trace[1:]:
-        trace_accessor = trace_entry[1]
-        if isinstance(trace_accessor, int):
-            full_accessor += f"[{trace_accessor}]"
-        else:
-            full_accessor += trace_accessor
-    return full_accessor
+    accessors = list(map(lambda tr: tr[1], trace[1:]))
+    return accessors_to_string(accessors)
 
 def select(root_node, accessors):
     cur_node = root_node

@@ -34,3 +34,11 @@ class TestUtil(unittest.TestCase):
         )
         actual = util.merge(base, to_merge)
         self.assertEqual(expected, actual)
+
+    def test_trace_to_full_accessor_empty(self):
+        self.assertEqual("", util.trace_to_full_accessor([]))
+
+    def test_trace_to_full_accessor(self):
+        trace_accessors = ["root", 5, "asdf", 3]
+        trace = list(map(lambda ta: (None, ta), trace_accessors))
+        self.assertEqual("[5].asdf[3]", util.trace_to_full_accessor(trace))
