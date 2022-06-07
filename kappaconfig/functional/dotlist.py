@@ -7,8 +7,8 @@ def from_dotlist(dotlist):
     for entry in dotlist:
         accessor_value_split = entry.split("=")
         if len(accessor_value_split) != 2:
-            from..error_messages import dotlist_entry_requires_equal_sign
-            raise ValueError(dotlist_entry_requires_equal_sign())
+            from..errors import dotlist_entry_requires_equal_sign_error
+            raise dotlist_entry_requires_equal_sign_error()
         accessor_string, value = accessor_value_split
         accessors = string_to_accessors(accessor_string)
 
@@ -21,8 +21,8 @@ def from_dotlist(dotlist):
             # lists can only be created in sequential order
             if isinstance(cur_accessor, int):
                 if len(prev_node) != cur_accessor:
-                    from ..error_messages import dotlist_requires_sequential_insert
-                    raise ValueError(dotlist_requires_sequential_insert())
+                    from ..errors import dotlist_requires_sequential_insert_error
+                    raise dotlist_requires_sequential_insert_error()
 
             # create missing datastructures
             if isinstance(next_accessor, int):
@@ -48,8 +48,8 @@ def from_dotlist(dotlist):
         last_accessor = accessors[-1]
         if isinstance(last_accessor, int):
             if len(prev_node) != last_accessor:
-                from ..error_messages import dotlist_requires_sequential_insert
-                raise ValueError(dotlist_requires_sequential_insert())
+                from ..errors import dotlist_requires_sequential_insert_error
+                raise dotlist_requires_sequential_insert_error()
             prev_node.append(parsed_value)
         else:
             prev_node[last_accessor] = parsed_value
@@ -59,8 +59,8 @@ def from_dotlist(dotlist):
 
 def to_dotlist(root_node):
     if isinstance(root_node, KCObject):
-        from ..error_messages import requires_primitive_node
-        raise ValueError(requires_primitive_node())
+        from ..errors import requires_primitive_node_error
+        raise requires_primitive_node_error()
     container = dict(accessors=[], result=[])
     apply(root_node, pre_fn=_to_dotlist_pre_fn, post_fn=_to_dotlist_post_fn, container=container)
     return container["result"]

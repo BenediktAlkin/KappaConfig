@@ -97,8 +97,8 @@ class Resolver:
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
             return scalar_resolver.resolve(resolve_result, root_node=root_node)
         else:
-            from ..error_messages import unexpected_type
-            raise TypeError(unexpected_type([RootNode, FixedNode, InterpolatedNode], grammar_node))
+            from ..errors import unexpected_type_error
+            raise unexpected_type_error([RootNode, FixedNode, InterpolatedNode], grammar_node)
 
     @staticmethod
     def _merge_scalar_resolve_results(resolve_results):

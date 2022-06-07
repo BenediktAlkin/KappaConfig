@@ -46,11 +46,11 @@ class KCList(KCObject):
 
     def _check_accessor(self, accessor):
         if not isinstance(accessor, int):
-            from ..error_messages import unexpected_type
-            raise ValueError(unexpected_type(int, accessor))
+            from ..errors import unexpected_type_error
+            raise unexpected_type_error(int, accessor)
         if not 0 <= accessor < len(self.list):
-            from ..error_messages import index_out_of_range
-            raise IndexError(index_out_of_range(accessor, len(self.list)))
+            from ..errors import index_out_of_range_error
+            raise index_out_of_range_error(accessor, len(self.list))
 
     def __setitem__(self, key, value):
         self._check_accessor(key)

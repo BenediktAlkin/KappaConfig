@@ -11,8 +11,8 @@ def _parse(value, parent_node):
     if isinstance(value, KCScalar):
         value = value.value
     if not isinstance(value, str):
-        from ..error_messages import unexpected_type
-        raise TypeError(unexpected_type(str, value))
+        from ..errors import unexpected_type_error
+        raise unexpected_type_error(str, value)
 
     while True:
         if len(value) == 0:
@@ -31,8 +31,8 @@ def _parse(value, parent_node):
         if ":" in value_in_braces:
             colon_idx = value_in_braces.index(":")
             if colon_idx == 0:
-                from ..error_messages import empty_resolver_key
-                raise ValueError(empty_resolver_key(value_in_braces))
+                from ..errors import empty_resolver_key_error
+                raise empty_resolver_key_error(value_in_braces)
             else:
                 node = InterpolatedNode(value_in_braces[:colon_idx])
         else:
@@ -54,5 +54,5 @@ def _find_brace_end(value):
                 return i
         if value[i] == "$" and i != len(value) - 2 and value[i + 1] == "{":
             nesting_level += 1
-    from ..error_messages import missing_closing_brace
-    raise ValueError(missing_closing_brace(value))
+    from ..errors import missing_closing_brace_error
+    raise missing_closing_brace_error(value)

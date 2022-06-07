@@ -1,6 +1,6 @@
 import unittest
 import kappaconfig.functional.util as util
-import kappaconfig.error_messages as msg
+import kappaconfig.errors as msg
 
 class TestUtil(unittest.TestCase):
     def test_accessors_to_string(self):
@@ -17,9 +17,10 @@ class TestUtil(unittest.TestCase):
 
     def test_string_to_accessors_missing_closing_bracket(self):
         accessor_string = "some.asd[1"
-        with self.assertRaises(ValueError) as ex:
+        expected = msg.missing_closing_bracket_error("[1")
+        with self.assertRaises(type(expected)) as ex:
             util.string_to_accessors(accessor_string)
-            self.assertEqual(msg.missing_closing_bracket("[1"), str(ex.exception))
+        self.assertEqual(expected.args[0], str(ex.exception))
 
     def test_merge_primitive(self):
         base = dict(

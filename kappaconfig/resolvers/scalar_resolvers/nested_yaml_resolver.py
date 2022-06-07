@@ -14,8 +14,8 @@ class NestedYamlResolver(ScalarResolver):
         if isinstance(value, KCScalar):
             value = value.value
         if not isinstance(value, str):
-            from ...error_messages import unexpected_type
-            raise ValueError(unexpected_type(str, value))
+            from ...errors import unexpected_type_error
+            raise unexpected_type_error(str, value)
         if not value.endswith(".yaml"):
             value += ".yaml"
 

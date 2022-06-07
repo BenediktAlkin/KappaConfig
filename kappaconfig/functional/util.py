@@ -47,8 +47,8 @@ def string_to_accessors(accessor_str):
         for bracket_split in bracket_splits[1:]:
             # remove closing bracket (']')
             if bracket_split[-1] != "]":
-                from ..error_messages import missing_closing_bracket
-                raise ValueError(missing_closing_bracket(bracket_split))
+                from ..errors import missing_closing_bracket_error
+                raise missing_closing_bracket_error(f"[{bracket_split}")
             list_accessor = bracket_split[:-1]
             result.append(int(list_accessor))
     return result
