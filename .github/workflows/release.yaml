@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - "v*.*.*"
-  workflow_dispatch:
 
 jobs:
   release:
@@ -49,11 +48,18 @@ jobs:
     # build
     - name: build
       run: python -m build
-    - name: Publish a Python distribution to PyPI
+
+    # publish
+    - name: publish
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN_TEST }}
+        repository_url: https://test.pypi.org/legacy
+    # publish
+    - name: publish
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-       user: __token__
-       password: ${{ secrets.TWINE_TEST_TOKEN }}
+       password: ${{ secrets.PYPI_API_TOKEN }}
     # upload to pypi
 #    - name: upload to pypi
 #      run: python -m twine upload dist/* --verbose
