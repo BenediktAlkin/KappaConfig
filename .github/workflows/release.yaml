@@ -27,10 +27,10 @@ jobs:
     # prepare version update
     - name: extract tag
       uses: olegtarasov/get-tag@v2.1
-      id: tagName
+      id: get_tag
     # update versions locally
     - name: update application version
-      run: python .github/scripts/update_version.py --tagname ${{ steps.tagName.outputs.tag }}
+      run: python .github/scripts/update_version.py --tagname ${{ steps.get_tag.outputs.tag }}
     # push updated version
     - name: push updated version number
       uses: test-room-7/action-update-file@v1
@@ -49,21 +49,21 @@ jobs:
     - name: build
       run: python -m build
 
-    # publish
+    # get publish type
+    - name: get publish type
+      id: get_publish_type
+      run: python .github/scripts/get_publish_type.py --tagname ${{ steps.tagName.outputs.tag }}
+
+    # publish to dev
     - name: publish
       uses: pypa/gh-action-pypi-publish@master
+      if: ${{ steps.get_publish_type.outputs.publish_type == 'dev' }}
       with:
         password: ${{ secrets.PYPI_API_TOKEN_TEST }}
         repository_url: https://test.pypi.org/legacy/
-    # publish
-#    - name: publish
-#      uses: pypa/gh-action-pypi-publish@release/v1
-#      with:
-#       password: ${{ secrets.PYPI_API_TOKEN }}
-    # upload to pypi
-#    - name: upload to pypi
-#      run: python -m twine upload dist/* --verbose
-#      env:
-#        TWINE_USERNAME: __token__
-#        TWINE_PASSWORD: ${{ secrets.TWINE_TEST_TOKEN }}
-#        TWINE_REPOSITORY: testpypi
+    # publish to production
+    - name: publish
+      uses: pypa/gh-action-pypi-publish@release/v1
+      if: ${{ steps.get_publish_type.outputs.publish_type == 'prod' }}
+      with:
+       password: ${{ secrets.PYPI_API_TOKEN }}
