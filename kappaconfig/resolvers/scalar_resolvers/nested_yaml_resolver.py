@@ -1,5 +1,5 @@
 from .scalar_resolver import ScalarResolver
-from ...entities.wrappers import KCObject, KCScalar
+from ...entities.wrappers import KCScalar
 from ...functional.load import from_string, from_file_uri
 
 class NestedYamlResolver(ScalarResolver):
@@ -13,8 +13,12 @@ class NestedYamlResolver(ScalarResolver):
     def resolve(self, value, *_, **__):
         if isinstance(value, KCScalar):
             value = value.value
-        if not isinstance(value, str) or not value.endswith(".yaml"):
-            raise ValueError
+        if not isinstance(value, str):
+            from ...error_messages import unexpected_type
+            raise ValueError(unexpected_type(str, value))
+        if not value.endswith(".yaml"):
+            value += ".yaml"
+
 
         if value in self.templates:
             # load from templates dict (pretty much only used for testing)

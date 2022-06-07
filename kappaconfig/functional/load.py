@@ -7,5 +7,6 @@ def from_file_uri(file_uri):
 
 def from_string(yaml_string):
     if not isinstance(yaml_string, str):
-        raise TypeError
+        from ..error_messages import unexpected_type
+        raise TypeError(unexpected_type(str, yaml_string))
     return from_primitive(yaml.safe_load(yaml_string))

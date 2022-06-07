@@ -28,6 +28,6 @@ class InterpolatedNode(GrammarTreeNode):
         self.resolver_key = resolver_key
 
     def __repr__(self):
-        children_repr = ", ".join(map(str, self.children))
+        children_repr = str(list(map(str, self.children)))
         resolver_repr = f"{self.resolver_key}:" if self.resolver_key else ""
         return f"${{{resolver_repr}{children_repr}}}"

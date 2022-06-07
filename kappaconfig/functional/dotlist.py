@@ -7,7 +7,8 @@ def from_dotlist(dotlist):
     for entry in dotlist:
         accessor_value_split = entry.split("=")
         if len(accessor_value_split) != 2:
-            raise ValueError("every entry in a dotlist requires a '=' character")
+            from..error_messages import dotlist_entry_requires_equal_sign
+            raise ValueError(dotlist_entry_requires_equal_sign())
         accessor_string, value = accessor_value_split
         accessors = string_to_accessors(accessor_string)
 
@@ -17,20 +18,22 @@ def from_dotlist(dotlist):
             cur_accessor = accessors[accessor_idx]
             next_accessor = accessors[accessor_idx + 1]
 
+            # lists can only be created in sequential order
+            if isinstance(cur_accessor, int):
+                if len(prev_node) != cur_accessor:
+                    from ..error_messages import dotlist_requires_sequential_insert
+                    raise ValueError(dotlist_requires_sequential_insert())
+
             # create missing datastructures
             if isinstance(next_accessor, int):
                 # create list (if it doesn't exist already)
                 if isinstance(cur_accessor, int):
-                    if len(prev_node) != cur_accessor:
-                        raise ValueError
                     prev_node.append([])
                 elif cur_accessor not in prev_node:
                     prev_node[cur_accessor] = []
             else:
                 # create dict (if it doesn't exist already)
                 if isinstance(cur_accessor, int):
-                    if len(prev_node != cur_accessor):
-                        raise ValueError
                     prev_node.append({})
                 elif cur_accessor not in prev_node:
                     prev_node[cur_accessor] = {}
@@ -45,7 +48,8 @@ def from_dotlist(dotlist):
         last_accessor = accessors[-1]
         if isinstance(last_accessor, int):
             if len(prev_node) != last_accessor:
-                raise ValueError("dotlist with list accessors has to be in sequential order")
+                from ..error_messages import dotlist_requires_sequential_insert
+                raise ValueError(dotlist_requires_sequential_insert())
             prev_node.append(parsed_value)
         else:
             prev_node[last_accessor] = parsed_value
@@ -55,7 +59,8 @@ def from_dotlist(dotlist):
 
 def to_dotlist(root_node):
     if isinstance(root_node, KCObject):
-        root_node = root_node.resolve()
+        from ..error_messages import requires_primitive_node
+        raise ValueError(requires_primitive_node())
     container = dict(accessors=[], result=[])
     apply(root_node, pre_fn=_to_dotlist_pre_fn, post_fn=_to_dotlist_post_fn, container=container)
     return container["result"]

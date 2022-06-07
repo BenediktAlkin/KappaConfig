@@ -1,7 +1,6 @@
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
 from ..functional.parse_grammar import parse_grammar
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
-from ..functional.util import string_to_accessors, select
 
 class Resolver:
     def __init__(self, *collection_resolvers, default_scalar_resolver=None, **scalar_resolvers):
@@ -58,8 +57,6 @@ class Resolver:
             for resolver in self.collection_resolvers:
                 resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
         elif isinstance(node, KCScalar):
-            if not (isinstance(result, list) or isinstance(result, dict)):
-                raise TypeError
             if not isinstance(node.value, str):
                 resolve_result = node.value
             else:
@@ -100,7 +97,8 @@ class Resolver:
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
             return scalar_resolver.resolve(resolve_result, root_node=root_node)
         else:
-            raise TypeError
+            from ..error_messages import unexpected_type
+            raise TypeError(unexpected_type([RootNode, FixedNode, InterpolatedNode], grammar_node))
 
     @staticmethod
     def _merge_scalar_resolve_results(resolve_results):
