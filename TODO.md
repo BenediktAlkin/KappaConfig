@@ -1,4 +1,5 @@
 - test error messages
 - navigate to parent with . in interpolation (e.g. ${eval:${vars.total_epochs}-${..[0].max_epoch}})
 - maybe remove None nodes
-- check if ${${yaml:optims/common}.mae_pretrain} is possible (i think it is, but not 100% sure)
+- ${${yaml:optims/common}.mae_pretrain} is not possible (not sure if it should be possible)
+  - right now a template is resolved with only the yaml resolver so the interpolation can't be resolved

@@ -28,16 +28,14 @@ def _parse(value, parent_node):
         brace_end = _find_brace_end(value)
 
         value_in_braces = value[:brace_end]
-        if ":" in value_in_braces:
-            colon_idx = value_in_braces.index(":")
-            if colon_idx == 0:
-                from ..errors import empty_resolver_key_error
-                raise empty_resolver_key_error(value_in_braces)
-            else:
-                node = InterpolatedNode(value_in_braces[:colon_idx])
-        else:
+        colon_idx = _find_colon(value_in_braces)
+        if colon_idx == -1:
             node = InterpolatedNode(None)
-            colon_idx = -1
+        elif colon_idx == 0:
+            from ..errors import empty_resolver_key_error
+            raise empty_resolver_key_error(value_in_braces)
+        else:
+            node = InterpolatedNode(value_in_braces[:colon_idx])
         parent_node.children.append(node)
 
         # parse recursively
@@ -56,3 +54,10 @@ def _find_brace_end(value):
             nesting_level += 1
     from ..errors import missing_closing_brace_error
     raise missing_closing_brace_error(value)
+
+def _find_colon(value):
+    if "${" in value:
+        value = value[:value.index("${")]
+    if ":" not in value:
+        return -1
+    return value.index(":")

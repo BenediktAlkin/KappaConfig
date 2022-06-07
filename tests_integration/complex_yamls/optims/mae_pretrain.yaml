@@ -1,0 +1,3 @@
+template: ${yaml:optims/mae_pretrain}
+template.vars.batch_size: 512
+template.vars.base_lr: 1.5e-4

@@ -48,6 +48,9 @@ class TestComplexYamls(unittest.TestCase):
     def test_loggers_discriminator_epochs(self):
         self.resolve_yaml("loggers/discriminator_epochs.yaml")
 
+    def test_optim_mae_pretrain(self):
+        self.resolve_yaml("optims/mae_pretrain.yaml")
+
     def test_optim_scaled_lr(self):
         self.resolve_yaml("optims/scaled_lr.yaml")
 
