@@ -1,0 +1,2 @@
+template: ${yaml:loggers/default}
+template.vars.every_n_epochs: 2

@@ -1,0 +1,3 @@
+template: ${yaml:loggers/discriminator}
+template.vars.every_n_epochs: 2
+template.vars.train_accuracy_dataset_name: train_small

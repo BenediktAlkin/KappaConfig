@@ -1,0 +1,25 @@
+vars:
+  every_n_epochs: None
+  every_n_updates: None
+  train_accuracy_dataset_name: ???
+  valid_accuracy_dataset_name: valid
+  test_accuracy_dataset_name: test
+
+template: ${yaml:loggers/default}
+template.vars.every_n_epochs: ${vars.every_n_epochs}
+template.vars.every_n_updates: ${vars.every_n_updates}
+train_accuracy_logger:
+  kind: accuracy_logger
+  dataset_name: ${vars.train_accuracy_dataset_name}
+  every_n_epochs: ${vars.every_n_epochs}
+  every_n_updates: ${vars.every_n_updates}
+valid_accuracy_logger:
+  kind: accuracy_logger
+  dataset_name: ${vars.valid_accuracy_dataset_name}
+  every_n_epochs: ${vars.every_n_epochs}
+  every_n_updates: ${vars.every_n_updates}
+test_accuracy_logger:
+  kind: accuracy_logger
+  dataset_name: ${vars.test_accuracy_dataset_name}
+  every_n_epochs: ${vars.every_n_epochs}
+  every_n_updates: ${vars.every_n_updates}

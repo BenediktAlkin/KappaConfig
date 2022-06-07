@@ -4,16 +4,32 @@ import kappaconfig as kc
 import yaml
 
 class TestComplexYamls(unittest.TestCase):
+    @staticmethod
+    def get_file_uris(root_path):
+        file_or_dir_list = os.listdir(root_path)
+        file_uris = []
+        for file_or_dir in file_or_dir_list:
+            file_or_dir_uri = f"{root_path}/{file_or_dir}"
+            if file_or_dir_uri.endswith(".result.yaml"): continue
+
+            if os.path.isdir(file_or_dir_uri):
+                file_uris += TestComplexYamls.get_file_uris(file_or_dir_uri)
+            else:
+                file_uris += [file_or_dir_uri]
+        return file_uris
+
+
     def test_testcase_exists_for_every_yaml_file(self):
         # there probably are libraries that allow this implicitly (e.g. ddt should be able to do this)
         # but this makes running/debugging individual tests a hassle, so just check it manually
-        files = os.listdir("tests_integration/complex_yamls")
+        root_path = "tests_integration/complex_yamls"
+        file_uris = self.get_file_uris(root_path)
+        file_uris = list(map(lambda fu: fu[len(root_path) + 1:], file_uris))
         with open(__file__) as f:
             yaml_files_test_content = f.read()
         # basic check if filename is contained
-        for file in files:
-            if ".result.yaml" in file: continue
-            self.assertTrue(file in yaml_files_test_content, f"no testcase for {file}")
+        for file_uri in file_uris:
+            self.assertTrue(file_uri in yaml_files_test_content, f"no testcase for {file_uri}")
 
     def resolve_yaml(self, src_file_name):
         kc_obj = kc.from_file_uri(f"tests_integration/complex_yamls/{src_file_name}")
@@ -27,7 +43,10 @@ class TestComplexYamls(unittest.TestCase):
         self.resolve_yaml("schedule.yaml")
 
     def test_loggers_default_epochs(self):
-        self.resolve_yaml("loggers_default_epochs.yaml")
+        self.resolve_yaml("loggers/default_epochs.yaml")
 
     def test_loggers_default_updates(self):
-        self.resolve_yaml("loggers_default_updates.yaml")
+        self.resolve_yaml("loggers/default_updates.yaml")
+
+    def test_loggers_discriminator_epochs(self):
+        self.resolve_yaml("loggers/discriminator_epochs.yaml")

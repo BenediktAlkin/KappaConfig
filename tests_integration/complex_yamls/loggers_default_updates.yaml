@@ -1,2 +1,0 @@
-template: ${yaml:loggers_default}
-template.vars.every_n_updates: 2
