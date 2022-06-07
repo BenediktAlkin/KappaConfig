@@ -11,7 +11,9 @@ with open("setup.cfg") as f:
 
 for i in range(len(lines)):
     if lines[i].startswith("version"):
+        print(f"old version line: {lines[i]}")
         lines[i] = f"version = {get_tagname()}"
+        print(f"new version line: {lines[i]}")
 
 with open("setup.cfg", "w") as f:
     f.writelines(lines)
