@@ -52,7 +52,7 @@ jobs:
     # get publish type
     - name: get publish type
       id: get_publish_type
-      run: python .github/scripts/get_publish_type.py --tagname ${{ steps.tagName.outputs.tag }}
+      run: python .github/scripts/get_publish_type.py --tagname ${{ steps.get_tag.outputs.tag }}
 
     # publish to dev
     - name: publish
