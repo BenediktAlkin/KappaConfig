@@ -22,7 +22,10 @@ class Resolver:
     def _resolve_collection(self, node, root_node, result, trace):
         parent, parent_accessor = trace[-1]
         if isinstance(node, KCDict):
-            result[parent_accessor] = {}
+            if isinstance(parent_accessor, int):
+                result.append({})
+            else:
+                result[parent_accessor] = {}
             # preorder
             for resolver in self.collection_resolvers:
                 resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
@@ -39,7 +42,10 @@ class Resolver:
             for resolver in self.collection_resolvers:
                 resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
         elif isinstance(node, KCList):
-            result[parent_accessor] = []
+            if isinstance(parent_accessor, int):
+                result[parent_accessor].append([])
+            else:
+                result[parent_accessor] = []
             # preorder
             for resolver in self.collection_resolvers:
                 resolver.preorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
@@ -48,7 +54,7 @@ class Resolver:
 
             # traverse
             for i, subnode in enumerate(node.list):
-                trace.append((subnode, i))
+                trace.append((node, i))
                 self._resolve_collection(subnode, root_node=root_node, result=result[parent_accessor], trace=trace)
                 trace.pop()
 

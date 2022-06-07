@@ -1,11 +1,15 @@
 from .scalar_resolver import ScalarResolver
 from ...entities.wrappers import KCScalar
 from ...functional.load import from_string, from_file_uri
+from pathlib import Path
 
 class NestedYamlResolver(ScalarResolver):
     def __init__(self, template_path=None, **templates):
         super().__init__()
         self.template_path = template_path
+        if self.template_path is not None and isinstance(self.template_path, str):
+            self.template_path = Path(self.template_path)
+
         self.templates = templates
         if any(map(lambda template_value: not isinstance(template_value, str), templates.values())):
             raise TypeError

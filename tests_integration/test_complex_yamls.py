@@ -23,5 +23,5 @@ class TestComplexYamls(unittest.TestCase):
             expected = yaml.safe_load(f)
         self.assertEqual(expected, resolver.resolve(kc_obj))
 
-    def test_test(self):
-        self.resolve_yaml("test.yaml")
+    def test_schedule(self):
+        self.resolve_yaml("schedule.yaml")

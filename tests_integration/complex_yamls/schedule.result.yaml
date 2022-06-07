@@ -1,0 +1,8 @@
+kind: sequential
+schedules:
+  - kind: linear
+    max_epoch: 5
+    mode: before_update
+  - kind: cosine_annealing
+    max_epoch: 95
+    mode: before_update

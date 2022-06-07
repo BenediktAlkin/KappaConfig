@@ -1,0 +1,13 @@
+vars:
+  total_epochs: ???
+  warmup_factor: ???
+  mode: before_update
+
+kind: sequential
+schedules:
+  - kind: linear
+    max_epoch: ${eval:${vars.total_epochs}*${vars.warmup_factor}}
+    mode: ${vars.mode}
+  - kind: cosine_annealing
+    max_epoch: ${eval:${vars.total_epochs}*${eval:1-${vars.warmup_factor}}}
+    mode: ${vars.mode}
