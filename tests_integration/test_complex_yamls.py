@@ -25,3 +25,9 @@ class TestComplexYamls(unittest.TestCase):
 
     def test_schedule(self):
         self.resolve_yaml("schedule.yaml")
+
+    def test_loggers_default_epochs(self):
+        self.resolve_yaml("loggers_default_epochs.yaml")
+
+    def test_loggers_default_updates(self):
+        self.resolve_yaml("loggers_default_updates.yaml")
