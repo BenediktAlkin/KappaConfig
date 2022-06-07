@@ -16,4 +16,4 @@ for i in range(len(lines)):
         print(f"new version line: {lines[i]}")
 
 with open("setup.cfg", "w") as f:
-    f.writelines(lines)
+    f.write("\n".join(lines))

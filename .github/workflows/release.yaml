@@ -49,7 +49,6 @@ jobs:
     - name: build
       run: python -m build
 
-    - run: echo ${{ secrets.PYPI_API_TOKEN_TEST }}
     # publish
     - name: publish
       uses: pypa/gh-action-pypi-publish@master
