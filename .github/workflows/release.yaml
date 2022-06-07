@@ -49,10 +49,15 @@ jobs:
     # build
     - name: build
       run: python -m build
+    - name: Publish a Python distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+       user: __token__
+       password: ${{ secrets.TWINE_TEST_TOKEN }}
     # upload to pypi
-    - name: upload to pypi
-      run: python -m twine upload dist/* --verbose
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TWINE_TEST_TOKEN }}
-        TWINE_REPOSITORY: testpypi
+#    - name: upload to pypi
+#      run: python -m twine upload dist/* --verbose
+#      env:
+#        TWINE_USERNAME: __token__
+#        TWINE_PASSWORD: ${{ secrets.TWINE_TEST_TOKEN }}
+#        TWINE_REPOSITORY: testpypi
