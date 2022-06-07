@@ -3,7 +3,7 @@ name: Test, update version number and release to PyPI
 on:
   push:
     tags:
-      - "v*.*.*"
+      - "v*"
 
 jobs:
   release:
