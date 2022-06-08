@@ -36,3 +36,9 @@ class MissingValueError(Exception):
 
 def missing_value_error(full_accessor):
     return MissingValueError(full_accessor)
+
+class InvalidAccessorError(Exception):
+    pass
+
+def invalid_accessor_error(accessor_until_invalid, full_accessor):
+    return InvalidAccessorError(f"invalid accessor '{accessor_until_invalid}' within '{full_accessor}'")
