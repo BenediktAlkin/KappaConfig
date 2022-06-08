@@ -1,6 +1,6 @@
 vars:
   total_epochs: ???
-  warmup_factor: ???
+  warmup_factor: 0.05
   mode: before_update
 
 kind: sequential

@@ -145,3 +145,33 @@ class TestTemplateResolver(unittest.TestCase):
             """
         }
         self._resolve_and_assert(input_, expected, templates)
+
+    def test_nested_parameter_passing(self):
+        input_ = """
+        template: ${yaml:optim.yaml}
+        template.vars.total_epochs: 100
+        """
+        templates = {
+            "optim.yaml": """
+            vars:
+              total_epochs: ???
+            kind: SGD
+            schedule:
+              template: ${yaml:schedule}
+              template.vars.epochs: ${vars.total_epochs}
+            """,
+            "schedule.yaml": """
+            vars:
+              epochs: ???
+            kind: linear
+            end_epoch: ${vars.epochs}
+            """
+        }
+        expected = dict(
+            kind="SGD",
+            schedule=dict(
+                kind="linear",
+                end_epoch=100,
+            )
+        )
+        self._resolve_and_assert(input_, expected, templates)

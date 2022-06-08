@@ -1,8 +1,12 @@
 vars:
   batch_size: ???
   base_lr: ???
+  total_epochs: ???
 
 kind: AdamW
 lr: ${eval:${vars.batch_size}*${vars.base_lr}/256}
 betas: [ 0.9, 0.95 ]
 weight_decay: 0.05
+schedule:
+  template: ${yaml:schedules/warmup_cosine}
+  template.vars.total_epochs: ${vars.total_epochs}

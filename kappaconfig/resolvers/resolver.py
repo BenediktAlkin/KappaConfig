@@ -97,7 +97,8 @@ class Resolver:
 
     def resolve_scalar(self, value, root_node):
         grammar_tree = parse_grammar(value)
-        return self._resolve_scalar(grammar_tree, root_node=root_node)
+        resolved_scalar = self._resolve_scalar(grammar_tree, root_node=root_node)
+        return resolved_scalar
 
     def _resolve_scalar(self, grammar_node, root_node):
         if isinstance(grammar_node, RootNode):
@@ -111,7 +112,8 @@ class Resolver:
             resolve_result = self._merge_scalar_resolve_results(resolve_results)
             # resolve cur node
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
-            return scalar_resolver.resolve(resolve_result, root_node=root_node)
+            resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node)
+            return resolved_scalar
         else:
             from ..errors import unexpected_type_error
             raise unexpected_type_error([RootNode, FixedNode, InterpolatedNode], grammar_node)

@@ -53,17 +53,17 @@ class TestUtil(unittest.TestCase):
                 ],
             ),
         )
-        expected = errors.invalid_accessor_error("", "invalid")
+        expected = errors.invalid_accessor_error("invalid", "invalid")
         with self.assertRaises(type(expected)) as ex:
             util.select(root_node, ["invalid"])
         self.assertEqual(expected.args[0], str(ex.exception))
 
-        expected = errors.invalid_accessor_error("some_node", "some_node.invalid")
+        expected = errors.invalid_accessor_error("some_node.invalid", "some_node.invalid[5]")
         with self.assertRaises(type(expected)) as ex:
-            util.select(root_node, ["some_node", "invalid"])
+            util.select(root_node, ["some_node", "invalid", 5])
         self.assertEqual(expected.args[0], str(ex.exception))
 
-        expected = errors.invalid_accessor_error("some_nested_node.some_list", "some_nested_node.some_list[23]")
+        expected = errors.invalid_accessor_error("some_nested_node.some_list[23]", "some_nested_node.some_list[23]")
         with self.assertRaises(type(expected)) as ex:
             util.select(root_node, ["some_nested_node", "some_list", 23])
         self.assertEqual(expected.args[0], str(ex.exception))

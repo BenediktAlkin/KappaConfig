@@ -38,9 +38,17 @@ class TemplateResolver(CollectionResolver):
                     # merge template parameters into template
                     template_params_keys = list(filter(lambda key: key.startswith("template."), node.keys()))
                     template_params = mask_in(node, template_params_keys)
-                    template_params_to_merge = {k.replace("template.", ""): v for k, v in template_params.items()}
+                    # resolve template params (for recursive parameter passing)
+                    resolved_template_params = {}
+                    for k, v in template_params.items():
+                        new_key = k.replace("template.", "")
+                        if isinstance(v, KCScalar):
+                            v = root_resolver.resolve(v, root_node=root_node)
+                            v = from_primitive(v)
+                        resolved_template_params[new_key] = v
+
                     kc_resolved_scalar = from_primitive(resolved_scalar)
-                    merged_template = merge(kc_resolved_scalar, template_params_to_merge)
+                    merged_template = merge(kc_resolved_scalar, resolved_template_params)
 
                     # remove template params from node
                     node_without_template_params = mask_out(node, template_params_keys)
