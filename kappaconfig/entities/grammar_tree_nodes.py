@@ -22,10 +22,11 @@ class FixedNode(GrammarTreeNode):
         return self.value
 
 class InterpolatedNode(GrammarTreeNode):
-    def __init__(self, resolver_key):
+    def __init__(self, resolver_key, *args):
         super().__init__()
         self.children = []
         self.resolver_key = resolver_key
+        self.args = args
 
     def __repr__(self):
         children_repr = str(list(map(str, self.children)))

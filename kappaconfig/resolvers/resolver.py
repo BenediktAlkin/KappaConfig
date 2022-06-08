@@ -112,7 +112,7 @@ class Resolver:
             resolve_result = self._merge_scalar_resolve_results(resolve_results)
             # resolve cur node
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
-            resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node)
+            resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node, grammar_node=grammar_node)
             return resolved_scalar
         else:
             from ..errors import unexpected_type_error

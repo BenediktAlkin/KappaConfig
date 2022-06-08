@@ -1,3 +1,4 @@
+import yaml
 from ..entities.grammar_tree_nodes import RootNode, InterpolatedNode, FixedNode
 from ..entities.wrappers import KCScalar
 
@@ -41,7 +42,8 @@ def _parse(value, parent_node):
             if len(value_in_braces) == colon_idx + 1:
                 from ..errors import empty_resolver_value_error
                 raise empty_resolver_value_error(value_in_braces)
-            node = InterpolatedNode(value_in_braces[:colon_idx])
+            key, args = _parse_resolver_key_and_args(value_in_braces[:colon_idx])
+            node = InterpolatedNode(key, *args)
         parent_node.children.append(node)
 
         # parse recursively
@@ -67,3 +69,19 @@ def _find_colon(value):
     if ":" not in value:
         return -1
     return value.index(":")
+
+def _parse_resolver_key_and_args(key_and_args):
+    if "(" in key_and_args:
+        if key_and_args[-1] != ")":
+            from ..errors import missing_closing_parentheses_at_last_position
+            raise missing_closing_parentheses_at_last_position(key_and_args)
+        par_start_idx = key_and_args.index("(")
+        key = key_and_args[:par_start_idx]
+        args_str = key_and_args[par_start_idx+1:-1]
+        args_split = args_str.split(",")
+        # parse into primitives (e.g. parse '5' to 5)
+        args = [yaml.safe_load(arg) for arg in args_split]
+        return key, args
+    else:
+        # no args
+        return key_and_args, []

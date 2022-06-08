@@ -2,11 +2,12 @@ import unittest
 
 from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
+from kappaconfig.resolvers.scalar_resolvers.select_resolver import SelectResolver
 from kappaconfig.resolvers.resolver import Resolver
 
-class TestEvalResolver(unittest.TestCase):
+class TestNestedYamlResolver(unittest.TestCase):
     def _resolve_and_assert(self, input_, expected, templates):
-        resolver = Resolver(yaml=NestedYamlResolver(**templates))
+        resolver = Resolver(select=SelectResolver(), yaml=NestedYamlResolver(**templates))
         actual = resolver.resolve(from_string(input_))
         self.assertEqual(expected, actual)
 
@@ -58,5 +59,15 @@ class TestEvalResolver(unittest.TestCase):
         templates = {"test.yaml": "other_yaml.yaml", "other_yaml.yaml": "some_key"}
         expected = dict(
             some_obj="some_key"
+        )
+        self._resolve_and_assert(input_, expected, templates)
+
+    def test_select_from_nested_yaml(self):
+        input_ = """
+        some_obj: ${select(some_key):${yaml:test}}
+        """
+        templates = {"test.yaml": "some_key: some_value"}
+        expected = dict(
+            some_obj="some_value"
         )
         self._resolve_and_assert(input_, expected, templates)
