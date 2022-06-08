@@ -12,6 +12,8 @@ class TemplateResolver(CollectionResolver):
     def __init__(self, template_path=None, **templates):
         super().__init__()
         # nested yaml templates are resolved after loading/merging with template parameters
+        # this should not resolve templates or throw missing value errors (these have to happen after the
+        # template params are passed to the template)
         self.nested_yaml_resolver = Resolver(
             default_scalar_resolver=InterpolationResolver(),
             scalar_resolvers=dict(
