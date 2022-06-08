@@ -1,0 +1,4 @@
+vars:
+  model_key: debug
+
+template: ${select:${vars.model_key}:${yaml:models/vit}}
