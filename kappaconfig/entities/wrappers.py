@@ -58,3 +58,10 @@ class KCList(KCObject):
 
     def __getitem__(self, item):
         return self.list[item]
+
+    def __iadd__(self, other):
+        if not isinstance(other, KCList):
+            from ..errors import unexpected_type_error
+            raise unexpected_type_error(KCList, other)
+        self.list += other.list
+        return self.list

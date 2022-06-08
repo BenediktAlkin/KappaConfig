@@ -100,3 +100,48 @@ class TestTemplateResolver(unittest.TestCase):
             """
         }
         self._resolve_and_assert(input_, expected, templates)
+
+    def test_set_list_of_template(self):
+        input_ = """
+        template: ${yaml:tmp.yaml}
+        template.x_transforms:
+          - kind: random_horizontal_flip
+        """
+        expected = dict(
+            kind="imagenet",
+            x_transforms=[
+                dict(kind="random_horizontal_flip"),
+            ],
+        )
+        templates = {
+            "tmp.yaml": """
+            kind: imagenet
+            x_transforms:
+              - kind: resize
+                size: 256
+            """
+        }
+        self._resolve_and_assert(input_, expected, templates)
+
+    def test_append_to_list_of_template(self):
+        input_ = """
+        template: ${yaml:tmp.yaml}
+        template.x_transforms.add:
+          - kind: random_horizontal_flip
+        """
+        expected = dict(
+            kind="imagenet",
+            x_transforms=[
+                dict(kind="resize", size=256),
+                dict(kind="random_horizontal_flip"),
+            ],
+        )
+        templates = {
+            "tmp.yaml": """
+            kind: imagenet
+            x_transforms:
+              - kind: resize
+                size: 256
+            """
+        }
+        self._resolve_and_assert(input_, expected, templates)

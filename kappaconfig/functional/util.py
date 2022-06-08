@@ -70,7 +70,15 @@ def merge(base, to_merge):
     for key, value in to_merge.items():
         accessors = string_to_accessors(key)
         node = select(base, accessors[:-1])
-        node[accessors[-1]] = value
+
+        # allow appending to a list if the last accessor is 'add' or 'append'
+        if isinstance(node, (KCList, list)) and accessors[-1] in ["add", "append"]:
+            if not isinstance(value, (KCList, list)):
+                from ..errors import unexpected_type_error
+                raise unexpected_type_error([KCList, list], value)
+            node += value
+        else:
+            node[accessors[-1]] = value
     return base
 
 def mask_out(dict_, keys_to_mask_out):
