@@ -4,6 +4,7 @@ from .scalar_resolvers.eval_resolver import EvalResolver
 from .collection_resolvers.template_resolver import TemplateResolver
 from .collection_resolvers.missing_value_resolver import MissingValueResolver
 from .scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
+from .scalar_resolvers.select_resolver import SelectResolver
 
 class DefaultResolver(Resolver):
     def __init__(self, template_path=None, **templates):
@@ -13,4 +14,5 @@ class DefaultResolver(Resolver):
             default_scalar_resolver=InterpolationResolver(),
             eval=EvalResolver(),
             yaml=NestedYamlResolver(template_path=template_path, **(templates or {})),
+            select=SelectResolver(),
         )
