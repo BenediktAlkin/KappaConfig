@@ -33,3 +33,7 @@ class TestResolver(unittest.TestCase):
                 default_scalar_resolver=dict()
             ).resolve(from_string("${asdf:qwer}"))
         self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_resolve_copies_before_resolve(self):
+        # stuff like in the mae with ctors requires overwriting nodes during parsing...copy beforehand
+        self.fail()
