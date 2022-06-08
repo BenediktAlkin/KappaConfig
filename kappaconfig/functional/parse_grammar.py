@@ -80,6 +80,7 @@ def _parse_resolver_key_and_args(key_and_args):
         args_str = key_and_args[par_start_idx+1:-1]
         args_split = args_str.split(",")
         # parse into primitives (e.g. parse '5' to 5)
+        # also removes leading/trailing whitespaces for strings
         args = [yaml.safe_load(arg) for arg in args_split]
         return key, args
     else:

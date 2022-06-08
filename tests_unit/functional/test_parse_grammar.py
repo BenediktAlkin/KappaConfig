@@ -80,3 +80,34 @@ class TestParseGrammar(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             parse_grammar("${}")
         self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_parse_resolver_key_and_args_missing_closing_par(self):
+        expected = errors.missing_closing_parentheses_at_last_position("select()a")
+        with self.assertRaises(type(expected)) as ex:
+            parse_grammar("${select()a:asdf}")
+        self.assertEqual(expected.args[0], str(ex.exception))
+
+        expected = errors.missing_closing_parentheses_at_last_position("select(")
+        with self.assertRaises(type(expected)) as ex:
+            parse_grammar("${select(:asdf}")
+        self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_parse_resolver_key_and_args(self):
+        tree = parse_grammar("${select(some_key):asdf}")
+        self.assertEqual(1, len(tree.children))
+        node = tree.children[0]
+        self.assertTrue(isinstance(node, InterpolatedNode))
+        self.assertEqual("select", node.resolver_key)
+        self.assertEqual(1, len(node.args))
+        self.assertEqual("some_key", node.args[0])
+
+    def test_parse_resolver_key_and_args_multiple(self):
+        tree = parse_grammar("${select(some_key, other, 5):asdf}")
+        self.assertEqual(1, len(tree.children))
+        node = tree.children[0]
+        self.assertTrue(isinstance(node, InterpolatedNode))
+        self.assertEqual("select", node.resolver_key)
+        self.assertEqual(3, len(node.args))
+        self.assertEqual("some_key", node.args[0])
+        self.assertEqual("other", node.args[1])
+        self.assertEqual(5, node.args[2])
