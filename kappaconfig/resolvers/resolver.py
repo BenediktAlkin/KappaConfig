@@ -82,8 +82,7 @@ class Resolver:
 
             # resolved value might be a KCObject (e.g. when loading a nested yaml)
             if isinstance(resolve_result, KCObject):
-                parent, accessor = trace.pop()
-                trace.append((resolve_result, accessor))
+                parent[parent_accessor] = resolve_result
                 self._resolve_collection(resolve_result, root_node=root_node, result=result, trace=trace)
             else:
                 # set value
