@@ -1,0 +1,16 @@
+train:
+  kind: mvtec
+  category: bottle
+  normalization: range
+  split: train
+  x_transforms:
+    - kind: resize
+      size: 256
+test:
+  kind: mvtec
+  category: bottle
+  normalization: range
+  split: test
+  x_transforms:
+    - kind: resize
+      size: 256

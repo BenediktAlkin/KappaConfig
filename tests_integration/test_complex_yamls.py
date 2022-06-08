@@ -42,6 +42,9 @@ class TestComplexYamls(unittest.TestCase):
     def test_data_cifar(self):
         self.resolve_yaml("data/cifar.yaml")
 
+    def test_data_mvtec(self):
+        self.resolve_yaml("data/mvtec.yaml")
+
     def test_loggers_default_epochs(self):
         self.resolve_yaml("loggers/default_epochs.yaml")
 

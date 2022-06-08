@@ -1,0 +1,21 @@
+vars:
+  size: 256
+  normalization: range
+  category: ???
+
+train:
+  kind: mvtec
+  category: ${vars.category}
+  normalization: ${vars.normalization}
+  split: train
+  x_transforms:
+    - kind: resize
+      size: ${vars.size}
+test:
+  kind: mvtec
+  category: ${vars.category}
+  normalization: ${vars.normalization}
+  split: test
+  x_transforms:
+    - kind: resize
+      size: ${vars.size}

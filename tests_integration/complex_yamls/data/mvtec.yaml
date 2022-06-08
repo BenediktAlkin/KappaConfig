@@ -1,0 +1,2 @@
+template: ${yaml:data/mvtec}
+template.vars.category: bottle
