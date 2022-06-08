@@ -5,14 +5,23 @@ from .collection_resolvers.template_resolver import TemplateResolver
 from .collection_resolvers.missing_value_resolver import MissingValueResolver
 from .scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
 from .scalar_resolvers.select_resolver import SelectResolver
+from .post_processors.remove_vars_post_processor import RemoveVarsPostProcessor
+
 
 class DefaultResolver(Resolver):
     def __init__(self, template_path=None, **templates):
         super().__init__(
-            TemplateResolver(template_path=template_path, **(templates or {})),
-            MissingValueResolver(),
+            collection_resolvers=[
+                TemplateResolver(template_path=template_path, **(templates or {})),
+                MissingValueResolver(),
+            ],
             default_scalar_resolver=InterpolationResolver(),
-            eval=EvalResolver(),
-            yaml=NestedYamlResolver(template_path=template_path, **(templates or {})),
-            select=SelectResolver(),
+            scalar_resolvers=dict(
+                eval=EvalResolver(),
+                yaml=NestedYamlResolver(template_path=template_path, **(templates or {})),
+                select=SelectResolver(),
+            ),
+            post_processors=[
+                RemoveVarsPostProcessor()
+            ]
         )

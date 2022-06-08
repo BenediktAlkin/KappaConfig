@@ -7,7 +7,7 @@ import kappaconfig.errors as errors
 
 class TestMissingValueResolver(unittest.TestCase):
     def _resolve_and_assert(self, input_, expected):
-        resolver = Resolver(MissingValueResolver())
+        resolver = Resolver(collection_resolvers=[MissingValueResolver()])
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(input_))
         self.assertEqual(expected.args[0], str(ex.exception))

@@ -3,11 +3,15 @@ from ..functional.parse_grammar import parse_grammar
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 
 class Resolver:
-    def __init__(self, *collection_resolvers, default_scalar_resolver=None, **scalar_resolvers):
-        self.collection_resolvers = list(collection_resolvers)
-        self.scalar_resolvers = scalar_resolvers
+    def __init__(
+            self, collection_resolvers=None,
+            scalar_resolvers=None, default_scalar_resolver=None,
+            post_processors=None):
+        self.collection_resolvers = collection_resolvers or []
+        self.scalar_resolvers = scalar_resolvers or {}
         if default_scalar_resolver is not None:
             self.scalar_resolvers[None] = default_scalar_resolver
+        self.post_processors = post_processors or []
 
 
     def resolve(self, node, root_node=None):
@@ -16,7 +20,10 @@ class Resolver:
             root_node = node
         wrapped_node = KCDict(root=node)
         self._resolve_collection(node, root_node=root_node, result=result, trace=[(wrapped_node, "root")])
-        return result["root"]
+        processed_result = result["root"]
+        for post_processor in self.post_processors:
+            post_processor.process(processed_result)
+        return processed_result
 
 
     def _resolve_collection(self, node, root_node, result, trace):

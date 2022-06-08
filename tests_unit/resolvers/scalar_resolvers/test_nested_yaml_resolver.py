@@ -7,7 +7,12 @@ from kappaconfig.resolvers.resolver import Resolver
 
 class TestNestedYamlResolver(unittest.TestCase):
     def _resolve_and_assert(self, input_, expected, templates):
-        resolver = Resolver(select=SelectResolver(), yaml=NestedYamlResolver(**templates))
+        resolver = Resolver(
+            scalar_resolvers=dict(
+                select=SelectResolver(),
+                yaml=NestedYamlResolver(**templates),
+            ),
+        )
         actual = resolver.resolve(from_string(input_))
         self.assertEqual(expected, actual)
 

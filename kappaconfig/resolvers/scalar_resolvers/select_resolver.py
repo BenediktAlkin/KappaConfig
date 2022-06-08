@@ -12,4 +12,4 @@ class SelectResolver(ScalarResolver):
         args, value = parse_resolver_args_and_value(args_and_value, n_args=1)
         accessors = string_to_accessors(args[0])
         node = select(root_node=value, accessors=accessors)
-        return node.value
+        return node

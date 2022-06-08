@@ -14,9 +14,11 @@ class TemplateResolver(CollectionResolver):
         # nested yaml templates are resolved after loading/merging with template parameters
         self.nested_yaml_resolver = Resolver(
             default_scalar_resolver=InterpolationResolver(),
-            eval=EvalResolver(),
-            yaml=NestedYamlResolver(template_path=template_path, **templates),
-            select=SelectResolver(),
+            scalar_resolvers=dict(
+                eval=EvalResolver(),
+                yaml=NestedYamlResolver(template_path=template_path, **templates),
+                select=SelectResolver(),
+            ),
         )
 
     def preorder_resolve(self, node, root_node, result, trace, root_resolver):

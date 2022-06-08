@@ -10,10 +10,14 @@ from kappaconfig.resolvers.resolver import Resolver
 class TestTemplateResolver(unittest.TestCase):
     def _resolve_and_assert(self, input_, expected, templates=None):
         resolver = Resolver(
-            TemplateResolver(**(templates or {})),
+            collection_resolvers=[
+                TemplateResolver(**(templates or {})),
+            ],
             default_scalar_resolver=InterpolationResolver(),
-            eval=EvalResolver(),
-            yaml=NestedYamlResolver(**(templates or {}))
+            scalar_resolvers=dict(
+                eval=EvalResolver(),
+                yaml=NestedYamlResolver(**(templates or {})),
+            ),
         )
         actual = resolver.resolve(from_string(input_))
         self.assertEqual(expected, actual)

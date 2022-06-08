@@ -7,7 +7,12 @@ from kappaconfig.resolvers.resolver import Resolver
 
 class TestEvalResolver(unittest.TestCase):
     def _resolve_and_assert(self, input_, expected):
-        resolver = Resolver(default_scalar_resolver=InterpolationResolver(), eval=EvalResolver())
+        resolver = Resolver(
+            default_scalar_resolver=InterpolationResolver(),
+            scalar_resolvers=dict(
+                eval=EvalResolver()
+            ),
+        )
         actual = resolver.resolve(from_string(input_))
         self.assertEqual(expected, actual)
 
