@@ -1,0 +1,28 @@
+train:
+  kind: cifar10
+  normalization: moment
+  sample_filters:
+    - kind: range_filter
+      to_index: 45000
+  split: train
+
+train_small:
+  kind: cifar10
+  normalization: moment
+  sample_filters:
+    - kind: range_filter
+      to_index: 5000
+  split: train
+
+valid:
+  kind: cifar10
+  normalization: moment
+  sample_filters:
+    - kind: range_filter
+      from_index: 45000
+  split: train
+
+test:
+  kind: cifar10
+  normalization: moment
+  split: test

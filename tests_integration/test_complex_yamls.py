@@ -39,6 +39,9 @@ class TestComplexYamls(unittest.TestCase):
             expected = yaml.safe_load(f)
         self.assertEqual(expected, resolver.resolve(kc_obj))
 
+    def test_data_cifar(self):
+        self.resolve_yaml("data/cifar.yaml")
+
     def test_loggers_default_epochs(self):
         self.resolve_yaml("loggers/default_epochs.yaml")
 
