@@ -4,12 +4,20 @@ from ...functional.util import mask_in, mask_out, merge
 from ...functional.convert import from_primitive
 from ..resolver import Resolver
 from ..scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
+from ..scalar_resolvers.interpolation_resolver import InterpolationResolver
+from ..scalar_resolvers.select_resolver import SelectResolver
+from ..scalar_resolvers.eval_resolver import EvalResolver
 
 class TemplateResolver(CollectionResolver):
     def __init__(self, template_path=None, **templates):
         super().__init__()
         # nested yaml templates are resolved after loading/merging with template parameters
-        self.nested_yaml_resolver = Resolver(yaml=NestedYamlResolver(template_path=template_path, **templates))
+        self.nested_yaml_resolver = Resolver(
+            default_scalar_resolver=InterpolationResolver(),
+            eval=EvalResolver(),
+            yaml=NestedYamlResolver(template_path=template_path, **templates),
+            select=SelectResolver(),
+        )
 
     def preorder_resolve(self, node, root_node, result, trace, root_resolver):
         if isinstance(node, KCDict):
@@ -50,14 +58,14 @@ class TemplateResolver(CollectionResolver):
                     kc_resolved_scalar = from_primitive(resolved_scalar)
                     merged_template = merge(kc_resolved_scalar, resolved_template_params)
 
-                    # remove template params from node
-                    node_without_template_params = mask_out(node, template_params_keys)
-
                     # resolve template with template root as root (for resolving parameterized templates)
                     resolved_template_primitive = root_resolver.resolve(merged_template)
                     # remove "vars" field in template
                     resolved_template_primitive_no_vars = mask_out(resolved_template_primitive, ["vars"])
                     resolved_template = from_primitive(resolved_template_primitive_no_vars)
+
+                    # remove template params from node
+                    node_without_template_params = mask_out(node, template_params_keys)
                 else:
                     # KCList not implemented yet
                     raise NotImplementedError
