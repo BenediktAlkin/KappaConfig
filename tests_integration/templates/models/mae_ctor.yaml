@@ -1,0 +1,18 @@
+vars:
+  model_params: ???
+
+encoder:
+  kind: vit.masked_encoder
+  patch_size: ${vars.model_params.patch_size}
+  embedding_dim: ${vars.model_params.encoder_embedding_dim}
+  depth: ${vars.model_params.encoder_depth}
+  num_heads: ${vars.model_params.encoder_attention_heads}
+  mlp_ratio: ${vars.model_params.mlp_ratio}
+decoder:
+  kind: vit.masked_decoder
+  patch_size: ${vars.model_params.patch_size}
+  encoder_embedding_dim: ${vars.model_params.encoder_embedding_dim}
+  decoder_embedding_dim: ${vars.model_params.decoder_embedding_dim}
+  depth: ${vars.model_params.decoder_depth}
+  num_heads: ${vars.model_params.decoder_attention_heads}
+  mlp_ratio: ${vars.model_params.mlp_ratio}

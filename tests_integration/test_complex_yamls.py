@@ -54,6 +54,9 @@ class TestComplexYamls(unittest.TestCase):
     def test_loggers_discriminator_epochs(self):
         self.resolve_yaml("loggers/discriminator_epochs.yaml")
 
+    def test_models_mae(self):
+        self.resolve_yaml("models/mae.yaml")
+
     def test_models_vit(self):
         self.resolve_yaml("models/vit.yaml")
 

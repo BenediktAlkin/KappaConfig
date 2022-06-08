@@ -1,0 +1,15 @@
+encoder:
+  kind: vit.masked_encoder
+  patch_size: 16
+  embedding_dim: 768
+  depth: 12
+  num_heads: 12
+  mlp_ratio: 4
+decoder:
+  kind: vit.masked_decoder
+  patch_size: 16
+  encoder_embedding_dim: 768
+  decoder_embedding_dim: 512
+  depth: 8
+  num_heads: 16
+  mlp_ratio: 4

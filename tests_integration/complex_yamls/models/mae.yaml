@@ -1,0 +1,5 @@
+vars:
+  model_key: base
+
+template: ${yaml:models/mae_ctor}
+template.vars.model_params: ${select:${vars.model_key}:${yaml:models/mae}}

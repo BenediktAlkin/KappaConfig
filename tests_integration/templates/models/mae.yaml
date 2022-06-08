@@ -1,0 +1,19 @@
+debug:
+  patch_size: 16
+  encoder_embedding_dim: 16
+  decoder_embedding_dim: 8
+  encoder_depth: 3
+  decoder_depth: 2
+  encoder_attention_heads: 2
+  decoder_attention_heads: 2
+  mlp_ratio: 1
+
+base:
+  patch_size: 16
+  encoder_embedding_dim: 768
+  decoder_embedding_dim: 512
+  encoder_depth: 12
+  decoder_depth: 8
+  encoder_attention_heads: 12
+  decoder_attention_heads: 16
+  mlp_ratio: 4
