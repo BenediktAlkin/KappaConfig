@@ -118,7 +118,9 @@ class Resolver:
             resolve_results = [self._resolve_scalar(child, root_node=root_node) for child in grammar_node.children]
             resolve_result = self._merge_scalar_resolve_results(resolve_results)
             # resolve cur node
-            # TODO error message if no key found
+            if grammar_node.resolver_key not in self.scalar_resolvers:
+                from ..errors import invalid_resolver_key
+                raise invalid_resolver_key(grammar_node.resolver_key, list(self.scalar_resolvers.keys()))
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
             resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node)
             return resolved_scalar

@@ -51,3 +51,7 @@ def empty_parameter_error(args_and_value_str):
 
 def missing_parameter_error(args_and_value_str, n_args):
     return ValueError(f"missing parameter in '{args_and_value_str}', expected {n_args} parameters")
+
+def invalid_resolver_key(resolver_key, valid_keys):
+    # don't use key error here as it escapes the whole string and the ' characters
+    return ValueError(f"invalid resolver key '{resolver_key}' valid keys are: {valid_keys}")

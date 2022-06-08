@@ -2,6 +2,8 @@ import unittest
 
 from kappaconfig.entities.wrappers import KCDict, KCList, KCScalar
 from kappaconfig.resolvers.resolver import Resolver
+import kappaconfig.errors as errors
+from kappaconfig.functional.load import from_string
 
 class TestResolver(unittest.TestCase):
     def test_resolve_scalar_root(self):
@@ -16,3 +18,18 @@ class TestResolver(unittest.TestCase):
         actual = Resolver().resolve(KCDict(some=KCScalar("value")))
         self.assertTrue(isinstance(actual, dict))
         self.assertEqual("value", actual["some"])
+
+    def test_resolve_invalid_resolver_key(self):
+        expected = errors.invalid_resolver_key("asdf", [])
+        with self.assertRaises(type(expected)) as ex:
+            Resolver().resolve(from_string("${asdf:qwer}"))
+        self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_resolve_invalid_resolver_key_multiple_valid_keys(self):
+        expected = errors.invalid_resolver_key("asdf", ["q", "b", None])
+        with self.assertRaises(type(expected)) as ex:
+            Resolver(
+                scalar_resolvers=dict(q=None, b=None),
+                default_scalar_resolver=dict()
+            ).resolve(from_string("${asdf:qwer}"))
+        self.assertEqual(expected.args[0], str(ex.exception))
