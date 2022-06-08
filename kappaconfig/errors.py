@@ -46,5 +46,8 @@ class InvalidAccessorError(Exception):
 def invalid_accessor_error(accessor_until_invalid, full_accessor):
     return InvalidAccessorError(f"invalid accessor '{accessor_until_invalid}' within '{full_accessor}'")
 
-def missing_closing_parentheses_at_last_position(value):
-    return ValueError(f"expected ')' at last position of '{value}'")
+def empty_parameter_error(args_and_value_str):
+    return ValueError(f"empty parameter in '{args_and_value_str}'")
+
+def missing_parameter_error(args_and_value_str, n_args):
+    return ValueError(f"missing parameter in '{args_and_value_str}', expected {n_args} parameters")

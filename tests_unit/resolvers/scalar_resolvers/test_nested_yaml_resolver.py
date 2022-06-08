@@ -64,7 +64,7 @@ class TestNestedYamlResolver(unittest.TestCase):
 
     def test_select_from_nested_yaml(self):
         input_ = """
-        some_obj: ${select(some_key):${yaml:test}}
+        some_obj: ${select:some_key:${yaml:test}}
         """
         templates = {"test.yaml": "some_key: some_value"}
         expected = dict(

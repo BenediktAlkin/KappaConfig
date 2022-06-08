@@ -1,6 +1,7 @@
 import yaml
 from ..entities.grammar_tree_nodes import RootNode, InterpolatedNode, FixedNode
 from ..entities.wrappers import KCScalar
+from ..functional.load import from_string
 
 def parse_grammar(value):
     root_node = RootNode()
@@ -42,8 +43,7 @@ def _parse(value, parent_node):
             if len(value_in_braces) == colon_idx + 1:
                 from ..errors import empty_resolver_value_error
                 raise empty_resolver_value_error(value_in_braces)
-            key, args = _parse_resolver_key_and_args(value_in_braces[:colon_idx])
-            node = InterpolatedNode(key, *args)
+            node = InterpolatedNode(value_in_braces[:colon_idx])
         parent_node.children.append(node)
 
         # parse recursively
@@ -70,19 +70,22 @@ def _find_colon(value):
         return -1
     return value.index(":")
 
-def _parse_resolver_key_and_args(key_and_args):
-    if "(" in key_and_args:
-        if key_and_args[-1] != ")":
-            from ..errors import missing_closing_parentheses_at_last_position
-            raise missing_closing_parentheses_at_last_position(key_and_args)
-        par_start_idx = key_and_args.index("(")
-        key = key_and_args[:par_start_idx]
-        args_str = key_and_args[par_start_idx+1:-1]
-        args_split = args_str.split(",")
+def parse_resolver_args_and_value(args_and_value, n_args):
+    args = []
+    remaining_str = args_and_value
+    for i in range(n_args):
+        if not ":" in remaining_str:
+            from ..errors import missing_parameter_error
+            raise missing_parameter_error(args_and_value, n_args)
+        colon_idx = remaining_str.index(":")
+        arg_str = remaining_str[:colon_idx]
+        if len(arg_str) == 0:
+            from ..errors import empty_parameter_error
+            raise empty_parameter_error(args_and_value)
+
         # parse into primitives (e.g. parse '5' to 5)
         # also removes leading/trailing whitespaces for strings
-        args = [yaml.safe_load(arg) for arg in args_split]
-        return key, args
-    else:
-        # no args
-        return key_and_args, []
+        parsed_arg = yaml.safe_load(arg_str)
+        args.append(parsed_arg)
+        remaining_str = remaining_str[colon_idx+1:]
+    return args, from_string(remaining_str)

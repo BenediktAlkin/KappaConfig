@@ -1,5 +1,5 @@
 import unittest
-from kappaconfig.functional.parse_grammar import parse_grammar
+from kappaconfig.functional.parse_grammar import parse_grammar, parse_resolver_args_and_value
 from kappaconfig.entities.grammar_tree_nodes import InterpolatedNode, FixedNode
 import kappaconfig.errors as errors
 
@@ -70,6 +70,12 @@ class TestParseGrammar(unittest.TestCase):
         self.assertTrue(isinstance(tree.children[3], FixedNode))
         self.assertEqual("end", tree.children[3].value)
 
+    def test_empty_resolver_key(self):
+        expected = errors.empty_resolver_key_error(":something")
+        with self.assertRaises(type(expected)) as ex:
+            parse_grammar("${:something}")
+        self.assertEqual(expected.args[0], str(ex.exception))
+
     def test_empty_resolver_value(self):
         expected = errors.empty_resolver_value_error("yaml:")
         with self.assertRaises(type(expected)) as ex:
@@ -81,33 +87,25 @@ class TestParseGrammar(unittest.TestCase):
             parse_grammar("${}")
         self.assertEqual(expected.args[0], str(ex.exception))
 
-    def test_parse_resolver_key_and_args_missing_closing_par(self):
-        expected = errors.missing_closing_parentheses_at_last_position("select()a")
+    def test_parse_resolver_args_and_value_missing_parameter(self):
+        expected = errors.missing_parameter_error("only_value", n_args=1)
         with self.assertRaises(type(expected)) as ex:
-            parse_grammar("${select()a:asdf}")
+            parse_resolver_args_and_value("only_value", n_args=1)
         self.assertEqual(expected.args[0], str(ex.exception))
 
-        expected = errors.missing_closing_parentheses_at_last_position("select(")
+        expected = errors.missing_parameter_error("param:value", n_args=2)
         with self.assertRaises(type(expected)) as ex:
-            parse_grammar("${select(:asdf}")
+            parse_resolver_args_and_value("param:value", n_args=2)
         self.assertEqual(expected.args[0], str(ex.exception))
 
-    def test_parse_resolver_key_and_args(self):
-        tree = parse_grammar("${select(some_key):asdf}")
-        self.assertEqual(1, len(tree.children))
-        node = tree.children[0]
-        self.assertTrue(isinstance(node, InterpolatedNode))
-        self.assertEqual("select", node.resolver_key)
-        self.assertEqual(1, len(node.args))
-        self.assertEqual("some_key", node.args[0])
+    def test_parse_resolver_args_and_value(self):
+        args, value = parse_resolver_args_and_value("param:value", n_args=1)
+        self.assertEqual("value", value.value)
+        self.assertEqual(1, len(args))
+        self.assertEqual("param", args[0])
 
-    def test_parse_resolver_key_and_args_multiple(self):
-        tree = parse_grammar("${select(some_key, other, 5):asdf}")
-        self.assertEqual(1, len(tree.children))
-        node = tree.children[0]
-        self.assertTrue(isinstance(node, InterpolatedNode))
-        self.assertEqual("select", node.resolver_key)
-        self.assertEqual(3, len(node.args))
-        self.assertEqual("some_key", node.args[0])
-        self.assertEqual("other", node.args[1])
-        self.assertEqual(5, node.args[2])
+        args, value = parse_resolver_args_and_value("param1 : 5:value", n_args=2)
+        self.assertEqual("value", value.value)
+        self.assertEqual(2, len(args))
+        self.assertEqual("param1", args[0])
+        self.assertEqual(5, args[1])
