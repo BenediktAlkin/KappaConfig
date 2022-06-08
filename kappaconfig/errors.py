@@ -23,7 +23,10 @@ def requires_primitive_node_error():
     return TypeError("requires primitive node")
 
 def empty_resolver_key_error(value_in_brace):
-    return ValueError(f"empty resolver key for interpolation '${{{value_in_brace}}}'")
+    return ValueError(f"empty resolver key in '${{{value_in_brace}}}'")
+
+def empty_resolver_value_error(value_in_brace):
+    return ValueError(f"empty resolver value in '${{{value_in_brace}}}'")
 
 def missing_closing_brace_error(value):
     return ValueError(f"missing '}}' in '{value}'")

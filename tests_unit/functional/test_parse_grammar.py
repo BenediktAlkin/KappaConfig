@@ -1,6 +1,7 @@
 import unittest
 from kappaconfig.functional.parse_grammar import parse_grammar
 from kappaconfig.entities.grammar_tree_nodes import InterpolatedNode, FixedNode
+import kappaconfig.errors as errors
 
 class TestParseGrammar(unittest.TestCase):
     def test_single_interpolation(self):
@@ -68,3 +69,14 @@ class TestParseGrammar(unittest.TestCase):
 
         self.assertTrue(isinstance(tree.children[3], FixedNode))
         self.assertEqual("end", tree.children[3].value)
+
+    def test_empty_resolver_value(self):
+        expected = errors.empty_resolver_value_error("yaml:")
+        with self.assertRaises(type(expected)) as ex:
+            parse_grammar("${yaml:}")
+        self.assertEqual(expected.args[0], str(ex.exception))
+
+        expected = errors.empty_resolver_value_error("")
+        with self.assertRaises(type(expected)) as ex:
+            parse_grammar("${}")
+        self.assertEqual(expected.args[0], str(ex.exception))

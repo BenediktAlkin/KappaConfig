@@ -30,11 +30,17 @@ def _parse(value, parent_node):
         value_in_braces = value[:brace_end]
         colon_idx = _find_colon(value_in_braces)
         if colon_idx == -1:
+            if len(value_in_braces) == 0:
+                from ..errors import empty_resolver_value_error
+                raise empty_resolver_value_error(value_in_braces)
             node = InterpolatedNode(None)
         elif colon_idx == 0:
             from ..errors import empty_resolver_key_error
             raise empty_resolver_key_error(value_in_braces)
         else:
+            if len(value_in_braces) == colon_idx + 1:
+                from ..errors import empty_resolver_value_error
+                raise empty_resolver_value_error(value_in_braces)
             node = InterpolatedNode(value_in_braces[:colon_idx])
         parent_node.children.append(node)
 
