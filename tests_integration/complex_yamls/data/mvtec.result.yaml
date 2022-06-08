@@ -6,6 +6,7 @@ train:
   x_transforms:
     - kind: resize
       size: 256
+    - kind: random_horizontal_flip
 test:
   kind: mvtec
   category: bottle

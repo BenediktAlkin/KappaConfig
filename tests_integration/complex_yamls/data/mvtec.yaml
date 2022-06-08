@@ -1,2 +1,4 @@
 template: ${yaml:data/mvtec}
 template.vars.category: bottle
+train.x_transforms.add:
+  - kind: random_horizontal_flip
