@@ -20,9 +20,10 @@ lines.insert(metadata_line + 1, f"version = {get_tagname()}")
 
 # for unified access to the version number across python versions
 print("inserting version into kappaconfig/__init__.py")
+with open("kappaconfig/__init__.py", "r") as f:
+    content = f.read()
 with open("kappaconfig/__init__.py", "w") as f:
-    f.seek(0)
-    f.write(f"__version__ = {get_tagname()}\n")
+    f.write(f"__version__ = {get_tagname()}\n\n" + content)
 
 with open("setup.cfg", "w") as f:
     f.write("\n".join(lines))
