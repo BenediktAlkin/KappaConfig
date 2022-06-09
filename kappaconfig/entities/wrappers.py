@@ -36,6 +36,10 @@ class KCDict(KCObject):
     def items(self):
         return self.dict.items()
 
+    def pop(self, key):
+        return self.dict.pop(key)
+
+
 class KCList(KCObject):
     def __init__(self, *args):
         super().__init__()
