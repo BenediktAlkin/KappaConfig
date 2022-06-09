@@ -1,5 +1,5 @@
 # KappaConfig
-
+[![publish](https://github.com/BenediktAlkin/KappaConfig/actions/workflows/publish.yaml/badge.svg)](https://github.com/BenediktAlkin/KappaConfig/actions/workflows/publish.yaml)
 KappaConfig is a configuration framework that allows you to define a full fletched configuration in yaml. 
 Basic yaml and many yaml configuration frameworks are restrictive in how a yaml is processed.
 KappaConfig provides a rich extension to parsing yamls into primitive types.

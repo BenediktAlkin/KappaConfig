@@ -1,4 +1,4 @@
-name: test, update version number and publish to pypi
+name: publish
 
 on:
   push:
