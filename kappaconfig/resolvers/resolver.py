@@ -18,12 +18,15 @@ class Resolver:
     def resolve(self, node, root_node=None):
         node = deepcopy(node)
         result = {}
-        if root_node is None:
-            root_node = node
+        root_node_to_pass = node if root_node is None else root_node
         wrapped_node = KCDict(root=node)
-        self._resolve_collection(node, root_node=root_node, result=result, trace=[(wrapped_node, "root")])
+        self._resolve_collection(node, root_node=root_node_to_pass, result=result, trace=[(wrapped_node, "root")])
         processed_result = result["root"]
-        post_processed = self.post_process(processed_result)
+        # only postprocess from root call (e.g. template resolver also calls resolve but with a root_node parameter)
+        if root_node is None:
+            post_processed = self.post_process(processed_result)
+        else:
+            post_processed = processed_result
         return post_processed
 
 

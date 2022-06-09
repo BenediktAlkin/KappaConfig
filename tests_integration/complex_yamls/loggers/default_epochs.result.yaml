@@ -4,8 +4,6 @@ parameter_number_logger:
   kind: parameter_number_logger
 progress_logger:
   kind: progress_logger
-  every_n_updates: null
 train_loss_logger:
   kind: train_loss_logger
   every_n_epochs: 2
-  every_n_updates: null

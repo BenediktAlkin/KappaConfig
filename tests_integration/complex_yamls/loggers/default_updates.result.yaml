@@ -7,5 +7,4 @@ progress_logger:
   every_n_updates: 2
 train_loss_logger:
   kind: train_loss_logger
-  every_n_epochs: null
   every_n_updates: 2

@@ -5,24 +5,19 @@ parameter_number_logger:
   kind: parameter_number_logger
 progress_logger:
   kind: progress_logger
-  every_n_updates: null
 train_loss_logger:
   kind: train_loss_logger
   every_n_epochs: 2
-  every_n_updates: null
 # discriminator
 train_accuracy_logger:
   kind: accuracy_logger
   dataset_name: train_small
   every_n_epochs: 2
-  every_n_updates: null
 valid_accuracy_logger:
   kind: accuracy_logger
   dataset_name: valid
   every_n_epochs: 2
-  every_n_updates: null
 test_accuracy_logger:
   kind: accuracy_logger
   dataset_name: test
   every_n_epochs: 2
-  every_n_updates: null
