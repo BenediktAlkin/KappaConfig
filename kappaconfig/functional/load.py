@@ -14,5 +14,8 @@ def from_string(yaml_string):
     return from_primitive(yaml.safe_load(yaml_string))
 
 def from_cli():
-    """ e.g. python main.py obj.key=value """
+    """
+    e.g. python main.py obj.key=value
+    NOTE: unittests can add unexpected arguments that should be removed beforehand (e.g. with sys.argv = sys.argv[:1])
+    """
     return from_primitive(from_dotlist(sys.argv[1:]))
