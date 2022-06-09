@@ -1,6 +1,7 @@
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
 from ..functional.parse_grammar import parse_grammar
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
+from copy import deepcopy
 
 class Resolver:
     def __init__(
@@ -15,6 +16,7 @@ class Resolver:
 
 
     def resolve(self, node, root_node=None):
+        node = deepcopy(node)
         result = {}
         if root_node is None:
             root_node = node
