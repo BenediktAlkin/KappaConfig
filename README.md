@@ -11,7 +11,7 @@ With support for many use-cases out-of-the-box (which you can use, but don't hav
 
 # Install
 Install: `pip install kappaconfig`
-Update to latest release: `pip install --upgrade kappaconfig`
+Update to latest release: `pip install kappaconfig --upgrade`
 
 # Examples
 [This directory](https://github.com/BenediktAlkin/KappaConfig/tree/main/tests_integration/complex_yamls) contains 
