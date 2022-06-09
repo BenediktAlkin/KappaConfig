@@ -6,14 +6,17 @@ def get_tagname():
     args = parser.parse_args()
     return args.tagname.replace("v", "")
 
+
 with open("setup.cfg") as f:
     lines = f.read().splitlines()
 
+metadata_line = -1
 for i in range(len(lines)):
-    if lines[i].startswith("version"):
-        print(f"old version line: {lines[i]}")
-        lines[i] = f"version = {get_tagname()}"
-        print(f"new version line: {lines[i]}")
+    if "[metadata]" in lines[i]:
+        metadata_line = i
+
+print(f"inserting version after line {metadata_line}")
+lines.insert(metadata_line + 1, f"version = {get_tagname()}")
 
 with open("setup.cfg", "w") as f:
     f.write("\n".join(lines))
