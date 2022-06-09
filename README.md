@@ -10,7 +10,8 @@ With support for many use-cases out-of-the-box (which you can use, but don't hav
 - use yamls from multiple sources to compose one large yaml during program execution
 
 # Install
-`pip install kappaconfig`
+Install: `pip install kappaconfig`
+Update to latest release: `pip install --upgrade kappaconfig`
 
 # Examples
 [This directory](https://github.com/BenediktAlkin/KappaConfig/tree/main/tests_integration/complex_yamls) contains 
