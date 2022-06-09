@@ -9,6 +9,9 @@ With support for many use-cases out-of-the-box (which you can use, but don't hav
 - write python expressions in yaml
 - use yamls from multiple sources to compose one large yaml during program execution
 
+# Install
+`pip install kappaconfig`
+
 # Examples
 [This directory](https://github.com/BenediktAlkin/KappaConfig/tree/main/tests_integration/complex_yamls) contains 
 various examples on how KappaConfig can be used to create flexible and compact yaml files.
