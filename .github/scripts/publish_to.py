@@ -6,13 +6,14 @@ def get_tagname():
     args = parser.parse_args()
     return args.tagname
 
+
 tagname = get_tagname()
 assert tagname[0] == "v", "tagname must start with 'v'"
 version_numbers = tagname[1:].split(".")
 version_number_count = len(version_numbers)
 if version_number_count == 3:
     print(f"::set-output name=publish_to_prod::true")
-    print(f"::set-output name=publish_to_dev::true")
+    print(f"::set-output name=publish_to_dev::false")
 elif version_number_count == 4:
     print(f"::set-output name=publish_to_prod::false")
     print(f"::set-output name=publish_to_dev::true")
