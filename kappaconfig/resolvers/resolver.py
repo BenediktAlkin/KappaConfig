@@ -160,5 +160,3 @@ class Resolver:
             for i, item in enumerate(node):
                 trace.append((node, i))
                 self._post_process(item, trace=trace)
-        for post_processor in self.post_processors:
-            post_processor.postorder_process(node, trace=trace)

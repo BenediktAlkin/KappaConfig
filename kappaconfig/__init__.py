@@ -5,3 +5,4 @@ from .resolvers.collection_resolvers.collection_resolver import CollectionResolv
 from .resolvers.post_processors.post_processor import PostProcessor
 
 from .functional.load import from_string, from_file_uri
+from .functional.util import merge, mask_in, mask_out
