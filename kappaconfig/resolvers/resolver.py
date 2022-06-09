@@ -23,9 +23,8 @@ class Resolver:
         wrapped_node = KCDict(root=node)
         self._resolve_collection(node, root_node=root_node, result=result, trace=[(wrapped_node, "root")])
         processed_result = result["root"]
-        for post_processor in self.post_processors:
-            post_processor.process(processed_result)
-        return processed_result
+        post_processed = self.post_process(processed_result)
+        return post_processed
 
 
     def _resolve_collection(self, node, root_node, result, trace):
@@ -137,3 +136,26 @@ class Resolver:
         else:
             # concat as string
             return "".join(map(str, resolve_results))
+
+    def post_process(self, node):
+        wrapped = dict(root=node)
+        self._post_process(wrapped, trace=[])
+        if "root" not in wrapped:
+            from ..errors import empty_result
+            raise empty_result()
+        return wrapped["root"]
+
+    def _post_process(self, node, trace):
+        for post_processor in self.post_processors:
+            post_processor.preorder_process(node, trace=trace)
+        if isinstance(node, dict):
+            for key in node.keys():
+                trace.append((node, key))
+                self._post_process(node[key], trace=trace)
+                trace.pop()
+        elif isinstance(node, list):
+            for i, item in enumerate(node):
+                trace.append((node, i))
+                self._post_process(item, trace=trace)
+        for post_processor in self.post_processors:
+            post_processor.postorder_process(node, trace=trace)

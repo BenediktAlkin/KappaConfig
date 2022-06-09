@@ -1,6 +1,6 @@
 vars:
-  every_n_epochs: None
-  every_n_updates: None
+  every_n_epochs: null
+  every_n_updates: null
   train_accuracy_dataset_name: ???
   valid_accuracy_dataset_name: valid
   test_accuracy_dataset_name: test

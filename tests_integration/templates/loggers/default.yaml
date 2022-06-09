@@ -1,6 +1,6 @@
 vars:
-  every_n_epochs: None
-  every_n_updates: None
+  every_n_epochs: null
+  every_n_updates: null
 
 dataset_statistics_logger:
   kind: dataset_statistics_logger
