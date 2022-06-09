@@ -15,8 +15,4 @@ def from_string(yaml_string):
 
 def from_cli():
     """ e.g. python main.py obj.key=value """
-    # filter out stuff from tests
-    for i in range(1, len(sys.argv)):
-        if "tests" in sys.argv[i] and ".py" in sys.argv[i]:
-            del sys.argv[i]
     return from_primitive(from_dotlist(sys.argv[1:]))
