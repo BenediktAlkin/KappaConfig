@@ -35,6 +35,9 @@ class TestUtil(unittest.TestCase):
         actual = util.merge(base, to_merge)
         self.assertEqual(expected, actual)
 
+    def test_merge_returns_copy(self):
+        self.fail()
+
     def test_trace_to_full_accessor_empty(self):
         self.assertEqual("", util.trace_to_full_accessor([]))
 

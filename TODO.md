@@ -1,2 +1,3 @@
+- KCDict.pop with default return
 - test error messages
 - navigate to parent with . in interpolation (e.g. ${eval:${vars.total_epochs}-${..[0].max_epoch}})

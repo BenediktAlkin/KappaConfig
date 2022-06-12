@@ -6,3 +6,4 @@ from .resolvers.post_processors.post_processor import PostProcessor
 
 from .functional.load import from_string, from_file_uri, from_cli, from_primitive
 from .functional.util import merge, mask_in, mask_out
+from .functional.dotlist import from_dotlist, to_dotlist

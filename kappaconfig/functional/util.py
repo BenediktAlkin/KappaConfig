@@ -1,4 +1,5 @@
 from ..entities.wrappers import KCDict, KCList
+from copy import deepcopy
 
 def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None):
     # do something before traversing the node
@@ -71,6 +72,7 @@ def select(root_node, accessors):
     return cur_node
 
 def merge(base, to_merge):
+    base = deepcopy(base)
     for key, value in to_merge.items():
         accessors = string_to_accessors(key)
         node = select(base, accessors[:-1])
