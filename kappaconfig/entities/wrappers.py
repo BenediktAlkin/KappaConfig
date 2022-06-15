@@ -13,6 +13,9 @@ class KCScalar(KCObject):
     def __repr__(self):
         return repr(self.value)
 
+    def __eq__(self, other):
+        return type(self) == type(other) and self.value == other.value
+
 class KCDict(KCObject):
     def __init__(self, **kwargs):
         super().__init__()
@@ -38,6 +41,9 @@ class KCDict(KCObject):
 
     def pop(self, key):
         return self.dict.pop(key)
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.dict == other.dict
 
 
 class KCList(KCObject):
@@ -69,3 +75,12 @@ class KCList(KCObject):
             raise unexpected_type_error(KCList, other)
         self.list += other.list
         return self.list
+
+    def __len__(self):
+        return len(self.list)
+
+    def append(self, item):
+        self.list.append(item)
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.list == other.list

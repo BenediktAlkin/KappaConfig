@@ -1,9 +1,9 @@
 from .util import apply, accessors_to_string, string_to_accessors
-from ..entities.wrappers import KCObject
+from ..entities.wrappers import KCObject, KCList, KCDict, KCScalar
 import yaml
 
 def from_dotlist(dotlist):
-    result = dict(root={})
+    result = dict(root=KCDict())
     for entry in dotlist:
         accessor_value_split = entry.split("=")
         if len(accessor_value_split) != 2:
@@ -30,13 +30,13 @@ def from_dotlist(dotlist):
                 if isinstance(cur_accessor, int):
                     prev_node.append([])
                 elif cur_accessor not in prev_node:
-                    prev_node[cur_accessor] = []
+                    prev_node[cur_accessor] = KCList()
             else:
                 # create dict (if it doesn't exist already)
                 if isinstance(cur_accessor, int):
                     prev_node.append({})
                 elif cur_accessor not in prev_node:
-                    prev_node[cur_accessor] = {}
+                    prev_node[cur_accessor] = KCDict()
 
             # progress to next accessor
             prev_node = prev_node[cur_accessor]
@@ -50,9 +50,9 @@ def from_dotlist(dotlist):
             if len(prev_node) != last_accessor:
                 from ..errors import dotlist_requires_sequential_insert_error
                 raise dotlist_requires_sequential_insert_error()
-            prev_node.append(parsed_value)
+            prev_node.append(KCScalar(parsed_value))
         else:
-            prev_node[last_accessor] = parsed_value
+            prev_node[last_accessor] = KCScalar(parsed_value)
 
     return result["root"]
 

@@ -1,6 +1,7 @@
 import unittest
 import kappaconfig.functional.convert as convert
 import yaml
+from kappaconfig.entities.wrappers import KCScalar, KCList, KCDict
 
 class TestConvert(unittest.TestCase):
     def test_from_primitive_scalar_root(self):
@@ -25,3 +26,21 @@ class TestConvert(unittest.TestCase):
         """)
         converted = convert.from_primitive(primitive)
         self.assertEqual("value", converted["some"].value)
+
+    def test_to_primitive_scalar_root(self):
+        root_node = KCScalar(5)
+        expected = 5
+        actual = convert.to_primitive(root_node)
+        self.assertEqual(expected, actual)
+
+    def test_to_primitive_list_root(self):
+        root_node = KCList(5, 6)
+        expected = [5, 6]
+        actual = convert.to_primitive(root_node)
+        self.assertEqual(expected, actual)
+
+    def test_to_primitive_dict_root(self):
+        root_node = KCDict(some="value")
+        expected = dict(some="value")
+        actual = convert.to_primitive(root_node)
+        self.assertEqual(expected, actual)
