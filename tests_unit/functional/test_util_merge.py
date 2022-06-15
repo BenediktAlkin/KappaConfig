@@ -101,3 +101,25 @@ class TestUtil(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             _ = util.merge(base, to_merge)
         self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_list_merge_missing_strategy(self):
+        base = dict(a=[1])
+        to_merge = dict(a=[5])
+        expected = dict(a=[5])
+        actual = util.merge(base, to_merge)
+        self.assertEqual(expected, actual)
+
+    def test_list_merge_missing_strategy2(self):
+        base = dict(a=[1])
+        to_merge = dict(a=[7, 6])
+        expected = dict(a=[7, 6])
+        actual = util.merge(base, to_merge)
+        self.assertEqual(expected, actual)
+
+    def test_list_merge_invalid_strategy(self):
+        base = dict(a=[1])
+        to_merge = {"a.strat": [5]}
+        expected = errors.list_merge_invalid_resolving_strategy("a.strat")
+        with self.assertRaises(type(expected)) as ex:
+            _ = util.merge(base, to_merge)
+        self.assertEqual(expected.args[0], str(ex.exception))

@@ -117,12 +117,14 @@ def _merge_dict_fn(base, to_merge):
             elif accessor == "set":
                 parent_node = select(base, accessors[:-2])
                 parent_node[accessors[-2]] = value
-            continue
-
-        if accessor in node:
-            node[accessor] = _merge_fn(node[accessor], value)
+            else:
+                from ..errors import list_merge_invalid_resolving_strategy
+                raise list_merge_invalid_resolving_strategy(key)
         else:
-            node[accessor] = value
+            if accessor in node:
+                node[accessor] = _merge_fn(node[accessor], value)
+            else:
+                node[accessor] = value
 
 def mask_out(dict_, keys_to_mask_out):
     masked_dict = type(dict_)()

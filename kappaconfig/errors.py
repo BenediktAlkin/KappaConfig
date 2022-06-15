@@ -61,3 +61,6 @@ def empty_result():
 
 def incompatible_type(type1, type2):
     return TypeError(f"type '{type1}' is incompatible with '{type2}'")
+
+def list_merge_invalid_resolving_strategy(key):
+    return ValueError(f"merging two lists requires valid resolving strategy (key='{key}')")
