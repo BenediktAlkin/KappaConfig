@@ -72,7 +72,10 @@ def select(root_node, accessors):
     return cur_node
 
 def merge(base, to_merge):
+    if base is None:
+        return deepcopy(to_merge)
     base = deepcopy(base)
+    to_merge = deepcopy(to_merge)
     for key, value in to_merge.items():
         accessors = string_to_accessors(key)
         node = select(base, accessors[:-1])

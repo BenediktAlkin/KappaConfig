@@ -35,6 +35,13 @@ class TestUtil(unittest.TestCase):
         actual = util.merge(base, to_merge)
         self.assertEqual(expected, actual)
 
+    def test_merge_none(self):
+        base = None
+        to_merge = 5
+        expected = 5
+        actual = util.merge(base, to_merge)
+        self.assertEqual(expected, actual)
+
     def test_merge_returns_copy(self):
         base = dict(
             some_key=5,
