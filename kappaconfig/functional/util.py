@@ -79,10 +79,10 @@ def merge(base, to_merge):
 def _merge_fn(base, to_merge):
     if not isinstance(base, (KCList, list, KCDict, dict)):
         return to_merge
-    if isinstance(base, (KCList, list)) and not isinstance(to_merge, (KCList, list)):
+    if isinstance(to_merge, (KCList, list)) and not isinstance(base, (KCList, list)):
         from ..errors import incompatible_type
         raise incompatible_type(type(base), type(to_merge))
-    if isinstance(base, (KCDict, dict)) and not isinstance(to_merge, (KCDict, dict)):
+    if isinstance(to_merge, (KCDict, dict)) and not isinstance(base, (KCDict, dict)):
         from ..errors import incompatible_type
         raise incompatible_type(type(base), type(to_merge))
 
