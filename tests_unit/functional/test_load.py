@@ -49,11 +49,11 @@ class TestLoad(unittest.TestCase):
         sys.argv = sys.argv[:1] + ["some.object.key=value", "some.alist=[1,2,asdf]"]
         expected = KCDict(
             some=KCDict(
-                object=KCList(key=KCScalar("value")),
+                object=KCDict(key=KCScalar("value")),
                 alist=KCList(KCScalar(1), KCScalar(2), KCScalar("asdf")),
             ),
         )
-        actual = Resolver().resolve(load.from_cli())
+        actual = load.from_cli()
         self.assertEqual(expected, actual)
 
     def test_from_cli_merge(self):
@@ -63,7 +63,7 @@ class TestLoad(unittest.TestCase):
         some:
           alist:
             - will_be_overwritten
-          other: 23
+        other: 23
         """
         expected = dict(
             some=dict(

@@ -58,3 +58,6 @@ def invalid_resolver_key(resolver_key, valid_keys):
 
 def empty_result():
     return MissingValueError("empty result")
+
+def incompatible_type(type1, type2):
+    return TypeError(f"type '{type1}' is incompatible with '{type2}'")

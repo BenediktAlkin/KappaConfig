@@ -1,6 +1,7 @@
 import unittest
 import kappaconfig.functional.util as util
 import kappaconfig.errors as errors
+from kappaconfig.entities.wrappers import KCScalar
 
 class TestUtil(unittest.TestCase):
     def test_accessors_to_string(self):
@@ -21,39 +22,6 @@ class TestUtil(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             util.string_to_accessors(accessor_string)
         self.assertEqual(expected.args[0], str(ex.exception))
-
-    def test_merge_primitive(self):
-        base = dict(
-            some_key=5,
-            other_key=6
-        )
-        to_merge = dict(other_key=10)
-        expected = dict(
-            some_key=5,
-            other_key=10,
-        )
-        actual = util.merge(base, to_merge)
-        self.assertEqual(expected, actual)
-
-    def test_merge_none(self):
-        base = None
-        to_merge = 5
-        expected = 5
-        actual = util.merge(base, to_merge)
-        self.assertEqual(expected, actual)
-
-    def test_merge_returns_copy(self):
-        base = dict(
-            some_key=5,
-            other_key=6
-        )
-        to_merge = dict(other_key=10)
-        expected = dict(
-            some_key=5,
-            other_key=6,
-        )
-        _ = util.merge(base, to_merge)
-        self.assertEqual(expected, base)
 
     def test_trace_to_full_accessor_empty(self):
         self.assertEqual("", util.trace_to_full_accessor([]))

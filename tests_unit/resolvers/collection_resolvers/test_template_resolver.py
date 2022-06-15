@@ -108,7 +108,7 @@ class TestTemplateResolver(unittest.TestCase):
     def test_set_list_of_template(self):
         input_ = """
         template: ${yaml:tmp.yaml}
-        template.x_transforms:
+        template.x_transforms.set:
           - kind: random_horizontal_flip
         """
         expected = dict(
