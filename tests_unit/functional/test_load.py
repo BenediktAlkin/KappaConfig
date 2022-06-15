@@ -3,6 +3,7 @@ import unittest
 import kappaconfig.functional.load as load
 from kappaconfig.resolvers.resolver import Resolver
 from kappaconfig.functional.util import merge
+from kappaconfig.entities.wrappers import KCDict, KCScalar, KCList
 
 class TestLoad(unittest.TestCase):
     @staticmethod
@@ -43,12 +44,24 @@ class TestLoad(unittest.TestCase):
         actual = Resolver().resolve(load.from_cli())
         self.assertEqual(expected, actual)
 
+    def test_list_from_cli(self):
+        # remove any potential arguments (from other tests or unittest runner)
+        sys.argv = sys.argv[:1] + ["some.object.key=value", "some.alist=[1,2,asdf]"]
+        expected = KCDict(
+            some=KCDict(
+                object=KCList(key=KCScalar("value")),
+                alist=KCList(KCScalar(1), KCScalar(2), KCScalar("asdf")),
+            ),
+        )
+        actual = Resolver().resolve(load.from_cli())
+        self.assertEqual(expected, actual)
+
     def test_from_cli_merge(self):
         # remove any potential arguments (from other tests or unittest runner)
         sys.argv = sys.argv[:1] + ["some.object.key=value", "other=5", "some.alist=[1,2,asdf]"]
         yaml = """
         some:
-          list:
+          alist:
             - will_be_overwritten
           other: 23
         """

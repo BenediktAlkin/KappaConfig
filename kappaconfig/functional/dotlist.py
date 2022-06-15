@@ -1,5 +1,6 @@
 from .util import apply, accessors_to_string, string_to_accessors
 from ..entities.wrappers import KCObject, KCList, KCDict, KCScalar
+from .convert import from_primitive
 import yaml
 
 def from_dotlist(dotlist):
@@ -42,7 +43,7 @@ def from_dotlist(dotlist):
             prev_node = prev_node[cur_accessor]
 
         # parse value
-        parsed_value = yaml.safe_load(value)
+        parsed_value = from_primitive(yaml.safe_load(value))
 
         # insert current value
         last_accessor = accessors[-1]
@@ -50,9 +51,9 @@ def from_dotlist(dotlist):
             if len(prev_node) != last_accessor:
                 from ..errors import dotlist_requires_sequential_insert_error
                 raise dotlist_requires_sequential_insert_error()
-            prev_node.append(KCScalar(parsed_value))
+            prev_node.append(parsed_value)
         else:
-            prev_node[last_accessor] = KCScalar(parsed_value)
+            prev_node[last_accessor] = parsed_value
 
     return result["root"]
 
