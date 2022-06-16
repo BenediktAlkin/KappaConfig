@@ -11,6 +11,7 @@ With support for many use-cases out-of-the-box (which you can use, but don't hav
 
 # Install
 Install: `pip install kappaconfig`
+
 Update to latest release: `pip install kappaconfig --upgrade`
 
 # Examples
