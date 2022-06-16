@@ -172,12 +172,12 @@ class Resolver:
     def _process_recursive(self, node, trace, processors):
         for processor in processors:
             processor.preorder_process(node, trace=trace)
-        if isinstance(node, dict):
+        if isinstance(node, (dict, KCDict)):
             for key in node.keys():
                 trace.append((node, key))
                 self._process_recursive(node[key], trace=trace, processors=processors)
                 trace.pop()
-        elif isinstance(node, list):
+        elif isinstance(node, (list, KCList)):
             for i, item in enumerate(node):
                 trace.append((node, i))
                 self._process_recursive(item, trace=trace, processors=processors)
