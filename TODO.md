@@ -1,3 +1,5 @@
+- nested templates with parameters (optim as param for mae_ctor)
 - KCDict.pop with default return
 - navigate to parent with . in interpolation (e.g. ${eval:${vars.total_epochs}-${..[0].max_epoch}})
 - resolve should maybe warn if primitive type is encountered and automatically pack it
+- warning if templates.vars.something doesn't contain vars
