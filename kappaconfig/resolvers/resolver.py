@@ -82,7 +82,11 @@ class Resolver:
             if not isinstance(node.value, str):
                 resolve_result = node.value
             else:
-                resolve_result = self.resolve_scalar(node.value, root_node=root_node)
+                resolve_result = node.value
+                while True:
+                    resolve_result = self.resolve_scalar(resolve_result, root_node=root_node)
+                    if not isinstance(resolve_result, str) or not self._requires_resolve_scalar(resolve_result):
+                        break
 
             # resolved value might be a KCObject (e.g. when loading a nested yaml)
             if isinstance(resolve_result, KCObject):
@@ -104,6 +108,11 @@ class Resolver:
         else:
             from ..errors import unexpected_type_error
             raise unexpected_type_error([KCDict, KCList, KCScalar], node)
+
+    @staticmethod
+    def _requires_resolve_scalar(value):
+        grammar_tree = parse_grammar(value)
+        return len(grammar_tree.children) > 1 or isinstance(grammar_tree.children[0], InterpolatedNode)
 
     def resolve_scalar(self, value, root_node):
         grammar_tree = parse_grammar(value)

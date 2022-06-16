@@ -39,3 +39,62 @@ class TestInterpolationResolver(unittest.TestCase):
             other_key=5
         )
         self._resolve_and_assert(input_, expected)
+
+    def test_dict_interpolation(self):
+        input_ = """
+        schedule:
+          epochs: 5
+        model:
+          schedule: ${schedule}
+        """
+        expected = dict(
+            schedule=dict(epochs=5),
+            model=dict(schedule=dict(epochs=5)),
+        )
+        self._resolve_and_assert(input_, expected)
+
+    def test_dict_interpolation2(self):
+        input_ = """
+        schedule_temp:
+          epochs: 5
+        schedule: ${schedule_temp}
+        model:
+          schedule:
+            epochs: ${schedule.epochs}
+        """
+        expected = dict(
+            schedule_temp=dict(epochs=5),
+            schedule=dict(epochs=5),
+            model=dict(schedule=dict(epochs=5)),
+        )
+        self._resolve_and_assert(input_, expected)
+
+    def test_dict_interpolation3(self):
+        input_ = """
+        schedule_temp:
+          epochs: 5
+        schedule: ${schedule_temp}
+        model:
+          schedule: ${schedule}
+        """
+        expected = dict(
+            schedule_temp=dict(epochs=5),
+            schedule=dict(epochs=5),
+            model=dict(schedule=dict(epochs=5)),
+        )
+        self._resolve_and_assert(input_, expected)
+
+    def test_dict_interpolation4(self):
+        input_ = """
+        model:
+          schedule: ${schedule}
+        schedule: ${schedule_temp}
+        schedule_temp:
+          epochs: 5
+        """
+        expected = dict(
+            schedule_temp=dict(epochs=5),
+            schedule=dict(epochs=5),
+            model=dict(schedule=dict(epochs=5)),
+        )
+        self._resolve_and_assert(input_, expected)
