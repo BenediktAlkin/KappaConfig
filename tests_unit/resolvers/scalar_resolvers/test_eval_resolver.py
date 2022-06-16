@@ -38,3 +38,18 @@ class TestEvalResolver(unittest.TestCase):
             other_key=list(range(5)),
         )
         self._resolve_and_assert(input_, expected)
+
+    def test_nested2(self):
+        src = """
+        vars:
+          n_test_rotations: 2
+        transforms: ${eval:list(dict(kind='fixed_rotation', angle=360/${vars.n_test_rotations}*i) for i in range(${vars.n_test_rotations}))}
+        """
+        expected = dict(
+            vars=dict(n_test_rotations=2),
+            transforms=[
+                dict(kind="fixed_rotation", angle=0),
+                dict(kind="fixed_rotation", angle=180),
+            ],
+        )
+        self._resolve_and_assert(src, expected)
