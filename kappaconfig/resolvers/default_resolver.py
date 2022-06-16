@@ -5,8 +5,8 @@ from .collection_resolvers.template_resolver import TemplateResolver
 from .collection_resolvers.missing_value_resolver import MissingValueResolver
 from .scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
 from .scalar_resolvers.select_resolver import SelectResolver
-from .post_processors.remove_vars_post_processor import RemoveVarsPostProcessor
-from .post_processors.remove_nones_post_processor import RemoveNonesPostProcessor
+from .processors.remove_vars_post_processor import RemoveVarsPostProcessor
+from .processors.remove_nones_post_processor import RemoveNonesPostProcessor
 
 
 class DefaultResolver(Resolver):

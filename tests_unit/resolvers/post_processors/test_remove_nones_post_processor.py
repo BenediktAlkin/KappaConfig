@@ -2,7 +2,7 @@ import unittest
 
 from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.resolver import Resolver
-from kappaconfig.resolvers.post_processors.remove_nones_post_processor import RemoveNonesPostProcessor
+from kappaconfig.resolvers.processors.remove_nones_post_processor import RemoveNonesPostProcessor
 import kappaconfig.errors as errors
 
 class TestRemoveVarsPostProcessor(unittest.TestCase):
