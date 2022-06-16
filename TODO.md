@@ -1,3 +1,3 @@
 - KCDict.pop with default return
-- test error messages
 - navigate to parent with . in interpolation (e.g. ${eval:${vars.total_epochs}-${..[0].max_epoch}})
+- resolve should maybe warn if primitive type is encountered and automatically pack it
