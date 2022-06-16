@@ -7,20 +7,26 @@ class Resolver:
     def __init__(
             self, collection_resolvers=None,
             scalar_resolvers=None, default_scalar_resolver=None,
-            post_processors=None):
+            pre_processors=None, post_processors=None
+    ):
         self.collection_resolvers = collection_resolvers or []
         self.scalar_resolvers = scalar_resolvers or {}
         if default_scalar_resolver is not None:
             self.scalar_resolvers[None] = default_scalar_resolver
+        self.pre_processors = pre_processors or []
         self.post_processors = post_processors or []
 
 
     def resolve(self, node, root_node=None):
         node = deepcopy(node)
+        if root_node is None:
+            pre_processed = self.pre_process(node)
+        else:
+            pre_processed = node
         result = {}
-        root_node_to_pass = node if root_node is None else root_node
-        wrapped_node = KCDict(root=node)
-        self._resolve_collection(node, root_node=root_node_to_pass, result=result, trace=[(wrapped_node, "root")])
+        root_node_to_pass = pre_processed if root_node is None else root_node
+        wrapped_node = KCDict(root=pre_processed)
+        self._resolve_collection(pre_processed, root_node=root_node_to_pass, result=result, trace=[(wrapped_node, "root")])
         processed_result = result["root"]
         # only postprocess from root call (e.g. template resolver also calls resolve but with a root_node parameter)
         if root_node is None:
@@ -149,23 +155,29 @@ class Resolver:
             # concat as string
             return "".join(map(str, resolve_results))
 
+    def pre_process(self, node):
+        return self._process(node, self.pre_processors)
+
     def post_process(self, node):
+        return self._process(node, self.post_processors)
+
+    def _process(self, node, processors):
         wrapped = dict(root=node)
-        self._post_process(wrapped, trace=[])
+        self._process_recursive(wrapped, trace=[], processors=processors)
         if "root" not in wrapped:
             from ..errors import empty_result
             raise empty_result()
         return wrapped["root"]
 
-    def _post_process(self, node, trace):
-        for post_processor in self.post_processors:
-            post_processor.preorder_process(node, trace=trace)
+    def _process_recursive(self, node, trace, processors):
+        for processor in processors:
+            processor.preorder_process(node, trace=trace)
         if isinstance(node, dict):
             for key in node.keys():
                 trace.append((node, key))
-                self._post_process(node[key], trace=trace)
+                self._process_recursive(node[key], trace=trace, processors=processors)
                 trace.pop()
         elif isinstance(node, list):
             for i, item in enumerate(node):
                 trace.append((node, i))
-                self._post_process(item, trace=trace)
+                self._process_recursive(item, trace=trace, processors=processors)
