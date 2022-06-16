@@ -1,6 +1,6 @@
-from .post_processor import PostProcessor
+from .processor import Processor
 
-class RemoveVarsPostProcessor(PostProcessor):
+class RemoveVarsPostProcessor(Processor):
     def preorder_process(self, node, **_):
         if isinstance(node, dict) and "vars" in node:
             del node["vars"]

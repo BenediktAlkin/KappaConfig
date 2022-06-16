@@ -1,6 +1,6 @@
-from .post_processor import PostProcessor
+from .processor import Processor
 
-class RemoveNonesPostProcessor(PostProcessor):
+class RemoveNonesPostProcessor(Processor):
     """
     removes nodes that are set to None
     e.g.
