@@ -1,6 +1,7 @@
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
 from ..functional.parse_grammar import parse_grammar
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
+from ..functional.util import trace_to_full_accessor
 from copy import deepcopy
 
 class Resolver:
@@ -138,7 +139,8 @@ class Resolver:
             # resolve cur node
             if grammar_node.resolver_key not in self.scalar_resolvers:
                 from ..errors import invalid_resolver_key
-                raise invalid_resolver_key(grammar_node.resolver_key, list(self.scalar_resolvers.keys()))
+                raise invalid_resolver_key(grammar_node.resolver_key, list(self.scalar_resolvers.keys()),
+                                           trace_to_full_accessor(trace), root_node.source_id)
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
             resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node, trace=trace)
             return resolved_scalar

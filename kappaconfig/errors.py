@@ -1,3 +1,8 @@
+def _source_id_str(source_id):
+    if source_id is None:
+        return ""
+    return f" of source '{source_id}'"
+
 def unexpected_type_error(expected_type_or_types, actual_value):
     if isinstance(expected_type_or_types, list):
         expected_type_str = str(list(map(lambda t: t.__name__, expected_type_or_types)))
@@ -44,8 +49,8 @@ class InvalidAccessorError(Exception):
     pass
 
 def invalid_accessor_error(accessor_until_invalid, trace_str, source_id=None):
-    source_id_str = f" of source '{source_id}'" if source_id is not None else ""
-    return InvalidAccessorError(f"invalid accessor '{accessor_until_invalid}' in node '{trace_str}'{source_id_str}")
+    return InvalidAccessorError(f"invalid accessor '{accessor_until_invalid}' in node '{trace_str}'"
+                                f"{_source_id_str(source_id)}")
 
 def empty_parameter_error(args_and_value_str):
     return ValueError(f"empty parameter in '{args_and_value_str}'")
@@ -53,9 +58,10 @@ def empty_parameter_error(args_and_value_str):
 def missing_parameter_error(args_and_value_str, n_args):
     return ValueError(f"missing parameter in '{args_and_value_str}', expected {n_args} parameters")
 
-def invalid_resolver_key(resolver_key, valid_keys):
+def invalid_resolver_key(resolver_key, valid_keys, trace_str, source_id):
     # don't use key error here as it escapes the whole string and the ' characters
-    return ValueError(f"invalid resolver key '{resolver_key}' valid keys are: {valid_keys}")
+    return ValueError(f"invalid resolver key '{resolver_key}' in node '{trace_str}' (valid keys are: {valid_keys})"
+                      f"{_source_id_str(source_id)}")
 
 def empty_result():
     return MissingValueError("empty result")

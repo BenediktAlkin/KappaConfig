@@ -93,3 +93,29 @@ class TestDefaultResolverErrors(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_invalid_resolver_key(self):
+        source = """
+        trainer: ${asdf:trainers/discriminator}
+        """
+        resolver = DefaultResolver()
+        expected = errors.invalid_resolver_key("asdf", ["eval", "yaml", "select", None], "trainer", None)
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_invalid_resolver_key_in_nested(self):
+        source = """
+        trainer: 
+          template: ${yaml:trainers/discriminator}
+        """
+        discriminator_trainer = """
+        some: ${asdf:qwer}
+        """
+        templates = {"trainers/discriminator.yaml": discriminator_trainer}
+        resolver = DefaultResolver(**templates)
+        expected = errors.invalid_resolver_key(
+            "asdf", ["eval", "yaml", "select", None], "some", "trainers/discriminator.yaml")
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))
