@@ -12,7 +12,7 @@ class NestedYamlResolver(ScalarResolver):
 
         self.templates = templates
         if any(map(lambda template_value: not isinstance(template_value, str), templates.values())):
-            raise TypeError
+            raise TypeError("template values have to be string (they are a yaml in string format)")
 
     def resolve(self, value, **__):
         if isinstance(value, KCScalar):
@@ -29,8 +29,15 @@ class NestedYamlResolver(ScalarResolver):
             template = from_string(self.templates[value])
             # set source_id (as this simulates loading from file_uri)
             template.source_id = value
+        elif self.template_path is None:
+            from ...errors import template_path_has_to_be_set
+            raise template_path_has_to_be_set(value, list(self.templates.keys()))
         else:
             # load from template_path
+            template_path = self.template_path / value
+            if not template_path.exists():
+                from ...errors import template_file_doesnt_exist
+                raise template_file_doesnt_exist(str(template_path))
             template = from_file_uri(self.template_path / value)
 
         return template

@@ -63,3 +63,23 @@ class TestDefaultResolverErrors(unittest.TestCase):
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
 
+
+    def test_no_template_path(self):
+        source = """
+        trainer: ${yaml:trainers/discriminator}
+        """
+        resolver = DefaultResolver()
+        expected = errors.template_path_has_to_be_set("trainers/discriminator.yaml", [])
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_no_template_path_valid_inmemory_templates(self):
+        source = """
+        trainer: ${yaml:trainers/discriminator}
+        """
+        resolver = DefaultResolver(**{"some_template.yaml": ""})
+        expected = errors.template_path_has_to_be_set("trainers/discriminator.yaml", ["some_template.yaml"])
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))

@@ -65,3 +65,10 @@ def incompatible_type(type1, type2):
 
 def list_merge_invalid_resolving_strategy(key):
     return ValueError(f"merging two lists requires valid resolving strategy (key='{key}')")
+
+def template_path_has_to_be_set(template_key, valid_templates):
+    return ValueError(f"invalid template key '{template_key}' (no template path set and template key is not in "
+                      f"{str(valid_templates)})")
+
+def template_file_doesnt_exist(file_uri):
+    return FileNotFoundError(f"{file_uri} doesn't exist")
