@@ -83,3 +83,13 @@ class TestDefaultResolverErrors(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_invalid_template_key(self):
+        source = """
+        trainer: ${yaml:trainers/discriminator}
+        """
+        resolver = DefaultResolver(template_path="some_path")
+        expected = errors.template_file_doesnt_exist("some_path/trainers/discriminator.yaml")
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))

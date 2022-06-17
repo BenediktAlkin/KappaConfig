@@ -37,7 +37,7 @@ class NestedYamlResolver(ScalarResolver):
             template_path = self.template_path / value
             if not template_path.exists():
                 from ...errors import template_file_doesnt_exist
-                raise template_file_doesnt_exist(str(template_path))
+                raise template_file_doesnt_exist(template_path.as_posix())
             template = from_file_uri(self.template_path / value)
 
         return template
