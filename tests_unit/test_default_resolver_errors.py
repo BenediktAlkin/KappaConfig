@@ -38,3 +38,28 @@ class TestDefaultResolverErrors(unittest.TestCase):
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
 
+    def test_trace_to_invalid_interpolation_in_nested_template(self):
+        source = """
+        trainer: 
+          template: ${yaml:trainers/discriminator}
+        """
+        discriminator_trainer = """
+        kind: discriminator_trainer
+        loggers:
+          template: ${yaml:loggers/default}
+        """
+        default_loggers = """
+        progress_logger:
+          kind: progress_logger
+          every_n_epochs: ${vars.every_n_epochs}
+        """
+        templates = {
+            "trainers/discriminator.yaml": discriminator_trainer,
+            "loggers/default.yaml": default_loggers,
+        }
+        resolver = DefaultResolver(**templates)
+        expected = errors.invalid_accessor_error("vars", "progress_logger.every_n_epochs", "loggers/default.yaml")
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))
+
