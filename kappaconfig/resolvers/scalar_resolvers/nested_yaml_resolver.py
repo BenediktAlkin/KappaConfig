@@ -27,6 +27,8 @@ class NestedYamlResolver(ScalarResolver):
         if value in self.templates:
             # load from templates dict (pretty much only used for testing)
             template = from_string(self.templates[value])
+            # set source_id (as this simulates loading from file_uri)
+            template.source_id = value
         else:
             # load from template_path
             template = from_file_uri(self.template_path / value)

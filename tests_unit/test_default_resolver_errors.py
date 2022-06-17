@@ -19,3 +19,22 @@ class TestDefaultResolverErrors(unittest.TestCase):
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
 
+    def test_trace_to_invalid_interpolation_in_template(self):
+        source = """
+        datasets: 
+          template: ${yaml:datasets}
+        """
+        datasets_template = """
+        vars:
+          size: 224
+        train:
+          kind: mvtec
+          category: ${vars.category}
+        """
+        templates = {"datasets.yaml": datasets_template}
+        resolver = DefaultResolver(**templates)
+        expected = errors.invalid_accessor_error("vars.category", "train.category", "datasets.yaml")
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))
+

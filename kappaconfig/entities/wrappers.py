@@ -1,4 +1,10 @@
 class KCObject:
+    def __init__(self):
+        # field to identify from which file this KCObject comes from (for verbose error messages)
+        # is set from outside if there exists a source_id
+        # (in case that the KCObject is created from a string it is None)
+        self.source_id = None
+
     def __repr__(self):
         raise NotImplementedError
 

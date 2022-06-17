@@ -5,7 +5,11 @@ from .dotlist import from_dotlist
 
 def from_file_uri(file_uri):
     with open(file_uri) as f:
-        return from_primitive(yaml.safe_load(f))
+        source = yaml.safe_load(f)
+    root_node = from_primitive(source)
+    root_node.source_id = file_uri
+    return root_node
+
 
 def from_string(yaml_string):
     if not isinstance(yaml_string, str):

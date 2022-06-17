@@ -70,7 +70,8 @@ def select(root_node, accessors, trace=None):
             cur_node = cur_node[accessor]
         except:
             from ..errors import invalid_accessor_error
-            raise invalid_accessor_error(accessors_to_string(accessors[:i+1]), trace_to_full_accessor(trace))
+            raise invalid_accessor_error(accessors_to_string(accessors[:i+1]), trace_to_full_accessor(trace),
+                                         root_node.source_id)
     return cur_node
 
 def merge(base, to_merge):
