@@ -43,8 +43,8 @@ def missing_value_error(full_accessor):
 class InvalidAccessorError(Exception):
     pass
 
-def invalid_accessor_error(accessor_until_invalid, full_accessor):
-    return InvalidAccessorError(f"invalid accessor '{accessor_until_invalid}' within '{full_accessor}'")
+def invalid_accessor_error(accessor_until_invalid, trace_str):
+    return InvalidAccessorError(f"invalid accessor '{accessor_until_invalid}' in '{trace_str}'")
 
 def empty_parameter_error(args_and_value_str):
     return ValueError(f"empty parameter in '{args_and_value_str}'")

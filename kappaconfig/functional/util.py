@@ -23,7 +23,8 @@ def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=Non
 
 
 def accessors_to_string(accessors):
-    if len(accessors) == 0: return ""
+    if accessors is None or len(accessors) == 0:
+        return ""
 
     if isinstance(accessors[0], int):
         result = f"[{accessors[0]}]"
@@ -58,17 +59,18 @@ def string_to_accessors(accessor_str):
     return result
 
 def trace_to_full_accessor(trace):
+    if trace is None: return ""
     accessors = list(map(lambda tr: tr[1], trace[1:]))
     return accessors_to_string(accessors)
 
-def select(root_node, accessors):
+def select(root_node, accessors, trace=None):
     cur_node = root_node
     for i, accessor in enumerate(accessors):
         try:
             cur_node = cur_node[accessor]
         except:
             from ..errors import invalid_accessor_error
-            raise invalid_accessor_error(accessors_to_string(accessors[:i+1]), accessors_to_string(accessors))
+            raise invalid_accessor_error(accessors_to_string(accessors[:i+1]), trace_to_full_accessor(trace))
     return cur_node
 
 def merge(base, to_merge):

@@ -90,7 +90,7 @@ class Resolver:
             else:
                 resolve_result = node.value
                 while True:
-                    resolve_result = self.resolve_scalar(resolve_result, root_node=root_node)
+                    resolve_result = self.resolve_scalar(resolve_result, root_node=root_node, trace=trace)
                     if not isinstance(resolve_result, str) or not self._requires_resolve_scalar(resolve_result):
                         break
 
@@ -120,27 +120,27 @@ class Resolver:
         grammar_tree = parse_grammar(value)
         return len(grammar_tree.children) > 1 or isinstance(grammar_tree.children[0], InterpolatedNode)
 
-    def resolve_scalar(self, value, root_node):
+    def resolve_scalar(self, value, root_node, trace):
         grammar_tree = parse_grammar(value)
-        resolved_scalar = self._resolve_scalar(grammar_tree, root_node=root_node)
+        resolved_scalar = self._resolve_scalar(grammar_tree, root_node=root_node, trace=trace)
         return resolved_scalar
 
-    def _resolve_scalar(self, grammar_node, root_node):
+    def _resolve_scalar(self, grammar_node, root_node, trace):
         if isinstance(grammar_node, RootNode):
-            resolve_results = [self._resolve_scalar(child, root_node=root_node) for child in grammar_node.children]
+            resolve_results = [self._resolve_scalar(child, root_node=root_node, trace=trace) for child in grammar_node.children]
             return self._merge_scalar_resolve_results(resolve_results)
         elif isinstance(grammar_node, FixedNode):
             return grammar_node.value
         elif isinstance(grammar_node, InterpolatedNode):
             # resolve children
-            resolve_results = [self._resolve_scalar(child, root_node=root_node) for child in grammar_node.children]
+            resolve_results = [self._resolve_scalar(child, root_node=root_node, trace=trace) for child in grammar_node.children]
             resolve_result = self._merge_scalar_resolve_results(resolve_results)
             # resolve cur node
             if grammar_node.resolver_key not in self.scalar_resolvers:
                 from ..errors import invalid_resolver_key
                 raise invalid_resolver_key(grammar_node.resolver_key, list(self.scalar_resolvers.keys()))
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
-            resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node)
+            resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node, trace=trace)
             return resolved_scalar
         else:
             from ..errors import unexpected_type_error
