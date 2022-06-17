@@ -1,4 +1,4 @@
-from ..entities.wrappers import KCDict, KCList, KCScalar
+from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
 from copy import deepcopy
 
 def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None):
@@ -70,8 +70,8 @@ def select(root_node, accessors, trace=None):
             cur_node = cur_node[accessor]
         except:
             from ..errors import invalid_accessor_error
-            raise invalid_accessor_error(accessors_to_string(accessors[:i+1]), trace_to_full_accessor(trace),
-                                         root_node.source_id)
+            source_id = root_node.source_id if isinstance(root_node, KCObject) else None
+            raise invalid_accessor_error(accessors_to_string(accessors[:i+1]), trace_to_full_accessor(trace), source_id)
     return cur_node
 
 def merge(base, to_merge):

@@ -71,4 +71,4 @@ def template_path_has_to_be_set(template_key, valid_templates):
                       f"{str(valid_templates)})")
 
 def template_file_doesnt_exist(file_uri):
-    return FileNotFoundError(f"{file_uri} doesn't exist")
+    return FileNotFoundError(f"template file '{file_uri}' doesn't exist")
