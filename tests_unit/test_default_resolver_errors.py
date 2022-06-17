@@ -119,3 +119,30 @@ class TestDefaultResolverErrors(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_invalid_eval(self):
+        source = """
+        trainer: ${eval:asdfasdf}
+        """
+        resolver = DefaultResolver()
+        expected = errors.invalid_evaluate_expression(
+            "asdfasdf", NameError("name 'asdfasdf' is not defined"), "trainer", None)
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_invalid_eval_in_nested(self):
+        source = """
+        trainer: 
+          template: ${yaml:trainers/discriminator}
+        """
+        discriminator_trainer = """
+        some: ${eval:asdfasdf}
+        """
+        templates = {"trainers/discriminator.yaml": discriminator_trainer}
+        resolver = DefaultResolver(**templates)
+        expected = errors.invalid_evaluate_expression(
+            "asdfasdf", NameError("name 'asdfasdf' is not defined"), "some", "trainers/discriminator.yaml")
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))

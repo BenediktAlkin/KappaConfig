@@ -78,3 +78,7 @@ def template_path_has_to_be_set(template_key, valid_templates):
 
 def template_file_doesnt_exist(file_uri):
     return FileNotFoundError(f"template file '{file_uri}' doesn't exist")
+
+def invalid_evaluate_expression(expression, error, trace_str, source_id):
+    return ValueError(f"invalid eval expression '{expression}' (raised {type(error).__name__}: {str(error)}) in node "
+                      f"'{trace_str}'{_source_id_str(source_id)}")
