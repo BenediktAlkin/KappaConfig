@@ -20,13 +20,13 @@ class TestResolver(unittest.TestCase):
         self.assertEqual("value", actual["some"])
 
     def test_resolve_invalid_resolver_key(self):
-        expected = errors.invalid_resolver_key("asdf", [])
+        expected = errors.invalid_resolver_key("asdf", [], "", None)
         with self.assertRaises(type(expected)) as ex:
             Resolver().resolve(from_string("${asdf:qwer}"))
         self.assertEqual(expected.args[0], str(ex.exception))
 
     def test_resolve_invalid_resolver_key_multiple_valid_keys(self):
-        expected = errors.invalid_resolver_key("asdf", ["q", "b", None])
+        expected = errors.invalid_resolver_key("asdf", ["q", "b", None], "", None)
         with self.assertRaises(type(expected)) as ex:
             Resolver(
                 scalar_resolvers=dict(q=None, b=None),
