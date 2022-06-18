@@ -63,14 +63,15 @@ def trace_to_full_accessor(trace):
     accessors = list(map(lambda tr: tr[1], trace[1:]))
     return accessors_to_string(accessors)
 
-def select(root_node, accessors, trace=None):
+def select(root_node, accessors, trace=None, source_id=None):
     cur_node = root_node
     for i, accessor in enumerate(accessors):
         try:
             cur_node = cur_node[accessor]
         except:
             from ..errors import invalid_accessor_error
-            source_id = root_node.source_id if isinstance(root_node, KCObject) else None
+            if source_id is None:
+                source_id = root_node.source_id if isinstance(root_node, KCObject) else None
             raise invalid_accessor_error(accessors_to_string(accessors[:i+1]), trace_to_full_accessor(trace), source_id)
     return cur_node
 

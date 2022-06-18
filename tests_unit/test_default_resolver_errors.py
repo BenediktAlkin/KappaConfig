@@ -146,3 +146,38 @@ class TestDefaultResolverErrors(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_invalid_select_accessor(self):
+        source = """
+        trainer: ${select:some:asdf}
+        """
+        resolver = DefaultResolver()
+        expected = errors.invalid_accessor_error("some", "trainer")
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_invalid_select_accessor2(self):
+        source = """
+        trainer: ${select:some.value:${eval:dict(some=5)}}
+        """
+        resolver = DefaultResolver()
+        expected = errors.invalid_accessor_error("some.value", "trainer")
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_invalid_select_accessor_nested(self):
+        source = """
+        trainer: 
+          template: ${yaml:trainers/discriminator}
+        """
+        discriminator_trainer = """
+        some: ${select:key:qwer}
+        """
+        templates = {"trainers/discriminator.yaml": discriminator_trainer}
+        resolver = DefaultResolver(**templates)
+        expected = errors.invalid_accessor_error("key", "some", "trainers/discriminator.yaml")
+        with self.assertRaises(type(expected)) as ex:
+            resolver.resolve(from_string(source))
+        self.assertEqual(expected.args[0], str(ex.exception))
