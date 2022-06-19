@@ -1,5 +1,6 @@
 vars:
   model_params: ???
+  optim: null
 
 encoder:
   kind: vit.masked_encoder
@@ -8,6 +9,7 @@ encoder:
   depth: ${vars.model_params.encoder_depth}
   num_heads: ${vars.model_params.encoder_attention_heads}
   mlp_ratio: ${vars.model_params.mlp_ratio}
+  optim: ${vars.optim}
 decoder:
   kind: vit.masked_decoder
   patch_size: ${vars.model_params.patch_size}
@@ -16,3 +18,4 @@ decoder:
   depth: ${vars.model_params.decoder_depth}
   num_heads: ${vars.model_params.decoder_attention_heads}
   mlp_ratio: ${vars.model_params.mlp_ratio}
+  optim: ${vars.optim}

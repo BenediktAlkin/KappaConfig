@@ -57,6 +57,9 @@ class TestComplexYamls(unittest.TestCase):
     def test_models_mae(self):
         self.resolve_yaml("models/mae.yaml")
 
+    def test_models_mae_with_schedule(self):
+        self.resolve_yaml("models/mae_with_schedule.yaml")
+
     def test_models_vit(self):
         self.resolve_yaml("models/vit.yaml")
 

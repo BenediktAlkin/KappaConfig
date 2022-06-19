@@ -1,0 +1,13 @@
+vars:
+  model_key: base
+
+
+template: ${yaml:models/mae_ctor}
+template.vars.model_params: ${select:${vars.pretrain_model_key}:${yaml:models/mae_128}}
+template.vars.optim:
+  template: ${yaml:optims/adamw_scaledlr}
+  template.vars.batch_size: ${vars.batch_size}
+  schedule:
+    template: ${yaml:schedules/warmup_cosine}
+    template.vars.total_epochs: ${vars.total_epochs}
+    template.vars.warmup_factor: 0.05
