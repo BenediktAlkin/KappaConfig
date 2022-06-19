@@ -54,9 +54,8 @@ class TemplateResolver(CollectionResolver):
                     resolved_template_params = {}
                     for k, v in template_params.items():
                         new_key = k.replace("template.", "")
-                        if isinstance(v, KCScalar):
-                            v = root_resolver.resolve(v, root_node=root_node)
-                            v = from_primitive(v)
+                        v = root_resolver.resolve(v, root_node=root_node)
+                        v = from_primitive(v)
                         resolved_template_params[new_key] = v
 
                     kc_resolved_scalar = from_primitive(resolved_scalar)
