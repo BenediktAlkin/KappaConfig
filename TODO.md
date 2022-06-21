@@ -1,3 +1,4 @@
+- ${select:<invalid_key>:${yaml:models/mae_224}} error message is still bad
 - KCDict.pop with default return
 - navigate to parent with . in interpolation (e.g. ${eval:${vars.total_epochs}-${..[0].max_epoch}})
 - resolve should maybe warn if primitive type is encountered and automatically pack it
