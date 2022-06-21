@@ -58,6 +58,9 @@ def empty_parameter_error(args_and_value_str):
 def missing_parameter_error(args_and_value_str, n_args):
     return ValueError(f"missing parameter in '{args_and_value_str}', expected {n_args} parameters")
 
+def missing_scalar_resolver_value(args_and_value_str):
+    return ValueError(f"missing value for ScalarResolver in '{args_and_value_str}'")
+
 def invalid_resolver_key(resolver_key, valid_keys, trace_str, source_id):
     # don't use key error here as it escapes the whole string and the ' characters
     return ValueError(f"invalid resolver key '{resolver_key}' in node '{trace_str}' (valid keys are: {valid_keys})"

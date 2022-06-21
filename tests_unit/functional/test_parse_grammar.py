@@ -87,6 +87,12 @@ class TestParseGrammar(unittest.TestCase):
             parse_grammar("${}")
         self.assertEqual(expected.args[0], str(ex.exception))
 
+    def test_parse_resolver_args_and_value_missing_scalar_resolver_value(self):
+        expected = errors.missing_scalar_resolver_value("")
+        with self.assertRaises(type(expected)) as ex:
+            parse_resolver_args_and_value("")
+        self.assertEqual(expected.args[0], str(ex.exception))
+
     def test_parse_resolver_args_and_value_missing_parameter(self):
         expected = errors.missing_parameter_error("only_value", n_args=1)
         with self.assertRaises(type(expected)) as ex:
@@ -105,6 +111,12 @@ class TestParseGrammar(unittest.TestCase):
         self.assertEqual("param", args[0])
 
         args, value = parse_resolver_args_and_value("param1 : 5:value", n_args=2)
+        self.assertEqual("value", value.value)
+        self.assertEqual(2, len(args))
+        self.assertEqual("param1", args[0])
+        self.assertEqual(5, args[1])
+
+        args, value = parse_resolver_args_and_value("param1:5:value")
         self.assertEqual("value", value.value)
         self.assertEqual(2, len(args))
         self.assertEqual("param1", args[0])

@@ -70,13 +70,16 @@ def _find_colon(value):
         return -1
     return value.index(":")
 
-def parse_resolver_args_and_value(args_and_value, n_args):
+def parse_resolver_args_and_value(args_and_value, n_args=None):
     args = []
     remaining_str = args_and_value
-    for i in range(n_args):
+    while True:
         if not ":" in remaining_str:
-            from ..errors import missing_parameter_error
-            raise missing_parameter_error(args_and_value, n_args)
+            break
+        if n_args is not None and len(args) >= n_args:
+            # if the value can have a colon inside it (e.g. a ${yaml:<yaml_file>} node can resolve to 'x:5')
+            # it needs to specify n_args in order to only parse the parameters
+            break
         colon_idx = remaining_str.index(":")
         arg_str = remaining_str[:colon_idx]
         if len(arg_str) == 0:
@@ -88,4 +91,21 @@ def parse_resolver_args_and_value(args_and_value, n_args):
         parsed_arg = yaml.safe_load(arg_str)
         args.append(parsed_arg)
         remaining_str = remaining_str[colon_idx+1:]
-    return args, from_string(remaining_str)
+
+    # value is the remainig string after the last colon (and is required)
+    if len(remaining_str) == 0:
+        from ..errors import missing_scalar_resolver_value
+        raise missing_scalar_resolver_value(args_and_value)
+    value = from_string(remaining_str)
+
+    # raise error if wrong number of parameters
+    if n_args is not None and len(args) != n_args:
+        if len(args) < n_args:
+            from ..errors import missing_parameter_error
+            raise missing_parameter_error(args_and_value, n_args)
+        else:
+            # there is no way to tell if there are superflous parameters as they are absorbed into the value
+            # a value can contain colons so there is no way to tell if it is a parameter or part of the value
+            pass
+
+    return args, value
