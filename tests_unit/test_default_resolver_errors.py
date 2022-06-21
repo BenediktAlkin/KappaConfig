@@ -99,7 +99,7 @@ class TestDefaultResolverErrors(unittest.TestCase):
         trainer: ${asdf:trainers/discriminator}
         """
         resolver = DefaultResolver()
-        expected = errors.invalid_resolver_key("asdf", ["eval", "yaml", "select", None], "trainer", None)
+        expected = errors.invalid_resolver_key("asdf", list(resolver.scalar_resolvers.keys()), "trainer", None)
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -115,7 +115,7 @@ class TestDefaultResolverErrors(unittest.TestCase):
         templates = {"trainers/discriminator.yaml": discriminator_trainer}
         resolver = DefaultResolver(**templates)
         expected = errors.invalid_resolver_key(
-            "asdf", ["eval", "yaml", "select", None], "some", "trainers/discriminator.yaml")
+            "asdf", list(resolver.scalar_resolvers.keys()), "some", "trainers/discriminator.yaml")
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))

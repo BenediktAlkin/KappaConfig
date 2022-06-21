@@ -1,6 +1,7 @@
 from .resolver import Resolver
 from .scalar_resolvers.interpolation_resolver import InterpolationResolver
 from .scalar_resolvers.eval_resolver import EvalResolver
+from .scalar_resolvers.merge_with_dotlist_resolver import MergeWithDotlistResolver
 from .collection_resolvers.template_resolver import TemplateResolver
 from .collection_resolvers.missing_value_resolver import MissingValueResolver
 from .scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
@@ -21,6 +22,7 @@ class DefaultResolver(Resolver):
                 eval=EvalResolver(),
                 yaml=NestedYamlResolver(template_path=template_path, **(templates or {})),
                 select=SelectResolver(),
+                merge_with_dotlist=MergeWithDotlistResolver()
             ),
             post_processors=[
                 RemoveVarsPostProcessor(),

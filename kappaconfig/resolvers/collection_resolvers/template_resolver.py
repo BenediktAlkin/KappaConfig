@@ -5,6 +5,7 @@ from ...functional.convert import from_primitive
 from ..resolver import Resolver
 from ..scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
 from ..scalar_resolvers.interpolation_resolver import InterpolationResolver
+from ..scalar_resolvers.merge_with_dotlist_resolver import MergeWithDotlistResolver
 from ..scalar_resolvers.select_resolver import SelectResolver
 from ..scalar_resolvers.eval_resolver import EvalResolver
 
@@ -20,6 +21,7 @@ class TemplateResolver(CollectionResolver):
                 eval=EvalResolver(),
                 yaml=NestedYamlResolver(template_path=template_path, **templates),
                 select=SelectResolver(),
+                merge_with_dotlist=MergeWithDotlistResolver()
             ),
         )
 

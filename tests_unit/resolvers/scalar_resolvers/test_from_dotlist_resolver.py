@@ -5,7 +5,7 @@ from kappaconfig.resolvers.scalar_resolvers.from_dotlist_resolver import FromDot
 from kappaconfig.resolvers.resolver import Resolver
 import kappaconfig.errors as errors
 
-class TestEvalResolver(unittest.TestCase):
+class TestFromDotlistResolver(unittest.TestCase):
     @staticmethod
     def _resolve(source):
         resolver = Resolver(
