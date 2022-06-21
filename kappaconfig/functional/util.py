@@ -1,4 +1,4 @@
-from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
+from ..entities.wrappers import KCDict, KCList, KCObject
 from copy import deepcopy
 
 def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None):

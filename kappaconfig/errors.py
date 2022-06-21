@@ -24,6 +24,10 @@ def dotlist_requires_sequential_insert_error():
     msg = "constructing a list from a dotlist requires the indices of the list to start at 0 and be in order"
     return ValueError(msg)
 
+def dotlist_resolver_empty_entry(args_str, trace_str):
+    return ValueError(f"expected space-seperated dotlist entries (e.g. 'value=3 obj.key=34') but found empty entry in "
+                     f"'{args_str}' of node '{trace_str}'")
+
 def requires_primitive_node_error():
     return TypeError("requires primitive node")
 
