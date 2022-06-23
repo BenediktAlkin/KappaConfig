@@ -8,6 +8,7 @@ from .scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
 from .scalar_resolvers.select_resolver import SelectResolver
 from .processors.remove_vars_post_processor import RemoveVarsPostProcessor
 from .processors.remove_nones_post_processor import RemoveNonesPostProcessor
+from .processors.if_post_processor import IfPostProcessor
 
 
 class DefaultResolver(Resolver):
@@ -25,6 +26,7 @@ class DefaultResolver(Resolver):
                 merge_with_dotlist=MergeWithDotlistResolver()
             ),
             post_processors=[
+                IfPostProcessor(),
                 RemoveVarsPostProcessor(),
                 RemoveNonesPostProcessor(),
             ]

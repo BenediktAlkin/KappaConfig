@@ -175,7 +175,10 @@ class Resolver:
         for processor in processors:
             processor.preorder_process(node, trace=trace)
         if isinstance(node, (dict, KCDict)):
-            for key in node.keys():
+            keys = list(node.keys())
+            for key in keys:
+                # collection might change during processing (e.g. IfPostProcessor)
+                if key not in node.keys(): continue
                 trace.append((node, key))
                 self._process_recursive(node[key], trace=trace, processors=processors)
                 trace.pop()
