@@ -17,8 +17,8 @@ def unexpected_type_error(expected_type_or_types, actual_value):
 def index_out_of_range_error(idx, max_idx):
     return IndexError(f"index {idx} is out of range (0<={idx}<{max_idx} evaluates to false)")
 
-def dotlist_entry_requires_equal_sign_error():
-    return ValueError("every entry in a dotlist requires a '=' character")
+def dotlist_entry_requires_equal_sign_error(entry):
+    return ValueError(f"invalid dotlist entry '{entry}' (every entry in a dotlist requires a '=' character)")
 
 def dotlist_requires_sequential_insert_error():
     msg = "constructing a list from a dotlist requires the indices of the list to start at 0 and be in order"

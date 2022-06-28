@@ -4,6 +4,7 @@ import kappaconfig.functional.load as load
 from kappaconfig.resolvers.resolver import Resolver
 from kappaconfig.functional.util import merge
 from kappaconfig.entities.wrappers import KCDict, KCScalar, KCList
+import kappaconfig.errors as errors
 
 class TestLoad(unittest.TestCase):
     @staticmethod
@@ -31,6 +32,25 @@ class TestLoad(unittest.TestCase):
             input_ = f.read()
         actual = Resolver().resolve(load.from_string(input_))
         self.assertEqual(expected, actual)
+
+    def test_from_cli_ignore_invalid(self):
+        # remove any potential arguments (from other tests or unittest runner)
+        sys.argv = sys.argv[:1] + ["some.object.key=value", "--test_run", "--device", "cuda:0"]
+        expected = dict(
+            some=dict(
+                object=dict(key="value"),
+            ),
+        )
+        actual = Resolver().resolve(load.from_cli())
+        self.assertEqual(expected, actual)
+
+    def test_from_cli_invalid_arg(self):
+        # remove any potential arguments (from other tests or unittest runner)
+        sys.argv = sys.argv[:1] + ["--test_run"]
+        expected = errors.dotlist_entry_requires_equal_sign_error("--test_run")
+        with self.assertRaises(type(expected)) as ex:
+            Resolver().resolve(load.from_cli(ignore_invalid_args=False))
+        self.assertEqual(expected.args[0], str(ex.exception))
 
     def test_from_cli(self):
         # remove any potential arguments (from other tests or unittest runner)

@@ -3,13 +3,15 @@ from ..entities.wrappers import KCObject, KCList, KCDict, KCScalar
 from .convert import from_primitive
 import yaml
 
-def from_dotlist(dotlist):
+def from_dotlist(dotlist, ignore_invalid_entries=False):
     result = dict(root=KCDict())
     for entry in dotlist:
         accessor_value_split = entry.split("=")
         if len(accessor_value_split) != 2:
+            if ignore_invalid_entries:
+                continue
             from..errors import dotlist_entry_requires_equal_sign_error
-            raise dotlist_entry_requires_equal_sign_error()
+            raise dotlist_entry_requires_equal_sign_error(entry)
         accessor_string, value = accessor_value_split
         accessors = string_to_accessors(accessor_string)
 

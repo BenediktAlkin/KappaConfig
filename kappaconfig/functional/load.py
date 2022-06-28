@@ -17,9 +17,9 @@ def from_string(yaml_string):
         raise unexpected_type_error(str, yaml_string)
     return from_primitive(yaml.safe_load(yaml_string))
 
-def from_cli():
+def from_cli(ignore_invalid_args=True):
     """
     e.g. python main.py obj.key=value
     NOTE: unittests can add unexpected arguments that should be removed beforehand (e.g. with sys.argv = sys.argv[:1])
     """
-    return from_primitive(from_dotlist(sys.argv[1:]))
+    return from_primitive(from_dotlist(sys.argv[1:], ignore_invalid_entries=ignore_invalid_args))
