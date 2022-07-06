@@ -17,11 +17,14 @@ def unexpected_type_error(expected_type_or_types, actual_value):
 def index_out_of_range_error(idx, max_idx):
     return IndexError(f"index {idx} is out of range (0<={idx}<{max_idx} evaluates to false)")
 
+class DotlistGrammarError(Exception):
+    pass
+
 def dotlist_entry_requires_equal_sign_error(entry):
-    return ValueError(f"invalid dotlist entry '{entry}' (every entry in a dotlist requires a '=' character)")
+    return DotlistGrammarError(f"invalid dotlist entry '{entry}' (every entry in a dotlist requires a '=' character)")
 
 def dotlist_entry_multiple_equal_signs_error(entry):
-    return ValueError(f"invalid dotlist entry '{entry}' (every entry in a dotlist requires exactly one '=' character)")
+    return DotlistGrammarError(f"invalid dotlist entry '{entry}' (every entry in a dotlist requires exactly one '=' character)")
 
 def dotlist_requires_sequential_insert_error():
     msg = "constructing a list from a dotlist requires the indices of the list to start at 0 and be in order"
@@ -43,21 +46,25 @@ def empty_resolver_value_error(value_in_brace):
 def missing_closing_brace_error(value):
     return ValueError(f"missing '}}' in '{value}'")
 
+class AccessorGrammarError(Exception):
+    pass
+
 def empty_accessor_error(full_accessor):
-    return ValueError(f"empty accessor in '{full_accessor}'")
+    return AccessorGrammarError(f"empty accessor in '{full_accessor}'")
 
 def dict_accessor_has_to_be_identifier_error(full_accessor, dict_accessor):
-    return ValueError(f"dictionary accessor '{dict_accessor}' in '{full_accessor}' has to be valid python identifier")
+    msg = f"dictionary accessor '{dict_accessor}' in '{full_accessor}' has to be valid python identifier"
+    return AccessorGrammarError(msg)
 
 def dict_accessor_has_to_start_with_letter_error(full_accessor, dict_accessor):
-    return ValueError(f"dictionary accessor '{dict_accessor}' of '{full_accessor}' has to start with letter but started "
-                      f"with '{dict_accessor[0]}'")
+    return AccessorGrammarError(f"dictionary accessor '{dict_accessor}' of '{full_accessor}' has to start with letter "
+                                f"but started with '{dict_accessor[0]}'")
 
 def missing_closing_bracket_error(full_accessor, list_accessor):
-    return ValueError(f"missing ']' in '{list_accessor}' of accessor '{full_accessor}'")
+    return AccessorGrammarError(f"missing ']' in '{list_accessor}' of accessor '{full_accessor}'")
 
 def list_accessor_has_to_be_int_error(full_accessor, list_accessor):
-    return ValueError(f"list accessor '{list_accessor}' of accessor '{full_accessor}' has to convertable to int")
+    return AccessorGrammarError(f"list accessor '{list_accessor}' of accessor '{full_accessor}' has to convertable to int")
 
 class MissingValueError(Exception):
     pass
