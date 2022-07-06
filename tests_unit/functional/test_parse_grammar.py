@@ -1,5 +1,5 @@
 import unittest
-from kappaconfig.functional.parse_grammar import parse_grammar, parse_resolver_args_and_value
+from kappaconfig.grammar.parse_grammar import parse_grammar, parse_resolver_args_and_value
 from kappaconfig.entities.grammar_tree_nodes import InterpolatedNode, FixedNode
 import kappaconfig.errors as errors
 

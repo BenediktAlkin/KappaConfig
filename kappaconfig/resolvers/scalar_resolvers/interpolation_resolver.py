@@ -1,7 +1,7 @@
 from .scalar_resolver import ScalarResolver
 from ...functional.util import select
 from ...entities.wrappers import KCScalar
-from ...functional.accessor_grammar import parse_accessor
+from kappaconfig.grammar.accessor_grammar import parse_accessor
 
 class InterpolationResolver(ScalarResolver):
     def resolve(self, value, root_node, trace, **__):

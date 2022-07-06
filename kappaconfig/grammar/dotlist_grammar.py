@@ -1,4 +1,4 @@
-from .accessor_grammar import parse_accessor
+from kappaconfig.grammar.accessor_grammar import parse_accessor
 
 def parse_dotlist_entry(entry):
     split = entry.split("=")

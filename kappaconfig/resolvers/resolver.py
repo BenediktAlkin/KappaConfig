@@ -1,5 +1,5 @@
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
-from ..functional.parse_grammar import parse_grammar
+from kappaconfig.grammar.parse_grammar import parse_grammar
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from ..functional.util import trace_to_full_accessor
 from copy import deepcopy

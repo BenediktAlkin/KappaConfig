@@ -1,6 +1,6 @@
 from ..entities.wrappers import KCDict, KCList, KCObject
 from copy import deepcopy
-from .accessor_grammar import parse_accessor
+from kappaconfig.grammar.accessor_grammar import parse_accessor
 
 def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None):
     # do something before traversing the node

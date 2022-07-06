@@ -1,7 +1,7 @@
 from .util import apply, accessors_to_string
 from ..entities.wrappers import KCObject, KCList, KCDict
 from .convert import from_primitive
-from .dotlist_grammar import parse_dotlist_entry
+from kappaconfig.grammar.dotlist_grammar import parse_dotlist_entry
 from ..errors import DotlistGrammarError, AccessorGrammarError
 import yaml
 

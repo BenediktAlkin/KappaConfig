@@ -1,5 +1,5 @@
 from .from_dotlist_resolver import FromDotlistResolver
-from ...functional.parse_grammar import parse_resolver_args_and_value
+from kappaconfig.grammar.parse_grammar import parse_resolver_args_and_value
 from ...functional.util import merge
 
 
