@@ -152,14 +152,14 @@ class TestDefaultResolverErrors(unittest.TestCase):
         trainer: ${select:some:asdf}
         """
         resolver = DefaultResolver()
-        expected = errors.invalid_accessor_error("some", "trainer")
+        expected = errors.cant_apply_accessor_to_scalar("some", "asdf")
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
 
     def test_invalid_select_accessor2(self):
         source = """
-        trainer: ${select:some.value:${eval:dict(some=5)}}
+        trainer: ${select:some.value:${eval:dict(some=dict(asdf=5))}}
         """
         resolver = DefaultResolver()
         expected = errors.invalid_accessor_error("some.value", "trainer")
@@ -173,7 +173,7 @@ class TestDefaultResolverErrors(unittest.TestCase):
           template: ${yaml:trainers/discriminator}
         """
         discriminator_trainer = """
-        some: ${select:key:qwer}
+        some: ${select:key:${eval:dict(asdf='qwer')}}
         """
         templates = {"trainers/discriminator.yaml": discriminator_trainer}
         resolver = DefaultResolver(**templates)

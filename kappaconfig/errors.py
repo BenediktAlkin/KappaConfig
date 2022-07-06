@@ -76,6 +76,14 @@ def invalid_accessor_error(accessor_until_invalid, trace_str, source_id=None):
     return InvalidAccessorError(f"invalid accessor '{accessor_until_invalid}' in node '{trace_str}'"
                                 f"{_source_id_str(source_id)}")
 
+class CantApplyAccessorToScalar(Exception):
+    pass
+
+def cant_apply_accessor_to_scalar(accessor, scalar):
+    # in some cases the scalar repr is already wrapped into ' --> remove duplicate ''
+    scalar_str = f"'{scalar}'".replace("''", "'")
+    return CantApplyAccessorToScalar(f"can't apply accessor '{accessor}' to scalar {scalar_str}")
+
 def empty_parameter_error(args_and_value_str):
     return ValueError(f"empty parameter in '{args_and_value_str}'")
 

@@ -1,6 +1,7 @@
-from ..entities.wrappers import KCDict, KCList, KCObject
+from ..entities.wrappers import KCDict, KCList, KCObject, KCScalar
 from copy import deepcopy
 from ..grammar.accessor_grammar import parse_accessor
+
 
 def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None):
     # do something before traversing the node
@@ -46,6 +47,10 @@ def trace_to_full_accessor(trace):
 def select(root_node, accessors, trace=None, source_id=None):
     cur_node = root_node
     for i, accessor in enumerate(accessors):
+        if isinstance(cur_node, KCScalar):
+            from ..errors import cant_apply_accessor_to_scalar
+            raise cant_apply_accessor_to_scalar(accessor, cur_node)
+
         try:
             cur_node = cur_node[accessor]
         except:
