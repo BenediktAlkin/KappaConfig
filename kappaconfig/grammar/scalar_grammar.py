@@ -3,13 +3,13 @@ from ..entities.grammar_tree_nodes import RootNode, InterpolatedNode, FixedNode
 from ..entities.wrappers import KCScalar
 from ..functional.load import from_string
 
-def parse_grammar(value):
+def parse_scalar(value):
     root_node = RootNode()
-    _parse(value, root_node)
+    _parse_scalar(value, root_node)
     return root_node
 
 
-def _parse(value, parent_node):
+def _parse_scalar(value, parent_node):
     if isinstance(value, KCScalar):
         value = value.value
     if not isinstance(value, str):
@@ -47,7 +47,7 @@ def _parse(value, parent_node):
         parent_node.children.append(node)
 
         # parse recursively
-        _parse(value[colon_idx + 1:brace_end], node)
+        _parse_scalar(value[colon_idx + 1:brace_end], node)
         value = value[brace_end + 1:]
 
 

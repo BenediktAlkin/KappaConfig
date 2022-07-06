@@ -1,11 +1,11 @@
 import unittest
-from kappaconfig.grammar.parse_grammar import parse_grammar, parse_resolver_args_and_value
+from kappaconfig.grammar.scalar_grammar import parse_scalar, parse_resolver_args_and_value
 from kappaconfig.entities.grammar_tree_nodes import InterpolatedNode, FixedNode
 import kappaconfig.errors as errors
 
 class TestParseGrammar(unittest.TestCase):
     def test_single_interpolation(self):
-        tree = parse_grammar("${obj.key}")
+        tree = parse_scalar("${obj.key}")
         self.assertEqual(1, len(tree.children))
         interp_node = tree.children[0]
         self.assertTrue(isinstance(interp_node, InterpolatedNode))
@@ -16,7 +16,7 @@ class TestParseGrammar(unittest.TestCase):
         self.assertEqual("obj.key", fixed_node.value)
 
     def test_single_resolver(self):
-        tree = parse_grammar("${eval:obj.key}")
+        tree = parse_scalar("${eval:obj.key}")
         self.assertEqual(1, len(tree.children))
         interp_node = tree.children[0]
         self.assertTrue(isinstance(interp_node, InterpolatedNode))
@@ -27,7 +27,7 @@ class TestParseGrammar(unittest.TestCase):
         self.assertEqual("obj.key", fixed_node.value)
 
     def test_nested(self):
-        tree = parse_grammar("${eval:${obj.key}/5}")
+        tree = parse_scalar("${eval:${obj.key}/5}")
 
         # check ${eval:}
         self.assertEqual(1, len(tree.children))
@@ -50,7 +50,7 @@ class TestParseGrammar(unittest.TestCase):
         self.assertEqual("/5", fixed_node.value)
 
     def test_mixed_root(self):
-        tree = parse_grammar("start${obj.key}${eval:vars.variable}end")
+        tree = parse_scalar("start${obj.key}${eval:vars.variable}end")
 
         self.assertEqual(4, len(tree.children))
         self.assertTrue(isinstance(tree.children[0], FixedNode))
@@ -73,18 +73,18 @@ class TestParseGrammar(unittest.TestCase):
     def test_empty_resolver_key(self):
         expected = errors.empty_resolver_key_error(":something")
         with self.assertRaises(type(expected)) as ex:
-            parse_grammar("${:something}")
+            parse_scalar("${:something}")
         self.assertEqual(expected.args[0], str(ex.exception))
 
     def test_empty_resolver_value(self):
         expected = errors.empty_resolver_value_error("yaml:")
         with self.assertRaises(type(expected)) as ex:
-            parse_grammar("${yaml:}")
+            parse_scalar("${yaml:}")
         self.assertEqual(expected.args[0], str(ex.exception))
 
         expected = errors.empty_resolver_value_error("")
         with self.assertRaises(type(expected)) as ex:
-            parse_grammar("${}")
+            parse_scalar("${}")
         self.assertEqual(expected.args[0], str(ex.exception))
 
     def test_parse_resolver_args_and_value_missing_scalar_resolver_value(self):

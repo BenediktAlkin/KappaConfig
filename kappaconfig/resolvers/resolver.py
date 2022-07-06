@@ -1,5 +1,5 @@
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
-from ..grammar.scalar_grammar import parse_grammar
+from ..grammar.scalar_grammar import parse_scalar
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from ..functional.util import trace_to_full_accessor
 from copy import deepcopy
@@ -118,11 +118,11 @@ class Resolver:
 
     @staticmethod
     def _requires_resolve_scalar(value):
-        grammar_tree = parse_grammar(value)
+        grammar_tree = parse_scalar(value)
         return len(grammar_tree.children) > 1 or isinstance(grammar_tree.children[0], InterpolatedNode)
 
     def resolve_scalar(self, value, root_node, trace):
-        grammar_tree = parse_grammar(value)
+        grammar_tree = parse_scalar(value)
         resolved_scalar = self._resolve_scalar(grammar_tree, root_node=root_node, trace=trace)
         return resolved_scalar
 
