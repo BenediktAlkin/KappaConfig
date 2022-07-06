@@ -20,6 +20,9 @@ def index_out_of_range_error(idx, max_idx):
 def dotlist_entry_requires_equal_sign_error(entry):
     return ValueError(f"invalid dotlist entry '{entry}' (every entry in a dotlist requires a '=' character)")
 
+def dotlist_entry_multiple_equal_signs_error(entry):
+    return ValueError(f"invalid dotlist entry '{entry}' (every entry in a dotlist requires exactly one '=' character)")
+
 def dotlist_requires_sequential_insert_error():
     msg = "constructing a list from a dotlist requires the indices of the list to start at 0 and be in order"
     return ValueError(msg)
@@ -40,8 +43,21 @@ def empty_resolver_value_error(value_in_brace):
 def missing_closing_brace_error(value):
     return ValueError(f"missing '}}' in '{value}'")
 
-def missing_closing_bracket_error(value):
-    return ValueError(f"missing ']' in '{value}'")
+def empty_accessor_error(full_accessor):
+    return ValueError(f"empty accessor in '{full_accessor}'")
+
+def dict_accessor_has_to_be_identifier_error(full_accessor, dict_accessor):
+    return ValueError(f"dictionary accessor '{dict_accessor}' in '{full_accessor}' has to be valid python identifier")
+
+def dict_accessor_has_to_start_with_letter_error(full_accessor, dict_accessor):
+    return ValueError(f"dictionary accessor '{dict_accessor}' of '{full_accessor}' has to start with letter but started "
+                      f"with '{dict_accessor[0]}'")
+
+def missing_closing_bracket_error(full_accessor, list_accessor):
+    return ValueError(f"missing ']' in '{list_accessor}' of accessor '{full_accessor}'")
+
+def list_accessor_has_to_be_int_error(full_accessor, list_accessor):
+    return ValueError(f"list accessor '{list_accessor}' of accessor '{full_accessor}' has to convertable to int")
 
 class MissingValueError(Exception):
     pass

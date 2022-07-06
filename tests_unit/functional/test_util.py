@@ -10,19 +10,6 @@ class TestUtil(unittest.TestCase):
         actual = util.accessors_to_string(accessors)
         self.assertEqual(expected, actual)
 
-    def test_string_to_accessors(self):
-        accessor_string = "some.asd[1][3].q[3]"
-        expected = ["some", "asd", 1, 3, "q", 3]
-        actual = util.string_to_accessors(accessor_string)
-        self.assertEqual(expected, actual)
-
-    def test_string_to_accessors_missing_closing_bracket(self):
-        accessor_string = "some.asd[1"
-        expected = errors.missing_closing_bracket_error("[1")
-        with self.assertRaises(type(expected)) as ex:
-            util.string_to_accessors(accessor_string)
-        self.assertEqual(expected.args[0], str(ex.exception))
-
     def test_trace_to_full_accessor_empty(self):
         self.assertEqual("", util.trace_to_full_accessor([]))
 

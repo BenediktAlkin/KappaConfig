@@ -1,5 +1,6 @@
 from ..entities.wrappers import KCDict, KCList, KCObject
 from copy import deepcopy
+from .accessor_grammar import parse_accessor
 
 def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None):
     # do something before traversing the node
@@ -35,27 +36,6 @@ def accessors_to_string(accessors):
             result += f"[{accessor}]"
         else:
             result += f".{accessor}"
-    return result
-
-def string_to_accessors(accessor_str):
-    if accessor_str == "": return []
-
-    result = []
-    dot_splits = accessor_str.split(".")
-    for dot_split in dot_splits:
-        bracket_splits = dot_split.split("[")
-        # add dictionary accessor
-        if bracket_splits[0] != "":
-            result.append(bracket_splits[0])
-
-        # add list accessors
-        for bracket_split in bracket_splits[1:]:
-            # remove closing bracket (']')
-            if bracket_split[-1] != "]":
-                from ..errors import missing_closing_bracket_error
-                raise missing_closing_bracket_error(f"[{bracket_split}")
-            list_accessor = bracket_split[:-1]
-            result.append(int(list_accessor))
     return result
 
 def trace_to_full_accessor(trace):
@@ -107,7 +87,7 @@ def _merge_list_fn(base, to_merge):
 
 def _merge_dict_fn(base, to_merge):
     for key, value in to_merge.items():
-        accessors = string_to_accessors(key)
+        accessors = parse_accessor(key)
         node = select(base, accessors[:-1])
         accessor = accessors[-1]
 
