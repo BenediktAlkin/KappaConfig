@@ -3,7 +3,7 @@ from kappaconfig.grammar.scalar_grammar import parse_scalar, parse_resolver_args
 from kappaconfig.entities.grammar_tree_nodes import InterpolatedNode, FixedNode
 import kappaconfig.errors as errors
 
-class TestParseGrammar(unittest.TestCase):
+class TestScalarGrammar(unittest.TestCase):
     def test_single_interpolation(self):
         tree = parse_scalar("${obj.key}")
         self.assertEqual(1, len(tree.children))
