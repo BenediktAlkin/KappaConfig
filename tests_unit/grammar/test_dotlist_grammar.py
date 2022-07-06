@@ -14,6 +14,10 @@ class TestDotlistGrammar(unittest.TestCase):
         source = "--invalid"
         self._test_error(source, errors.dotlist_entry_requires_equal_sign_error(source))
 
-    def test_from_dotlist_invalid_twoequal(self):
+    def test_from_dotlist_twoequal(self):
         source = "some_string=some_value=3"
-        self._test_error(source, errors.dotlist_entry_multiple_equal_signs_error(source))
+        actual_accessor, actual_value = parse_dotlist_entry(source)
+        expected_accessor = ["some_string"]
+        expected_value = "some_value=3"
+        self.assertEqual(actual_accessor, expected_accessor)
+        self.assertEqual(actual_value, expected_value)
