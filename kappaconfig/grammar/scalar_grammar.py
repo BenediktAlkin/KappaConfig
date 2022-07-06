@@ -1,7 +1,7 @@
 import yaml
-from kappaconfig.entities.grammar_tree_nodes import RootNode, InterpolatedNode, FixedNode
-from kappaconfig.entities.wrappers import KCScalar
-from kappaconfig.functional.load import from_string
+from ..entities.grammar_tree_nodes import RootNode, InterpolatedNode, FixedNode
+from ..entities.wrappers import KCScalar
+from ..functional.load import from_string
 
 def parse_grammar(value):
     root_node = RootNode()

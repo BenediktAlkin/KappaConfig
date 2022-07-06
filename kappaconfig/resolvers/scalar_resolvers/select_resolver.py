@@ -1,7 +1,7 @@
 from .scalar_resolver import ScalarResolver
 from ...functional.util import select
-from kappaconfig.grammar.parse_grammar import parse_resolver_args_and_value
-from kappaconfig.grammar.accessor_grammar import parse_accessor
+from ...grammar.scalar_grammar import parse_resolver_args_and_value
+from ...grammar.accessor_grammar import parse_accessor
 
 class SelectResolver(ScalarResolver):
     """
