@@ -96,3 +96,10 @@ class TestLoad(unittest.TestCase):
         merged = merge(load.from_string(yaml), cli)
         actual = Resolver().resolve(merged)
         self.assertEqual(expected, actual)
+
+    def test_from_cli_ignore_equals_in_runname(self):
+        # remove any potential arguments (from other tests or unittest runner)
+        sys.argv = sys.argv[:1] + ["--run_name", "imagenet vit-b patch_size=16"]
+        expected = {}
+        cli = load.from_cli()
+        self.assertEqual(expected, Resolver().resolve(cli))
