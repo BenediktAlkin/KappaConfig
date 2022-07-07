@@ -2,7 +2,7 @@ import sys
 import unittest
 import kappaconfig.functional.load as load
 from kappaconfig.resolvers.resolver import Resolver
-from kappaconfig.functional.util import merge
+from kappaconfig.functional.merge import merge
 from kappaconfig.entities.wrappers import KCDict, KCScalar, KCList
 import kappaconfig.errors as errors
 

@@ -1,6 +1,7 @@
 from .collection_resolver import CollectionResolver
 from ...entities.wrappers import KCDict, KCScalar
-from ...functional.util import mask_in, mask_out, merge
+from ...functional.util import mask_in, mask_out
+from ...functional.merge import merge
 from ...functional.convert import from_primitive
 from ..resolver import Resolver
 from ..scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
