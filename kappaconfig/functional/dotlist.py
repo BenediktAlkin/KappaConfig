@@ -25,8 +25,8 @@ def from_dotlist(dotlist, ignore_invalid_entries=False):
             # lists can only be created in sequential order
             if isinstance(cur_accessor, int):
                 if len(prev_node) != cur_accessor:
-                    from ..errors import dotlist_requires_sequential_insert_error
-                    raise dotlist_requires_sequential_insert_error()
+                    from ..errors import requires_sequential_insert_error
+                    raise requires_sequential_insert_error()
 
             # create missing datastructures
             if isinstance(next_accessor, int):
@@ -52,8 +52,8 @@ def from_dotlist(dotlist, ignore_invalid_entries=False):
         last_accessor = accessors[-1]
         if isinstance(last_accessor, int):
             if len(prev_node) != last_accessor:
-                from ..errors import dotlist_requires_sequential_insert_error
-                raise dotlist_requires_sequential_insert_error()
+                from ..errors import requires_sequential_insert_error
+                raise requires_sequential_insert_error()
             prev_node.append(parsed_value)
         else:
             prev_node[last_accessor] = parsed_value

@@ -47,7 +47,7 @@ class TestUnpackAccessor(unittest.TestCase):
         source = """
         a.[5]: 5
         """
-        expected = errors.dotlist_requires_sequential_insert_error()
+        expected = errors.requires_sequential_insert_error()
         self._unpack_and_assert_fails(source, expected)
 
     def test_invalid_unpack(self):

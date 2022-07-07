@@ -23,7 +23,7 @@ class DotlistGrammarError(Exception):
 def dotlist_entry_requires_equal_sign_error(entry):
     return DotlistGrammarError(f"invalid dotlist entry '{entry}' (every entry in a dotlist requires a '=' character)")
 
-def dotlist_requires_sequential_insert_error():
+def requires_sequential_insert_error():
     msg = "constructing a list from a dotlist requires the indices of the list to start at 0 and be in order"
     return ValueError(msg)
 

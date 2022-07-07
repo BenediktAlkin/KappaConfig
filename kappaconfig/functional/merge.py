@@ -3,7 +3,7 @@ from copy import deepcopy
 from ..grammar.accessor_grammar import parse_accessor
 from .util import select
 
-def merge(base, to_merge, allow_path_accessors=True):
+def merge(base, to_merge):
     """
     merges two objects into one
     :param base:
@@ -18,9 +18,7 @@ def merge(base, to_merge, allow_path_accessors=True):
     """
     base = deepcopy(base)
     to_merge = deepcopy(to_merge)
-    if not allow_path_accessors:
-        pass
-    return _merge_fn(dict(root=base), dict(root=to_merge), allow_path_accessors=allow_path_accessors)["root"]
+    return _merge_fn(dict(root=base), dict(root=to_merge))["root"]
 
 def _merge_fn(base, to_merge):
     if not isinstance(base, (KCList, list, KCDict, dict)):
