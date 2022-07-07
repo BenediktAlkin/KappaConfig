@@ -1,7 +1,7 @@
 from ..entities.wrappers import KCDict, KCList, KCObject, KCScalar
 
 
-def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None):
+def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=None, container=None, trace=None):
     # do something before traversing the node
     if pre_fn is not None:
         pre_fn(node=node, parent_node=parent_node, parent_accessor=parent_accessor, container=container)

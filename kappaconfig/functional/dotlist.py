@@ -15,6 +15,7 @@ def from_dotlist(dotlist, ignore_invalid_entries=False):
                 continue
             raise
 
+        # TODO this should probably be replace by unpack_accessors methods
         # create missing parent objects
         prev_node = result["root"]
         for accessor_idx in range(len(accessors[:-1])):

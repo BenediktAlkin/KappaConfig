@@ -3,10 +3,24 @@ from copy import deepcopy
 from ..grammar.accessor_grammar import parse_accessor
 from .util import select
 
-def merge(base, to_merge):
+def merge(base, to_merge, allow_path_accessors=True):
+    """
+    merges two objects into one
+    :param base:
+    :param to_merge:
+    :param allow_path_accessors:
+    if True -> base={'obj.property': 5} to_merge={'obj': 3} will return {'obj.property': 5, 'obj': 3}
+    if False -> base={'obj.property': 5} to_merge={'obj': 3} will return {'obj'} as base is resolved into
+    {'obj': {'property': 5}}
+    if False -> base={'obj': 3} to_merge={'obj.property': 5} will throw an error as 'obj' should have a property
+    'property' but 'obj' is an int
+    :return: merged object where to_merge dominates base i.e. base={'obj': 5} to_merge={'obj': 3} will return {'obj': 3}
+    """
     base = deepcopy(base)
     to_merge = deepcopy(to_merge)
-    return _merge_fn(dict(root=base), dict(root=to_merge))["root"]
+    if not allow_path_accessors:
+        pass
+    return _merge_fn(dict(root=base), dict(root=to_merge), allow_path_accessors=allow_path_accessors)["root"]
 
 def _merge_fn(base, to_merge):
     if not isinstance(base, (KCList, list, KCDict, dict)):

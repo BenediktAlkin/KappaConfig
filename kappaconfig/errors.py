@@ -117,3 +117,6 @@ def template_file_doesnt_exist(file_uri):
 def invalid_evaluate_expression(expression, error, trace_str, source_id):
     return ValueError(f"invalid eval expression '{expression}' (raised {type(error).__name__}: {str(error)}) in node "
                       f"'{trace_str}'{_source_id_str(source_id)}")
+
+def invalid_unpack_operation(full_accessor, scalar_accessor):
+    return ValueError(f"invalid unpack operation: can't unpack '{full_accessor}' as '{scalar_accessor}' is a scalar")
