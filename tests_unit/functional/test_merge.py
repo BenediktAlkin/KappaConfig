@@ -121,5 +121,5 @@ class TestUtil(unittest.TestCase):
         to_merge = {"a.strat": [5]}
         expected = errors.list_merge_invalid_resolving_strategy("a.strat")
         with self.assertRaises(type(expected)) as ex:
-            _ = merge(base, to_merge)
+            merge(base, to_merge)
         self.assertEqual(expected.args[0], str(ex.exception))
