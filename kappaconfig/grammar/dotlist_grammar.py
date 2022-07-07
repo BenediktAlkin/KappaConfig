@@ -1,4 +1,4 @@
-from .accessor_grammar import parse_accessor
+from .accessor_grammar import parse_accessors
 
 def parse_dotlist_entry(entry):
     if "=" not in entry:
@@ -8,5 +8,5 @@ def parse_dotlist_entry(entry):
     accessor_string = entry[:equals_idx]
     value_string = entry[equals_idx + 1:]
 
-    accessor = parse_accessor(accessor_string)
-    return accessor, value_string
+    accessors = parse_accessors(accessor_string)
+    return accessors, value_string, accessor_string

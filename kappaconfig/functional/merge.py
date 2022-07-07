@@ -1,6 +1,6 @@
 from ..entities.wrappers import KCDict, KCList
 from copy import deepcopy
-from ..grammar.accessor_grammar import parse_accessor
+from ..grammar.accessor_grammar import parse_accessors
 from .util import select
 
 def merge(base, to_merge):
@@ -47,7 +47,7 @@ def _merge_list_fn(base, to_merge):
 
 def _merge_dict_fn(base, to_merge):
     for key, value in to_merge.items():
-        accessors = parse_accessor(key)
+        accessors = parse_accessors(key)
         node = select(base, accessors[:-1])
         accessor = accessors[-1]
 

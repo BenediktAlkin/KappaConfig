@@ -1,7 +1,7 @@
 from ..entities.wrappers import KCDict, KCObject, KCList, KCScalar
 from .util import apply, accessors_to_string
 from copy import deepcopy
-from ..grammar.accessor_grammar import parse_accessor
+from ..grammar.accessor_grammar import parse_accessors
 
 def unpack_accessors(root_node):
     # TODO prettier error message
@@ -18,7 +18,7 @@ def _unpack_accessors_pre_fn(node, **_):
 
     keys = list(node.keys())
     for key in keys:
-        accessors = parse_accessor(key)
+        accessors = parse_accessors(key)
         if len(accessors) == 1:
             continue
         value = node.pop(key)

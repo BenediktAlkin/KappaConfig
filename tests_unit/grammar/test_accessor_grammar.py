@@ -1,18 +1,18 @@
 import unittest
-from kappaconfig.grammar.accessor_grammar import parse_accessor
+from kappaconfig.grammar.accessor_grammar import parse_accessors
 import kappaconfig.errors as errors
 
 class TestAccessorGrammar(unittest.TestCase):
     def test_valid(self):
-        self.assertEqual(["some", "accessor"], parse_accessor("some.accessor"))
-        self.assertEqual(["some", 5], parse_accessor("some[5]"))
-        self.assertEqual([5, "some"], parse_accessor("[5].some"))
-        self.assertEqual(["some_prop", 5, "that5"], parse_accessor("some_prop[5].that5"))
-        self.assertEqual(["some_prop", 5, 6, 7], parse_accessor("some_prop[5][6][7]"))
+        self.assertEqual(["some", "accessor"], parse_accessors("some.accessor"))
+        self.assertEqual(["some", 5], parse_accessors("some[5]"))
+        self.assertEqual([5, "some"], parse_accessors("[5].some"))
+        self.assertEqual(["some_prop", 5, "that5"], parse_accessors("some_prop[5].that5"))
+        self.assertEqual(["some_prop", 5, 6, 7], parse_accessors("some_prop[5][6][7]"))
 
     def _test_error(self, source, expected):
         with self.assertRaises(type(expected)) as ex:
-            parse_accessor(source)
+            parse_accessors(source)
         self.assertEqual(expected.args[0], str(ex.exception))
 
     def test_empty_accessor(self):

@@ -4,61 +4,21 @@ from .convert import from_primitive
 from ..grammar.dotlist_grammar import parse_dotlist_entry
 from ..errors import DotlistGrammarError, AccessorGrammarError
 import yaml
+from .unpack_accessors import create_accessor_structure
 
 def from_dotlist(dotlist, ignore_invalid_entries=False):
-    result = dict(root=KCDict())
+    result = KCDict()
     for entry in dotlist:
         try:
-            accessors, value = parse_dotlist_entry(entry)
+            accessors, value, full_accessor = parse_dotlist_entry(entry)
         except (DotlistGrammarError, AccessorGrammarError):
             if ignore_invalid_entries:
                 continue
             raise
+        value = from_primitive(yaml.safe_load(value))
+        create_accessor_structure(result, accessors, value)
 
-        # TODO this should probably be replace by unpack_accessors methods
-        # create missing parent objects
-        prev_node = result["root"]
-        for accessor_idx in range(len(accessors[:-1])):
-            cur_accessor = accessors[accessor_idx]
-            next_accessor = accessors[accessor_idx + 1]
-
-            # lists can only be created in sequential order
-            if isinstance(cur_accessor, int):
-                if len(prev_node) != cur_accessor:
-                    from ..errors import requires_sequential_insert_error
-                    raise requires_sequential_insert_error()
-
-            # create missing datastructures
-            if isinstance(next_accessor, int):
-                # create list (if it doesn't exist already)
-                if isinstance(cur_accessor, int):
-                    prev_node.append([])
-                elif cur_accessor not in prev_node:
-                    prev_node[cur_accessor] = KCList()
-            else:
-                # create dict (if it doesn't exist already)
-                if isinstance(cur_accessor, int):
-                    prev_node.append({})
-                elif cur_accessor not in prev_node:
-                    prev_node[cur_accessor] = KCDict()
-
-            # progress to next accessor
-            prev_node = prev_node[cur_accessor]
-
-        # parse value
-        parsed_value = from_primitive(yaml.safe_load(value))
-
-        # insert current value
-        last_accessor = accessors[-1]
-        if isinstance(last_accessor, int):
-            if len(prev_node) != last_accessor:
-                from ..errors import requires_sequential_insert_error
-                raise requires_sequential_insert_error()
-            prev_node.append(parsed_value)
-        else:
-            prev_node[last_accessor] = parsed_value
-
-    return result["root"]
+    return result
 
 
 def to_dotlist(root_node):
