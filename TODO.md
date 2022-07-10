@@ -1,4 +1,3 @@
-- when loading bands the resolver fails
 - resolver for use-case of using a loaded yaml within an interpolation as template
   e.g. `model_params: ${select:${vars.model_key}:${yaml:models/mae_32}}` -->
   `model_params: ${select:${vars.model_key}:${template:vars.patch_size=[32,8]:${yaml:models/mae_32}}}}`
