@@ -61,7 +61,7 @@ class Resolver:
                 resolver.postorder_resolve(node, root_node=root_node, result=result, trace=trace, root_resolver=self)
         elif isinstance(node, KCList):
             if isinstance(parent_accessor, int):
-                result[parent_accessor].append([])
+                result.append([])
             else:
                 result[parent_accessor] = []
             # preorder
