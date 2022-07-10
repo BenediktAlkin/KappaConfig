@@ -16,6 +16,7 @@ def merge(base, to_merge):
     'property' but 'obj' is an int
     :return: merged object where to_merge dominates base i.e. base={'obj': 5} to_merge={'obj': 3} will return {'obj': 3}
     """
+    # TODO allow_path_accessors is not implemented yet in merge
     base = deepcopy(base)
     to_merge = deepcopy(to_merge)
     return _merge_fn(dict(root=base), dict(root=to_merge))["root"]
@@ -51,13 +52,14 @@ def _merge_dict_fn(base, to_merge):
         node = select(base, accessors[:-1])
         accessor = accessors[-1]
 
-        # allow appending to a list if the last accessor is 'add' or 'append'
         if isinstance(node, (KCList, list)):
+            # allow appending to a list if the last accessor is 'add' or 'append'
             if accessor in ["add", "append"]:
                 if not isinstance(value, (KCList, list)):
                     from ..errors import unexpected_type_error
                     raise unexpected_type_error([KCList, list], value)
                 node += value
+            # allow overwriting a list if the last accessor is 'set'
             elif accessor == "set":
                 parent_node = select(base, accessors[:-2])
                 parent_node[accessors[-2]] = value
