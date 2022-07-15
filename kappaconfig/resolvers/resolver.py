@@ -1,7 +1,9 @@
+from copy import deepcopy
+
+from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
 from ..grammar.scalar_grammar import parse_scalar
-from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
-from copy import deepcopy
+
 
 class Resolver:
     def __init__(
@@ -16,7 +18,6 @@ class Resolver:
         self.pre_processors = pre_processors or []
         self.post_processors = post_processors or []
 
-
     def resolve(self, node, root_node=None):
         node = deepcopy(node)
         if root_node is None:
@@ -26,7 +27,8 @@ class Resolver:
         result = {}
         root_node_to_pass = pre_processed if root_node is None else root_node
         wrapped_node = KCDict(root=pre_processed)
-        self._resolve_collection(pre_processed, root_node=root_node_to_pass, result=result, trace=[(wrapped_node, "root")])
+        self._resolve_collection(pre_processed, root_node=root_node_to_pass, result=result,
+                                 trace=[(wrapped_node, "root")])
         processed_result = result["root"]
         # only postprocess from root call (e.g. template resolver also calls resolve but with a root_node parameter)
         if root_node is None:
@@ -34,7 +36,6 @@ class Resolver:
         else:
             post_processed = processed_result
         return post_processed
-
 
     def _resolve_collection(self, node, root_node, result, trace):
         parent, parent_accessor = trace[-1]

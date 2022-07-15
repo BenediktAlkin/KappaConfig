@@ -35,7 +35,7 @@ def select(root_node, accessors, trace=None, source_id=None):
             from ..errors import invalid_accessor_error
             if source_id is None:
                 source_id = root_node.source_id if isinstance(root_node, KCObject) else None
-            raise invalid_accessor_error(accessors[:i+1], trace, source_id)
+            raise invalid_accessor_error(accessors[:i + 1], trace, source_id)
     return cur_node
 
 
@@ -45,6 +45,7 @@ def mask_out(dict_, keys_to_mask_out):
         if key not in keys_to_mask_out:
             masked_dict[key] = value
     return masked_dict
+
 
 def mask_in(dict_, keys_to_mask_in):
     masked_dict = type(dict_)()

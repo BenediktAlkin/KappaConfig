@@ -1,6 +1,6 @@
 from .from_dotlist_resolver import FromDotlistResolver
-from ...grammar.scalar_grammar import parse_resolver_args_and_value
 from ...functional.merge import merge
+from ...grammar.scalar_grammar import parse_resolver_args_and_value
 
 
 class MergeWithDotlistResolver(FromDotlistResolver):

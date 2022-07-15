@@ -1,9 +1,10 @@
 import unittest
 
-from kappaconfig.entities.wrappers import KCDict, KCList, KCScalar
-from kappaconfig.resolvers.resolver import Resolver
 import kappaconfig.errors as errors
+from kappaconfig.entities.wrappers import KCDict, KCList, KCScalar
 from kappaconfig.functional.load import from_string
+from kappaconfig.resolvers.resolver import Resolver
+
 
 class TestResolver(unittest.TestCase):
     def test_resolve_scalar_root(self):

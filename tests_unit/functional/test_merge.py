@@ -1,7 +1,9 @@
 import unittest
-from kappaconfig.functional.merge import merge
+
 import kappaconfig.errors as errors
 from kappaconfig.entities.wrappers import KCScalar
+from kappaconfig.functional.merge import merge
+
 
 class TestUtil(unittest.TestCase):
     def test_dict(self):

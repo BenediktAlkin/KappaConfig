@@ -1,8 +1,10 @@
 import unittest
+
+import kappaconfig.errors as errors
+from kappaconfig.functional.convert import to_primitive
 from kappaconfig.functional.load import from_string
 from kappaconfig.functional.unpack_accessors import unpack_accessors
-from kappaconfig.functional.convert import to_primitive
-import kappaconfig.errors as errors
+
 
 class TestUnpackAccessor(unittest.TestCase):
     def _unpack_and_assert_equal(self, source, expected):
@@ -41,7 +43,6 @@ class TestUnpackAccessor(unittest.TestCase):
                 - value: 3
         """
         self._unpack_and_assert_equal(source, expected)
-
 
     def test_non_sequential_list(self):
         source = """

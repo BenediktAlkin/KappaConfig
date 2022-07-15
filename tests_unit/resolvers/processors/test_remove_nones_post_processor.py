@@ -1,9 +1,10 @@
 import unittest
 
-from kappaconfig.functional.load import from_string
-from kappaconfig.resolvers.resolver import Resolver
-from kappaconfig.resolvers.processors.remove_nones_post_processor import RemoveNonesPostProcessor
 import kappaconfig.errors as errors
+from kappaconfig.functional.load import from_string
+from kappaconfig.resolvers.processors.remove_nones_post_processor import RemoveNonesPostProcessor
+from kappaconfig.resolvers.resolver import Resolver
+
 
 class TestRemoveVarsPostProcessor(unittest.TestCase):
     def resolve_and_assert(self, yaml_str, expected):

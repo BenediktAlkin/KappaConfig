@@ -1,5 +1,6 @@
 from .processor import Processor
 
+
 class IfPostProcessor(Processor):
     def __init__(self, allow_empty_result=False):
         self.allow_empty_result = allow_empty_result
@@ -25,4 +26,3 @@ class IfPostProcessor(Processor):
                         if len(parent) == 0:
                             parent[parent_accessor] = None
                         break
-

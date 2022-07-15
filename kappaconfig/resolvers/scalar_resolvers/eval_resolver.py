@@ -1,5 +1,6 @@
 from .scalar_resolver import ScalarResolver
 
+
 class EvalResolver(ScalarResolver):
     def resolve(self, value, root_node, trace, **__):
         try:

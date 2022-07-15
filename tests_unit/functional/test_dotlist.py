@@ -1,7 +1,9 @@
 import unittest
+
+import kappaconfig.errors as errors
 import kappaconfig.functional.dotlist as dotlist
 from kappaconfig.entities.wrappers import KCDict, KCList, KCScalar
-import kappaconfig.errors as errors
+
 
 class TestDotlist(unittest.TestCase):
     def test_to_dotlist(self):

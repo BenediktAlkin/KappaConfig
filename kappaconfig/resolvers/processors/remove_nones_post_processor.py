@@ -1,5 +1,6 @@
 from .processor import Processor
 
+
 class RemoveNonesPostProcessor(Processor):
     """
     removes nodes that are set to None
@@ -11,6 +12,7 @@ class RemoveNonesPostProcessor(Processor):
     save_logger:
       every_n_epochs: 1
     """
+
     def preorder_process(self, node, **_):
         if isinstance(node, dict):
             keys = list(node.keys())

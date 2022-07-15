@@ -34,4 +34,3 @@ def parse_accessors(full_accessor):
                 raise list_accessor_has_to_be_int_error(full_accessor, f"[{list_accessor}]")
             result.append(int_accessor)
     return result
-

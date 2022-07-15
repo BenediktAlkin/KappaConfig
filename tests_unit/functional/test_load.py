@@ -1,10 +1,12 @@
 import sys
 import unittest
-import kappaconfig.functional.load as load
-from kappaconfig.resolvers.resolver import Resolver
-from kappaconfig.functional.merge import merge
-from kappaconfig.entities.wrappers import KCDict, KCScalar, KCList
+
 import kappaconfig.errors as errors
+import kappaconfig.functional.load as load
+from kappaconfig.entities.wrappers import KCDict, KCScalar, KCList
+from kappaconfig.functional.merge import merge
+from kappaconfig.resolvers.resolver import Resolver
+
 
 class TestLoad(unittest.TestCase):
     @staticmethod

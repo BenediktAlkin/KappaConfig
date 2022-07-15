@@ -1,7 +1,9 @@
-from ..entities.wrappers import KCDict, KCObject, KCList, KCScalar
-from .util import apply
 from copy import deepcopy
+
+from .util import apply
+from ..entities.wrappers import KCDict, KCObject, KCList, KCScalar
 from ..grammar.accessor_grammar import parse_accessors
+
 
 def unpack_accessors(root_node):
     # TODO prettier error message
@@ -11,6 +13,7 @@ def unpack_accessors(root_node):
     wrapped = KCDict(root=root_node)
     apply(wrapped, pre_fn=_unpack_accessors_pre_fn)
     return root_node
+
 
 def _unpack_accessors_pre_fn(node, **_):
     if not isinstance(node, KCDict):
@@ -23,6 +26,7 @@ def _unpack_accessors_pre_fn(node, **_):
             continue
         value = node.pop(key)
         create_accessor_structure(node, accessors, value)
+
 
 def create_accessor_structure(node, accessors, value):
     # create missing parent objects

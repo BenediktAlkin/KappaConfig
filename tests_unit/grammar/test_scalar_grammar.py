@@ -1,7 +1,9 @@
 import unittest
-from kappaconfig.grammar.scalar_grammar import parse_scalar, parse_resolver_args_and_value
-from kappaconfig.entities.grammar_tree_nodes import InterpolatedNode, FixedNode
+
 import kappaconfig.errors as errors
+from kappaconfig.entities.grammar_tree_nodes import InterpolatedNode, FixedNode
+from kappaconfig.grammar.scalar_grammar import parse_scalar, parse_resolver_args_and_value
+
 
 class TestScalarGrammar(unittest.TestCase):
     def test_single_interpolation(self):

@@ -1,6 +1,7 @@
 from .scalar_resolver import ScalarResolver
 from ...functional.load import from_dotlist
 
+
 class FromDotlistResolver(ScalarResolver):
     """
     allows parsing from a dotlist within a scalar

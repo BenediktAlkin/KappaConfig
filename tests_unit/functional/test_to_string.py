@@ -1,5 +1,7 @@
 import unittest
+
 from kappaconfig.functional.to_string import accessors_to_string, trace_to_full_accessor
+
 
 class TestToString(unittest.TestCase):
     def test_accessors_to_string(self):

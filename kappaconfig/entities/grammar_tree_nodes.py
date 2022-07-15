@@ -5,6 +5,7 @@ class GrammarTreeNode:
     def __str__(self):
         return repr(self)
 
+
 class RootNode(GrammarTreeNode):
     def __init__(self):
         super().__init__()
@@ -13,6 +14,7 @@ class RootNode(GrammarTreeNode):
     def __repr__(self):
         return "".join(map(str, self.children))
 
+
 class FixedNode(GrammarTreeNode):
     def __init__(self, value):
         super().__init__()
@@ -20,6 +22,7 @@ class FixedNode(GrammarTreeNode):
 
     def __repr__(self):
         return self.value
+
 
 class InterpolatedNode(GrammarTreeNode):
     def __init__(self, resolver_key, *args):

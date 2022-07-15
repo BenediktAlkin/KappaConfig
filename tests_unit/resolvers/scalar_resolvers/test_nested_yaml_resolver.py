@@ -1,9 +1,10 @@
 import unittest
 
 from kappaconfig.functional.load import from_string
+from kappaconfig.resolvers.resolver import Resolver
 from kappaconfig.resolvers.scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
 from kappaconfig.resolvers.scalar_resolvers.select_resolver import SelectResolver
-from kappaconfig.resolvers.resolver import Resolver
+
 
 class TestNestedYamlResolver(unittest.TestCase):
     def _resolve_and_assert(self, input_, expected, templates):
@@ -43,7 +44,6 @@ class TestNestedYamlResolver(unittest.TestCase):
         templates = {"test.yaml": "5"}
         expected = 5
         self._resolve_and_assert(input_, expected, templates)
-
 
     def test_simple(self):
         input_ = """

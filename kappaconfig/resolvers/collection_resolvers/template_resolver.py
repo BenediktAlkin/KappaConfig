@@ -1,14 +1,15 @@
 from .collection_resolver import CollectionResolver
-from ...entities.wrappers import KCDict, KCScalar
-from ...functional.util import mask_in, mask_out
-from ...functional.merge import merge
-from ...functional.convert import from_primitive
 from ..resolver import Resolver
-from ..scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
+from ..scalar_resolvers.eval_resolver import EvalResolver
 from ..scalar_resolvers.interpolation_resolver import InterpolationResolver
 from ..scalar_resolvers.merge_with_dotlist_resolver import MergeWithDotlistResolver
+from ..scalar_resolvers.nested_yaml_resolver import NestedYamlResolver
 from ..scalar_resolvers.select_resolver import SelectResolver
-from ..scalar_resolvers.eval_resolver import EvalResolver
+from ...entities.wrappers import KCDict, KCScalar
+from ...functional.convert import from_primitive
+from ...functional.merge import merge
+from ...functional.util import mask_in, mask_out
+
 
 class TemplateResolver(CollectionResolver):
     def __init__(self, template_path=None, **templates):
@@ -49,7 +50,8 @@ class TemplateResolver(CollectionResolver):
                     #   template: ${yaml:some_template.yaml}
                     #   template.vars:
                     #     param: 5
-                    resolved_scalar = self.nested_yaml_resolver.resolve_scalar(template, root_node=root_node, trace=trace)
+                    resolved_scalar = self.nested_yaml_resolver.resolve_scalar(template, root_node=root_node,
+                                                                               trace=trace)
                     # merge template parameters into template
                     template_params_keys = list(filter(lambda key: key.startswith("template."), node.keys()))
                     template_params = mask_in(node, template_params_keys)
@@ -76,13 +78,8 @@ class TemplateResolver(CollectionResolver):
                     # KCList not implemented yet
                     raise NotImplementedError
 
-
                 masked = mask_out(node_without_template_params, ["template"])
                 merged = merge(resolved_template, masked)
                 parent, accessor = trace[-1]
                 parent[accessor] = merged
                 node = merged
-
-
-
-

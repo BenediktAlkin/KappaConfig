@@ -1,8 +1,9 @@
 import unittest
+
 import kappaconfig.errors as errors
-from kappaconfig.entities.wrappers import KCScalar
 from kappaconfig.functional.util import select
 from ..util.trace import simulated_trace
+
 
 class TestUtil(unittest.TestCase):
     def test_invalid_select(self):
@@ -29,4 +30,3 @@ class TestUtil(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             select(root_node, ["some_nested_node", "some_list", 23])
         self.assertEqual(expected.args[0], str(ex.exception))
-

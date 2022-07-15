@@ -1,7 +1,10 @@
-import unittest
 import os
-import kappaconfig as kc
+import unittest
+
 import yaml
+
+import kappaconfig as kc
+
 
 class TestComplexYamls(unittest.TestCase):
     @staticmethod
@@ -17,7 +20,6 @@ class TestComplexYamls(unittest.TestCase):
             else:
                 file_uris += [file_or_dir_uri]
         return file_uris
-
 
     def test_testcase_exists_for_every_yaml_file(self):
         # there probably are libraries that allow this implicitly (e.g. ddt should be able to do this)

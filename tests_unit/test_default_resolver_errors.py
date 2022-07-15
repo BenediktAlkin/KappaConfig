@@ -1,9 +1,10 @@
 import unittest
 
-from kappaconfig.resolvers.default_resolver import DefaultResolver
 import kappaconfig.errors as errors
 from kappaconfig.functional.load import from_string
+from kappaconfig.resolvers.default_resolver import DefaultResolver
 from .util.trace import simulated_trace
+
 
 class TestDefaultResolverErrors(unittest.TestCase):
     def test_trace_to_invalid_interpolation(self):
@@ -15,7 +16,8 @@ class TestDefaultResolverErrors(unittest.TestCase):
               every_n_epochs: ${vars.every_n_epochs}
         """
         resolver = DefaultResolver()
-        expected = errors.invalid_accessor_error(["vars"], simulated_trace("trainer", "loggers", "train_loss_logger", "every_n_epochs"))
+        expected = errors.invalid_accessor_error(["vars"], simulated_trace("trainer", "loggers", "train_loss_logger",
+                                                                           "every_n_epochs"))
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -60,11 +62,11 @@ class TestDefaultResolverErrors(unittest.TestCase):
             "loggers/default.yaml": default_loggers,
         }
         resolver = DefaultResolver(**templates)
-        expected = errors.invalid_accessor_error(["vars"], simulated_trace("progress_logger", "every_n_epochs"), "loggers/default.yaml")
+        expected = errors.invalid_accessor_error(["vars"], simulated_trace("progress_logger", "every_n_epochs"),
+                                                 "loggers/default.yaml")
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
-
 
     def test_no_template_path(self):
         source = """

@@ -1,9 +1,10 @@
 import unittest
 
 from kappaconfig.functional.load import from_string
+from kappaconfig.resolvers.resolver import Resolver
 from kappaconfig.resolvers.scalar_resolvers.eval_resolver import EvalResolver
 from kappaconfig.resolvers.scalar_resolvers.interpolation_resolver import InterpolationResolver
-from kappaconfig.resolvers.resolver import Resolver
+
 
 class TestEvalResolver(unittest.TestCase):
     def _resolve_and_assert(self, input_, expected):

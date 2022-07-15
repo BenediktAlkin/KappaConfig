@@ -1,10 +1,11 @@
 import unittest
 
-from kappaconfig.functional.load import from_string
-from kappaconfig.resolvers.scalar_resolvers.from_dotlist_resolver import FromDotlistResolver
-from kappaconfig.resolvers.resolver import Resolver
 import kappaconfig.errors as errors
+from kappaconfig.functional.load import from_string
+from kappaconfig.resolvers.resolver import Resolver
+from kappaconfig.resolvers.scalar_resolvers.from_dotlist_resolver import FromDotlistResolver
 from ...util.trace import simulated_trace
+
 
 class TestFromDotlistResolver(unittest.TestCase):
     @staticmethod

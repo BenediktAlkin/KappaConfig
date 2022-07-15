@@ -1,7 +1,8 @@
 from .scalar_resolver import ScalarResolver
 from ...functional.util import select
-from ...grammar.scalar_grammar import parse_resolver_args_and_value
 from ...grammar.accessor_grammar import parse_accessors
+from ...grammar.scalar_grammar import parse_resolver_args_and_value
+
 
 class SelectResolver(ScalarResolver):
     """

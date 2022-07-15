@@ -1,6 +1,7 @@
 import unittest
-from kappaconfig.grammar.dotlist_grammar import parse_dotlist_entry
+
 import kappaconfig.errors as errors
+from kappaconfig.grammar.dotlist_grammar import parse_dotlist_entry
 
 
 class TestDotlistGrammar(unittest.TestCase):
@@ -8,7 +9,6 @@ class TestDotlistGrammar(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             parse_dotlist_entry(source)
         self.assertEqual(expected.args[0], str(ex.exception))
-
 
     def test_from_dotlist_invalid_noequal(self):
         source = "--invalid"

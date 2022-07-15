@@ -11,6 +11,7 @@ class KCObject:
     def __str__(self):
         return repr(self)
 
+
 class KCScalar(KCObject):
     def __init__(self, value):
         super().__init__()
@@ -21,6 +22,7 @@ class KCScalar(KCObject):
 
     def __eq__(self, other):
         return type(self) == type(other) and self.value == other.value
+
 
 class KCDict(KCObject):
     def __init__(self, **kwargs):

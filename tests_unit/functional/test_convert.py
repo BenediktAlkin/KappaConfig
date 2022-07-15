@@ -1,7 +1,10 @@
 import unittest
-import kappaconfig.functional.convert as convert
+
 import yaml
+
+import kappaconfig.functional.convert as convert
 from kappaconfig.entities.wrappers import KCScalar, KCList, KCDict
+
 
 class TestConvert(unittest.TestCase):
     def test_from_primitive_scalar_root(self):

@@ -1,11 +1,13 @@
-from .util import apply
-from .to_string import accessors_to_string
-from ..entities.wrappers import KCObject, KCList, KCDict
-from .convert import from_primitive
-from ..grammar.dotlist_grammar import parse_dotlist_entry
-from ..errors import DotlistGrammarError, AccessorGrammarError
 import yaml
+
+from .convert import from_primitive
+from .to_string import accessors_to_string
 from .unpack_accessors import create_accessor_structure
+from .util import apply
+from ..entities.wrappers import KCObject, KCDict
+from ..errors import DotlistGrammarError, AccessorGrammarError
+from ..grammar.dotlist_grammar import parse_dotlist_entry
+
 
 def from_dotlist(dotlist, ignore_invalid_entries=False):
     result = KCDict()

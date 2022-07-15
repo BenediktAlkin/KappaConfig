@@ -13,6 +13,7 @@ def accessors_to_string(accessors):
             result += f".{accessor}"
     return result
 
+
 def trace_to_full_accessor(trace):
     if trace is None: return ""
     accessors = list(map(lambda tr: tr[1], trace[1:]))

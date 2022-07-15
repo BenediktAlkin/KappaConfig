@@ -1,7 +1,9 @@
+from pathlib import Path
+
 from .scalar_resolver import ScalarResolver
 from ...entities.wrappers import KCScalar
 from ...functional.load import from_string, from_file_uri
-from pathlib import Path
+
 
 class NestedYamlResolver(ScalarResolver):
     def __init__(self, template_path=None, **templates):
@@ -22,7 +24,6 @@ class NestedYamlResolver(ScalarResolver):
             raise unexpected_type_error(str, value)
         if not value.endswith(".yaml"):
             value += ".yaml"
-
 
         if value in self.templates:
             # load from templates dict (pretty much only used for testing)

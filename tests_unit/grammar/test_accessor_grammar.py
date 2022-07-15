@@ -1,6 +1,8 @@
 import unittest
-from kappaconfig.grammar.accessor_grammar import parse_accessors
+
 import kappaconfig.errors as errors
+from kappaconfig.grammar.accessor_grammar import parse_accessors
+
 
 class TestAccessorGrammar(unittest.TestCase):
     def test_valid(self):

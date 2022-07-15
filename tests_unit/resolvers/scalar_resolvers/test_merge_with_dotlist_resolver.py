@@ -1,10 +1,10 @@
 import unittest
 
 from kappaconfig.functional.load import from_string
+from kappaconfig.resolvers.resolver import Resolver
 from kappaconfig.resolvers.scalar_resolvers.from_dotlist_resolver import FromDotlistResolver
 from kappaconfig.resolvers.scalar_resolvers.merge_with_dotlist_resolver import MergeWithDotlistResolver
-from kappaconfig.resolvers.resolver import Resolver
-import kappaconfig.errors as errors
+
 
 class TestMergeWithDotlistResolver(unittest.TestCase):
     @staticmethod

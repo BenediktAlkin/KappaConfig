@@ -1,10 +1,11 @@
 import unittest
 
-from kappaconfig.functional.load import from_string
-from kappaconfig.resolvers.scalar_resolvers.interpolation_resolver import InterpolationResolver
-from kappaconfig.resolvers.resolver import Resolver
 import kappaconfig.errors as errors
+from kappaconfig.functional.load import from_string
+from kappaconfig.resolvers.resolver import Resolver
+from kappaconfig.resolvers.scalar_resolvers.interpolation_resolver import InterpolationResolver
 from ...util.trace import simulated_trace
+
 
 class TestInterpolationResolver(unittest.TestCase):
     @staticmethod

@@ -1,7 +1,9 @@
 import yaml
+
 from ..entities.grammar_tree_nodes import RootNode, InterpolatedNode, FixedNode
 from ..entities.wrappers import KCScalar
 from ..functional.load import from_string
+
 
 def parse_scalar(value):
     root_node = RootNode()
@@ -63,12 +65,14 @@ def _find_brace_end(value):
     from ..errors import missing_closing_brace_error
     raise missing_closing_brace_error(value)
 
+
 def _find_colon(value):
     if "${" in value:
         value = value[:value.index("${")]
     if ":" not in value:
         return -1
     return value.index(":")
+
 
 def parse_resolver_args_and_value(args_and_value, n_args=None):
     args = []
@@ -90,7 +94,7 @@ def parse_resolver_args_and_value(args_and_value, n_args=None):
         # also removes leading/trailing whitespaces for strings
         parsed_arg = yaml.safe_load(arg_str)
         args.append(parsed_arg)
-        remaining_str = remaining_str[colon_idx+1:]
+        remaining_str = remaining_str[colon_idx + 1:]
 
     # value is the remainig string after the last colon (and is required)
     if len(remaining_str) == 0:
