@@ -1,5 +1,5 @@
 from ..entities.wrappers import KCDict, KCObject, KCList, KCScalar
-from .util import apply, accessors_to_string
+from .util import apply
 from copy import deepcopy
 from ..grammar.accessor_grammar import parse_accessors
 
@@ -34,7 +34,7 @@ def create_accessor_structure(node, accessors, value):
         # can't process obj.value as it tries to access the property 'value' of 'obj' which doesn't exist as it is 5
         if isinstance(prev_node, KCScalar):
             from ..errors import invalid_unpack_operation
-            raise invalid_unpack_operation(accessors_to_string(accessors), accessors_to_string(accessors[:i]))
+            raise invalid_unpack_operation(accessors, accessors[:i])
 
         cur_accessor = accessors[i]
         next_accessor = accessors[i + 1]
@@ -68,7 +68,7 @@ def create_accessor_structure(node, accessors, value):
     # can't process obj.value as it tries to access the property 'value' of 'obj' which doesn't exist as it is 5
     if isinstance(prev_node, KCScalar):
         from ..errors import invalid_unpack_operation
-        raise invalid_unpack_operation(accessors_to_string(accessors), accessors_to_string(accessors[:-1]))
+        raise invalid_unpack_operation(accessors, accessors[:-1])
 
     # insert current value
     last_accessor = accessors[-1]

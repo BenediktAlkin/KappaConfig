@@ -11,6 +11,5 @@ class FromDotlistResolver(ScalarResolver):
         dotlist = value.split(" ")
         if any(map(lambda entry: len(entry) == 0, dotlist)):
             from ...errors import dotlist_resolver_empty_entry
-            from ...functional.util import trace_to_full_accessor
-            raise dotlist_resolver_empty_entry(value, trace_to_full_accessor(trace))
+            raise dotlist_resolver_empty_entry(value, trace)
         return from_dotlist(dotlist)

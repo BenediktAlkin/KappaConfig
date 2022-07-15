@@ -22,26 +22,6 @@ def apply(node, pre_fn=None, post_fn=None, parent_node=None, parent_accessor=Non
         post_fn(node=node, parent_node=parent_node, parent_accessor=parent_accessor, container=container)
 
 
-def accessors_to_string(accessors):
-    if accessors is None or len(accessors) == 0:
-        return ""
-
-    if isinstance(accessors[0], int):
-        result = f"[{accessors[0]}]"
-    else:
-        result = f"{accessors[0]}"
-    for accessor in accessors[1:]:
-        if isinstance(accessor, int):
-            result += f"[{accessor}]"
-        else:
-            result += f".{accessor}"
-    return result
-
-def trace_to_full_accessor(trace):
-    if trace is None: return ""
-    accessors = list(map(lambda tr: tr[1], trace[1:]))
-    return accessors_to_string(accessors)
-
 def select(root_node, accessors, trace=None, source_id=None):
     cur_node = root_node
     for i, accessor in enumerate(accessors):
@@ -55,7 +35,7 @@ def select(root_node, accessors, trace=None, source_id=None):
             from ..errors import invalid_accessor_error
             if source_id is None:
                 source_id = root_node.source_id if isinstance(root_node, KCObject) else None
-            raise invalid_accessor_error(accessors_to_string(accessors[:i+1]), trace_to_full_accessor(trace), source_id)
+            raise invalid_accessor_error(accessors[:i+1], trace, source_id)
     return cur_node
 
 

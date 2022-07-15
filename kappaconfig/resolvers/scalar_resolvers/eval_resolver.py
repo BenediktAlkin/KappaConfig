@@ -6,5 +6,4 @@ class EvalResolver(ScalarResolver):
             return eval(value)
         except Exception as e:
             from ...errors import invalid_evaluate_expression
-            from ...functional.util import trace_to_full_accessor
-            raise invalid_evaluate_expression(value, e, trace_to_full_accessor(trace), root_node.source_id)
+            raise invalid_evaluate_expression(value, e, trace, root_node.source_id)

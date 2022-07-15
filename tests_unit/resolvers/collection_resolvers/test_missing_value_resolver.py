@@ -4,6 +4,7 @@ from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.collection_resolvers.missing_value_resolver import MissingValueResolver
 from kappaconfig.resolvers.resolver import Resolver
 import kappaconfig.errors as errors
+from ...util.trace import simulated_trace
 
 class TestMissingValueResolver(unittest.TestCase):
     def _resolve_and_assert(self, input_, expected):
@@ -16,5 +17,5 @@ class TestMissingValueResolver(unittest.TestCase):
         input_ = """
         some_obj: ???
         """
-        expected = errors.missing_value_error("some_obj")
+        expected = errors.missing_value_error(simulated_trace("some_obj"))
         self._resolve_and_assert(input_, expected)

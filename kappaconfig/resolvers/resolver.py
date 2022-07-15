@@ -1,7 +1,6 @@
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
 from ..grammar.scalar_grammar import parse_scalar
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
-from ..functional.util import trace_to_full_accessor
 from copy import deepcopy
 
 class Resolver:
@@ -100,8 +99,7 @@ class Resolver:
                     # check for recursive resolving
                     if resolve_result in scalar_resolver_trace:
                         from ..errors import recursive_resolving_error
-                        from ..functional.util import trace_to_full_accessor
-                        raise recursive_resolving_error(trace_to_full_accessor(trace))
+                        raise recursive_resolving_error(trace)
 
             # resolved value might be a KCObject (e.g. when loading a nested yaml)
             if isinstance(resolve_result, KCObject):
@@ -148,7 +146,7 @@ class Resolver:
             if grammar_node.resolver_key not in self.scalar_resolvers:
                 from ..errors import invalid_resolver_key
                 raise invalid_resolver_key(grammar_node.resolver_key, list(self.scalar_resolvers.keys()),
-                                           trace_to_full_accessor(trace), root_node.source_id)
+                                           trace, root_node.source_id)
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
             resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node, trace=trace)
             return resolved_scalar

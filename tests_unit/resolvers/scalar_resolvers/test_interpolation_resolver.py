@@ -4,6 +4,7 @@ from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.scalar_resolvers.interpolation_resolver import InterpolationResolver
 from kappaconfig.resolvers.resolver import Resolver
 import kappaconfig.errors as errors
+from ...util.trace import simulated_trace
 
 class TestInterpolationResolver(unittest.TestCase):
     @staticmethod
@@ -111,11 +112,11 @@ class TestInterpolationResolver(unittest.TestCase):
 
     def test_recursive_reference_direct(self):
         source = "prop: ${prop}"
-        self._resolve_and_assert_error(source, errors.recursive_resolving_error("prop"))
+        self._resolve_and_assert_error(source, errors.recursive_resolving_error(simulated_trace("prop")))
 
     def test_recursive_reference_indirect(self):
         source = """
         one: ${two}
         two: ${one}
         """
-        self._resolve_and_assert_error(source, errors.recursive_resolving_error("one"))
+        self._resolve_and_assert_error(source, errors.recursive_resolving_error(simulated_trace("one")))

@@ -3,6 +3,7 @@ import unittest
 from kappaconfig.resolvers.default_resolver import DefaultResolver
 import kappaconfig.errors as errors
 from kappaconfig.functional.load import from_string
+from .util.trace import simulated_trace
 
 class TestDefaultResolverErrors(unittest.TestCase):
     def test_trace_to_invalid_interpolation(self):
@@ -14,7 +15,7 @@ class TestDefaultResolverErrors(unittest.TestCase):
               every_n_epochs: ${vars.every_n_epochs}
         """
         resolver = DefaultResolver()
-        expected = errors.invalid_accessor_error("vars", "trainer.loggers.train_loss_logger.every_n_epochs")
+        expected = errors.invalid_accessor_error(["vars"], simulated_trace("trainer", "loggers", "train_loss_logger", "every_n_epochs"))
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -33,7 +34,8 @@ class TestDefaultResolverErrors(unittest.TestCase):
         """
         templates = {"datasets.yaml": datasets_template}
         resolver = DefaultResolver(**templates)
-        expected = errors.invalid_accessor_error("vars.category", "train.category", "datasets.yaml")
+        expected = errors.invalid_accessor_error(
+            ["vars", "category"], simulated_trace("train", "category"), "datasets.yaml")
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -58,7 +60,7 @@ class TestDefaultResolverErrors(unittest.TestCase):
             "loggers/default.yaml": default_loggers,
         }
         resolver = DefaultResolver(**templates)
-        expected = errors.invalid_accessor_error("vars", "progress_logger.every_n_epochs", "loggers/default.yaml")
+        expected = errors.invalid_accessor_error(["vars"], simulated_trace("progress_logger", "every_n_epochs"), "loggers/default.yaml")
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -99,7 +101,11 @@ class TestDefaultResolverErrors(unittest.TestCase):
         trainer: ${asdf:trainers/discriminator}
         """
         resolver = DefaultResolver()
-        expected = errors.invalid_resolver_key("asdf", list(resolver.scalar_resolvers.keys()), "trainer", None)
+        expected = errors.invalid_resolver_key(
+            "asdf",
+            list(resolver.scalar_resolvers.keys()),
+            simulated_trace("trainer"),
+        )
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -115,7 +121,11 @@ class TestDefaultResolverErrors(unittest.TestCase):
         templates = {"trainers/discriminator.yaml": discriminator_trainer}
         resolver = DefaultResolver(**templates)
         expected = errors.invalid_resolver_key(
-            "asdf", list(resolver.scalar_resolvers.keys()), "some", "trainers/discriminator.yaml")
+            "asdf",
+            list(resolver.scalar_resolvers.keys()),
+            simulated_trace("some"),
+            "trainers/discriminator.yaml",
+        )
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -126,7 +136,10 @@ class TestDefaultResolverErrors(unittest.TestCase):
         """
         resolver = DefaultResolver()
         expected = errors.invalid_evaluate_expression(
-            "asdfasdf", NameError("name 'asdfasdf' is not defined"), "trainer", None)
+            "asdfasdf",
+            NameError("name 'asdfasdf' is not defined"),
+            simulated_trace("trainer"),
+        )
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -142,7 +155,11 @@ class TestDefaultResolverErrors(unittest.TestCase):
         templates = {"trainers/discriminator.yaml": discriminator_trainer}
         resolver = DefaultResolver(**templates)
         expected = errors.invalid_evaluate_expression(
-            "asdfasdf", NameError("name 'asdfasdf' is not defined"), "some", "trainers/discriminator.yaml")
+            "asdfasdf",
+            NameError("name 'asdfasdf' is not defined"),
+            simulated_trace("some"),
+            "trainers/discriminator.yaml",
+        )
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -162,7 +179,7 @@ class TestDefaultResolverErrors(unittest.TestCase):
         trainer: ${select:some.value:${eval:dict(some=dict(asdf=5))}}
         """
         resolver = DefaultResolver()
-        expected = errors.invalid_accessor_error("some.value", "trainer")
+        expected = errors.invalid_accessor_error(["some", "value"], simulated_trace("trainer"))
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))
@@ -177,7 +194,7 @@ class TestDefaultResolverErrors(unittest.TestCase):
         """
         templates = {"trainers/discriminator.yaml": discriminator_trainer}
         resolver = DefaultResolver(**templates)
-        expected = errors.invalid_accessor_error("key", "some", "trainers/discriminator.yaml")
+        expected = errors.invalid_accessor_error(["key"], simulated_trace("some"), "trainers/discriminator.yaml")
         with self.assertRaises(type(expected)) as ex:
             resolver.resolve(from_string(source))
         self.assertEqual(expected.args[0], str(ex.exception))

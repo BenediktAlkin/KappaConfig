@@ -1,4 +1,5 @@
-from .util import apply, accessors_to_string
+from .util import apply
+from .to_string import accessors_to_string
 from ..entities.wrappers import KCObject, KCList, KCDict
 from .convert import from_primitive
 from ..grammar.dotlist_grammar import parse_dotlist_entry

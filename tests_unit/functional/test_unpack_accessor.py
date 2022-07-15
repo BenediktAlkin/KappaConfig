@@ -55,7 +55,7 @@ class TestUnpackAccessor(unittest.TestCase):
         obj: 5
         obj.val: 3
         """
-        expected = errors.invalid_unpack_operation("obj.val", "obj")
+        expected = errors.invalid_unpack_operation(["obj", "val"], ["obj"])
         self._unpack_and_assert_fails(source, expected)
 
     def test_invalid_unpack_nested(self):
@@ -63,7 +63,7 @@ class TestUnpackAccessor(unittest.TestCase):
         obj: 5
         obj.val.nested: 3
         """
-        expected = errors.invalid_unpack_operation("obj.val.nested", "obj")
+        expected = errors.invalid_unpack_operation(["obj", "val", "nested"], ["obj"])
         self._unpack_and_assert_fails(source, expected)
 
     def test_invalid_unpack_nested_arr(self):
@@ -71,5 +71,5 @@ class TestUnpackAccessor(unittest.TestCase):
         obj: 5
         obj.val[5].nested: 3
         """
-        expected = errors.invalid_unpack_operation("obj.val[5].nested", "obj")
+        expected = errors.invalid_unpack_operation(["obj", "val", 5, "nested"], ["obj"])
         self._unpack_and_assert_fails(source, expected)

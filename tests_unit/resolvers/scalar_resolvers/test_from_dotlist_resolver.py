@@ -4,6 +4,7 @@ from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.scalar_resolvers.from_dotlist_resolver import FromDotlistResolver
 from kappaconfig.resolvers.resolver import Resolver
 import kappaconfig.errors as errors
+from ...util.trace import simulated_trace
 
 class TestFromDotlistResolver(unittest.TestCase):
     @staticmethod
@@ -45,7 +46,7 @@ class TestFromDotlistResolver(unittest.TestCase):
         source = """
         somekey: ${from_dotlist:value=3  other=2}
         """
-        expected = errors.dotlist_resolver_empty_entry("value=3  other=2", "somekey")
+        expected = errors.dotlist_resolver_empty_entry("value=3  other=2", simulated_trace("somekey"))
         with self.assertRaises(type(expected)) as ex:
             self._resolve(source)
         self.assertEqual(expected.args[0], str(ex.exception))
