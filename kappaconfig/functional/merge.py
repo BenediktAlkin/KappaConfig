@@ -8,7 +8,6 @@ def merge(base, to_merge):
     merges two objects into one
     :param base:
     :param to_merge:
-    :param allow_path_accessors:
     if True -> base={'obj.property': 5} to_merge={'obj': 3} will return {'obj.property': 5, 'obj': 3}
     if False -> base={'obj.property': 5} to_merge={'obj': 3} will return {'obj'} as base is resolved into
     {'obj': {'property': 5}}

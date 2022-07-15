@@ -74,7 +74,7 @@ def parse_resolver_args_and_value(args_and_value, n_args=None):
     args = []
     remaining_str = args_and_value
     while True:
-        if not ":" in remaining_str:
+        if ":" not in remaining_str:
             break
         if n_args is not None and len(args) >= n_args:
             # if the value can have a colon inside it (e.g. a ${yaml:<yaml_file>} node can resolve to 'x:5')

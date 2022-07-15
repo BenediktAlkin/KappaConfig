@@ -134,19 +134,27 @@ class Resolver:
 
     def _resolve_scalar(self, grammar_node, root_node, trace):
         if isinstance(grammar_node, RootNode):
-            resolve_results = [self._resolve_scalar(child, root_node=root_node, trace=trace) for child in grammar_node.children]
+            resolve_results = [
+                self._resolve_scalar(child, root_node=root_node, trace=trace)
+                for child in grammar_node.children
+            ]
             return self._merge_scalar_resolve_results(resolve_results)
         elif isinstance(grammar_node, FixedNode):
             return grammar_node.value
         elif isinstance(grammar_node, InterpolatedNode):
             # resolve children
-            resolve_results = [self._resolve_scalar(child, root_node=root_node, trace=trace) for child in grammar_node.children]
+            resolve_results = [
+                self._resolve_scalar(child, root_node=root_node, trace=trace)
+                for child in grammar_node.children
+            ]
             resolve_result = self._merge_scalar_resolve_results(resolve_results)
             # resolve cur node
             if grammar_node.resolver_key not in self.scalar_resolvers:
                 from ..errors import invalid_resolver_key
-                raise invalid_resolver_key(grammar_node.resolver_key, list(self.scalar_resolvers.keys()),
-                                           trace, root_node.source_id)
+                raise invalid_resolver_key(
+                    grammar_node.resolver_key, list(self.scalar_resolvers.keys()),
+                    trace, root_node.source_id
+                )
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
             resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node, trace=trace)
             return resolved_scalar
