@@ -3,12 +3,22 @@ import unittest
 from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.scalar_resolvers.interpolation_resolver import InterpolationResolver
 from kappaconfig.resolvers.resolver import Resolver
+import kappaconfig.errors as errors
 
 class TestInterpolationResolver(unittest.TestCase):
-    def _resolve_and_assert(self, input_, expected):
+    @staticmethod
+    def _resolve(source):
         resolver = Resolver(default_scalar_resolver=InterpolationResolver())
-        actual = resolver.resolve(from_string(input_))
+        return resolver.resolve(from_string(source))
+
+    def _resolve_and_assert(self, source, expected):
+        actual = self._resolve(source)
         self.assertEqual(expected, actual)
+
+    def _resolve_and_assert_error(self, source, expected):
+        with self.assertRaises(type(expected)) as ex:
+            self._resolve(source)
+        self.assertEqual(expected.args[0], str(ex.exception))
 
     def test_simple_interpolation(self):
         input_ = """
@@ -98,3 +108,14 @@ class TestInterpolationResolver(unittest.TestCase):
             model=dict(schedule=dict(epochs=5)),
         )
         self._resolve_and_assert(input_, expected)
+
+    def test_recursive_reference_direct(self):
+        source = "prop: ${prop}"
+        self._resolve_and_assert_error(source, errors.recursive_resolving_error("prop"))
+
+    def test_recursive_reference_indirect(self):
+        source = """
+        one: ${two}
+        two: ${one}
+        """
+        self._resolve_and_assert_error(source, errors.recursive_resolving_error("one"))

@@ -90,10 +90,18 @@ class Resolver:
                 resolve_result = node.value
             else:
                 resolve_result = node.value
+                # track resolved scalars to avoid endless loops in resolving (e.g. prop: ${prop})
+                scalar_resolver_trace = []
                 while True:
+                    scalar_resolver_trace.append(resolve_result)
                     resolve_result = self.resolve_scalar(resolve_result, root_node=root_node, trace=trace)
                     if not isinstance(resolve_result, str) or not self._requires_resolve_scalar(resolve_result):
                         break
+                    # check for recursive resolving
+                    if resolve_result in scalar_resolver_trace:
+                        from ..errors import recursive_resolving_error
+                        from ..functional.util import trace_to_full_accessor
+                        raise recursive_resolving_error(trace_to_full_accessor(trace))
 
             # resolved value might be a KCObject (e.g. when loading a nested yaml)
             if isinstance(resolve_result, KCObject):

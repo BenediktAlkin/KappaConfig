@@ -76,6 +76,9 @@ def invalid_accessor_error(accessor_until_invalid, trace_str, source_id=None):
     return InvalidAccessorError(f"invalid accessor '{accessor_until_invalid}' in node '{trace_str}'"
                                 f"{_source_id_str(source_id)}")
 
+def recursive_resolving_error(trace_str):
+    return RecursionError(f"encountered recursion in node '{trace_str}'")
+
 class CantApplyAccessorToScalar(Exception):
     pass
 
