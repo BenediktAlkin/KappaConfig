@@ -25,9 +25,14 @@ class KCScalar(KCObject):
 
 
 class KCDict(KCObject):
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__()
-        self.dict = kwargs
+        # *args is required to allow passing dicts with keys other than string (e.g. with int keys)
+        self.dict = {}
+        for arg in args:
+            assert isinstance(arg, dict), f"expected dictionary object but got {arg}"
+            self.dict.update(arg)
+        self.dict.update(kwargs)
 
     def __repr__(self):
         return repr(self.dict)

@@ -13,7 +13,8 @@ def from_primitive(root_node):
 
 def _from_primitive_fn(node, parent_node, parent_accessor, **_):
     if isinstance(node, dict):
-        parent_node[parent_accessor] = KCDict(**node)
+        # KCDict(**node) doesn't work here since yaml allows keys other than strings
+        parent_node[parent_accessor] = KCDict(node)
     elif isinstance(node, list):
         parent_node[parent_accessor] = KCList(*node)
     elif not isinstance(node, (KCDict, KCList, KCScalar)):
