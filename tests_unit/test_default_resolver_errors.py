@@ -3,7 +3,7 @@ import unittest
 import kappaconfig.errors as errors
 from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.default_resolver import DefaultResolver
-from .util.trace import simulated_trace
+from tests_unit.util.trace import simulated_trace
 
 
 class TestDefaultResolverErrors(unittest.TestCase):

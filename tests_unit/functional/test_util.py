@@ -2,7 +2,7 @@ import unittest
 
 import kappaconfig.errors as errors
 from kappaconfig.functional.util import select
-from ..util.trace import simulated_trace
+from tests_unit.util.trace import simulated_trace
 
 
 class TestUtil(unittest.TestCase):

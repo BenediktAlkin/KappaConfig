@@ -4,7 +4,7 @@ import kappaconfig.errors as errors
 from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.collection_resolvers.missing_value_resolver import MissingValueResolver
 from kappaconfig.resolvers.resolver import Resolver
-from ...util.trace import simulated_trace
+from tests_unit.util.trace import simulated_trace
 
 
 class TestMissingValueResolver(unittest.TestCase):
