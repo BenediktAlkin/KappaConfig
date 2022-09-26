@@ -1,3 +1,17 @@
+```
+vars:
+  encoder_params: ${select:${vars.pretrain_model_key}:${yaml:models/vit}}
+  decoder_params: ${select:${vars.pretrain_model_key}:${yaml:models/mae_decoder}}
+  model:
+    patch_size: ${vars.encoder_params.patch_size}
+stages:
+  stage0:
+    model:
+      template: ${vars.model}
+```
+
+
+- 
 - resolver for use-case of using a loaded yaml within an interpolation as template
   e.g. `model_params: ${select:${vars.model_key}:${yaml:models/mae_32}}` -->
   `model_params: ${select:${vars.model_key}:${template:vars.patch_size=[32,8]:${yaml:models/mae_32}}}}`
