@@ -3,7 +3,7 @@ from copy import deepcopy
 from .util import select
 from ..entities.wrappers import KCDict, KCList
 from ..grammar.accessor_grammar import parse_accessors
-from ..errors import InvalidAccessorError
+from ..errors import InvalidAccessorError, CantApplyAccessorToScalar
 
 def merge(base, to_merge, allow_path_accessors=False):
     """
@@ -56,7 +56,7 @@ def _merge_dict_fn(base, to_merge, allow_path_accessors):
         try:
             node = select(base, accessors[:-1])
             accessor = accessors[-1]
-        except InvalidAccessorError:
+        except (InvalidAccessorError, CantApplyAccessorToScalar):
             if allow_path_accessors:
                 node = base
                 accessor = key
