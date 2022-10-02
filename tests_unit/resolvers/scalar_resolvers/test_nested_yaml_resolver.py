@@ -11,7 +11,7 @@ class TestNestedYamlResolver(unittest.TestCase):
         resolver = Resolver(
             scalar_resolvers=dict(
                 select=SelectResolver(),
-                yaml=NestedYamlResolver(**templates),
+                yaml=NestedYamlResolver(resolve_all=True, **templates),
             ),
         )
         actual = resolver.resolve(from_string(input_))
@@ -76,3 +76,22 @@ class TestNestedYamlResolver(unittest.TestCase):
             some_obj="some_value"
         )
         self._resolve_and_assert(input_, expected, templates)
+
+    def test_resolve_all(self):
+        source = """
+        some_obj: ${yaml:test}
+        """
+        templates = {
+            "test.yaml":
+                """
+                some_key: some_value
+                some_interpolated_key: ${some_key}
+                """
+        }
+        expected = dict(
+            some_obj=dict(
+                some_key="some_value",
+                some_interpolated_key="some_value",
+            ),
+        )
+        self._resolve_and_assert(source, expected, templates)
