@@ -18,7 +18,6 @@ def merge(base, to_merge, allow_path_accessors=False):
     'property' but 'obj' is an int
     :return: merged object where to_merge dominates base i.e. base={'obj': 5} to_merge={'obj': 3} will return {'obj': 3}
     """
-    # TODO allow_path_accessors is not implemented yet in merge
     base = deepcopy(base)
     to_merge = deepcopy(to_merge)
     return _merge_fn(dict(root=base), dict(root=to_merge), allow_path_accessors=allow_path_accessors)["root"]
@@ -37,16 +36,16 @@ def _merge_fn(base, to_merge, allow_path_accessors):
     if isinstance(to_merge, (KCDict, dict)):
         _merge_dict_fn(base, to_merge, allow_path_accessors=allow_path_accessors)
     elif isinstance(to_merge, (KCList, list)):
-        _merge_list_fn(base, to_merge)
+        _merge_list_fn(base, to_merge, allow_path_accessors=allow_path_accessors)
     else:
         return to_merge
     return base
 
 
-def _merge_list_fn(base, to_merge):
+def _merge_list_fn(base, to_merge, allow_path_accessors):
     for i in range(len(to_merge)):
         if i < len(base):
-            base[i] = _merge_fn(base[i], to_merge[i])
+            base[i] = _merge_fn(base[i], to_merge[i], allow_path_accessors=allow_path_accessors)
         else:
             base.append(to_merge[i])
 
@@ -58,8 +57,11 @@ def _merge_dict_fn(base, to_merge, allow_path_accessors):
             node = select(base, accessors[:-1])
             accessor = accessors[-1]
         except InvalidAccessorError:
-            node = base
-            accessor = key
+            if allow_path_accessors:
+                node = base
+                accessor = key
+            else:
+                raise
 
         if isinstance(node, (KCList, list)):
             # allow appending to a list if the last accessor is 'add' or 'append'

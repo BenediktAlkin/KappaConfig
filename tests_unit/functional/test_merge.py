@@ -125,3 +125,13 @@ class TestUtil(unittest.TestCase):
         with self.assertRaises(type(expected)) as ex:
             merge(base, to_merge)
         self.assertEqual(expected.args[0], str(ex.exception))
+
+    def test_allow_path_accessors(self):
+        base = {}
+        to_merge = {
+            "template": "${yaml:some_template}",
+            "template.vars.param": "some_param",
+        }
+        actual = merge(base, to_merge, allow_path_accessors=True)
+        expected = to_merge
+        self.assertEqual(expected, actual)
