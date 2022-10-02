@@ -17,7 +17,7 @@ class TestTemplateResolver(unittest.TestCase):
             default_scalar_resolver=InterpolationResolver(),
             scalar_resolvers=dict(
                 eval=EvalResolver(),
-                yaml=NestedYamlResolver(**(templates or {})),
+                yaml=NestedYamlResolver(resolve_all=True, **(templates or {})),
             ),
         )
         actual = resolver.resolve(from_string(input_))

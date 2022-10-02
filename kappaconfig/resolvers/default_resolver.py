@@ -21,7 +21,7 @@ class DefaultResolver(Resolver):
             default_scalar_resolver=InterpolationResolver(),
             scalar_resolvers=dict(
                 eval=EvalResolver(),
-                yaml=NestedYamlResolver(template_path=template_path, **(templates or {})),
+                yaml=NestedYamlResolver(resolve_all=True, template_path=template_path, **(templates or {})),
                 select=SelectResolver(),
                 merge_with_dotlist=MergeWithDotlistResolver()
             ),

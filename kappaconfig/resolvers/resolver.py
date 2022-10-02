@@ -27,8 +27,12 @@ class Resolver:
         result = {}
         root_node_to_pass = pre_processed if root_node is None else root_node
         wrapped_node = KCDict(root=pre_processed)
-        self._resolve_collection(pre_processed, root_node=root_node_to_pass, result=result,
-                                 trace=[(wrapped_node, "root")])
+        self._resolve_collection(
+            pre_processed,
+            root_node=root_node_to_pass,
+            result=result,
+            trace=[(wrapped_node, "root")],
+        )
         processed_result = result["root"]
         # only postprocess from root call (e.g. template resolver also calls resolve but with a root_node parameter)
         if root_node is None:
