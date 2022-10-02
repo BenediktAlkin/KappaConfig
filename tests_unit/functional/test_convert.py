@@ -30,6 +30,17 @@ class TestConvert(unittest.TestCase):
         converted = convert.from_primitive(primitive)
         self.assertEqual("value", converted["some"].value)
 
+    def test_from_primitive_nonstring_keys(self):
+        primitive = yaml.safe_load("""
+        5: intkey
+        true: boolkey
+        3.2: floatkey 
+        """)
+        converted = convert.from_primitive(primitive)
+        self.assertEqual("intkey", converted[5].value)
+        self.assertEqual("boolkey", converted[True].value)
+        self.assertEqual("floatkey", converted[3.2].value)
+
     def test_to_primitive_scalar_root(self):
         root_node = KCScalar(5)
         expected = 5

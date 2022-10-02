@@ -4,7 +4,7 @@ import kappaconfig.errors as errors
 from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.resolver import Resolver
 from kappaconfig.resolvers.scalar_resolvers.interpolation_resolver import InterpolationResolver
-from ...util.trace import simulated_trace
+from tests_unit.util.trace import simulated_trace
 
 
 class TestInterpolationResolver(unittest.TestCase):

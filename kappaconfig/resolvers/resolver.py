@@ -45,7 +45,11 @@ class Resolver:
         parent, parent_accessor = trace[-1]
         if isinstance(node, KCDict):
             if isinstance(parent_accessor, int):
-                result.append({})
+                if isinstance(result, list):
+                    result.append({})
+                else:
+                    # dict with int index
+                    result[parent_accessor] = {}
             else:
                 result[parent_accessor] = {}
             # preorder
@@ -112,8 +116,7 @@ class Resolver:
                 self._resolve_collection(resolve_result, root_node=root_node, result=result, trace=trace)
             else:
                 # set value
-                parent_accessor = trace[-1][1]
-                if isinstance(parent_accessor, int):
+                if isinstance(parent_accessor, int) and isinstance(parent, KCList):
                     if len(result) != parent_accessor:
                         raise IndexError
                     result.append(resolve_result)

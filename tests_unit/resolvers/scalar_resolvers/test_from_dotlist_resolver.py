@@ -4,7 +4,7 @@ import kappaconfig.errors as errors
 from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.resolver import Resolver
 from kappaconfig.resolvers.scalar_resolvers.from_dotlist_resolver import FromDotlistResolver
-from ...util.trace import simulated_trace
+from tests_unit.util.trace import simulated_trace
 
 
 class TestFromDotlistResolver(unittest.TestCase):
