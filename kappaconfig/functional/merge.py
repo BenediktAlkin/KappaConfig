@@ -3,13 +3,14 @@ from copy import deepcopy
 from .util import select
 from ..entities.wrappers import KCDict, KCList
 from ..grammar.accessor_grammar import parse_accessors
+from ..errors import InvalidAccessorError
 
-
-def merge(base, to_merge):
+def merge(base, to_merge, allow_path_accessors=False):
     """
     merges two objects into one
     :param base:
     :param to_merge:
+    :param allow_path_accessors:
     if True -> base={'obj.property': 5} to_merge={'obj': 3} will return {'obj.property': 5, 'obj': 3}
     if False -> base={'obj.property': 5} to_merge={'obj': 3} will return {'obj'} as base is resolved into
     {'obj': {'property': 5}}
@@ -20,10 +21,10 @@ def merge(base, to_merge):
     # TODO allow_path_accessors is not implemented yet in merge
     base = deepcopy(base)
     to_merge = deepcopy(to_merge)
-    return _merge_fn(dict(root=base), dict(root=to_merge))["root"]
+    return _merge_fn(dict(root=base), dict(root=to_merge), allow_path_accessors=allow_path_accessors)["root"]
 
 
-def _merge_fn(base, to_merge):
+def _merge_fn(base, to_merge, allow_path_accessors):
     if not isinstance(base, (KCList, list, KCDict, dict)):
         return to_merge
     if isinstance(to_merge, (KCList, list)) and not isinstance(base, (KCList, list)):
@@ -34,7 +35,7 @@ def _merge_fn(base, to_merge):
         raise incompatible_type(type(base), type(to_merge))
 
     if isinstance(to_merge, (KCDict, dict)):
-        _merge_dict_fn(base, to_merge)
+        _merge_dict_fn(base, to_merge, allow_path_accessors=allow_path_accessors)
     elif isinstance(to_merge, (KCList, list)):
         _merge_list_fn(base, to_merge)
     else:
@@ -50,11 +51,15 @@ def _merge_list_fn(base, to_merge):
             base.append(to_merge[i])
 
 
-def _merge_dict_fn(base, to_merge):
+def _merge_dict_fn(base, to_merge, allow_path_accessors):
     for key, value in to_merge.items():
         accessors = parse_accessors(key)
-        node = select(base, accessors[:-1])
-        accessor = accessors[-1]
+        try:
+            node = select(base, accessors[:-1])
+            accessor = accessors[-1]
+        except InvalidAccessorError:
+            node = base
+            accessor = key
 
         if isinstance(node, (KCList, list)):
             # allow appending to a list if the last accessor is 'add' or 'append'
@@ -72,6 +77,6 @@ def _merge_dict_fn(base, to_merge):
                 raise list_merge_invalid_resolving_strategy(key)
         else:
             if accessor in node:
-                node[accessor] = _merge_fn(node[accessor], value)
+                node[accessor] = _merge_fn(node[accessor], value, allow_path_accessors=allow_path_accessors)
             else:
                 node[accessor] = value
