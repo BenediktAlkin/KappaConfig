@@ -1,5 +1,7 @@
 import unittest
+
 from kappaconfig.entities.wrappers import KCDict
+
 
 class TestWrappers(unittest.TestCase):
     def test_nonstring_keys(self):

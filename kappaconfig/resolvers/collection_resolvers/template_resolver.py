@@ -50,8 +50,11 @@ class TemplateResolver(CollectionResolver):
                     #   template: ${yaml:some_template.yaml}
                     #   template.vars:
                     #     param: 5
-                    resolved_scalar = self.nested_yaml_resolver.resolve_scalar(template, root_node=root_node,
-                                                                               trace=trace)
+                    resolved_scalar = self.nested_yaml_resolver.resolve_scalar(
+                        template,
+                        root_node=root_node,
+                        trace=trace,
+                    )
                     # merge template parameters into template
                     template_params_keys = list(filter(lambda key: key.startswith("template."), node.keys()))
                     template_params = mask_in(node, template_params_keys)

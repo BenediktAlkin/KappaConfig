@@ -1,6 +1,8 @@
 import unittest
+
 from kappaconfig.functional.load import from_string
 from kappaconfig.resolvers.resolver import Resolver
+
 
 class TestResolver(unittest.TestCase):
     def test_resolve_with_nonstring_keys(self):

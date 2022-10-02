@@ -1,13 +1,13 @@
 from pathlib import Path
 
 from .scalar_resolver import ScalarResolver
-from ...entities.wrappers import KCScalar
-from ...functional.load import from_string, from_file_uri
 from ..resolver import Resolver
 from ..scalar_resolvers.eval_resolver import EvalResolver
 from ..scalar_resolvers.interpolation_resolver import InterpolationResolver
 from ..scalar_resolvers.merge_with_dotlist_resolver import MergeWithDotlistResolver
 from ..scalar_resolvers.select_resolver import SelectResolver
+from ...entities.wrappers import KCScalar
+from ...functional.load import from_string, from_file_uri
 
 
 class NestedYamlResolver(ScalarResolver):
