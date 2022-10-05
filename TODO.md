@@ -9,7 +9,17 @@ stages:
     model:
       template: ${vars.model}
 ```
-
+````
+datasets:
+  valid:
+    template: ${vars.datasets.valid}
+    dataset_kwargs:
+      normalization: ${vars.dataset_norm}
+  test:
+    template: ${vars.datasets.test}
+    dataset_kwargs:
+      normalization: ${vars.dataset_norm}
+```
 -
 - resolver for use-case of using a loaded yaml within an interpolation as template
   e.g. `model_params: ${select:${vars.model_key}:${yaml:models/mae_32}}` -->
