@@ -1,5 +1,15 @@
 ```
 vars:
+  model_key: debug
+
+template: ${select:${vars.model_key}:${yaml:models/vit_solo}}
+---
+template: ${yaml:models/vit}
+debug.attention_heads: 16
+```
+
+```
+vars:
   encoder_params: ${select:${vars.pretrain_model_key}:${yaml:models/vit}}
   decoder_params: ${select:${vars.pretrain_model_key}:${yaml:models/mae_decoder}}
   model:

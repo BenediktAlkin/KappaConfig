@@ -21,9 +21,14 @@ class TemplateResolver(CollectionResolver):
             default_scalar_resolver=InterpolationResolver(),
             scalar_resolvers=dict(
                 eval=EvalResolver(),
-                yaml=NestedYamlResolver(resolve_all=False, template_path=template_path, **templates),
+                yaml=NestedYamlResolver(
+                    resolve_all=False,
+                    template_path=template_path,
+                    template_resolver=self,
+                    **templates
+                ),
                 select=SelectResolver(),
-                merge_with_dotlist=MergeWithDotlistResolver()
+                merge_with_dotlist=MergeWithDotlistResolver(),
             ),
         )
 

@@ -13,17 +13,23 @@ from .scalar_resolvers.select_resolver import SelectResolver
 
 class DefaultResolver(Resolver):
     def __init__(self, template_path=None, **templates):
+        template_resolver = TemplateResolver(template_path=template_path, **(templates or {}))
         super().__init__(
             collection_resolvers=[
-                TemplateResolver(template_path=template_path, **(templates or {})),
+                template_resolver,
                 MissingValueResolver(),
             ],
             default_scalar_resolver=InterpolationResolver(),
             scalar_resolvers=dict(
                 eval=EvalResolver(),
-                yaml=NestedYamlResolver(resolve_all=True, template_path=template_path, **(templates or {})),
+                yaml=NestedYamlResolver(
+                    resolve_all=True,
+                    template_path=template_path,
+                    template_resolver=template_resolver,
+                    **(templates or {})
+                ),
                 select=SelectResolver(),
-                merge_with_dotlist=MergeWithDotlistResolver()
+                merge_with_dotlist=MergeWithDotlistResolver(),
             ),
             post_processors=[
                 IfPostProcessor(),
