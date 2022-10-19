@@ -1,5 +1,17 @@
 ```
 vars:
+  normalization: range
+  datasets: ${yaml:data/cifar}
+
+datasets:
+  valid:
+    template: ${vars.datasets.valid}
+  test:
+    template: ${vars.datasets.test}
+```
+
+```
+vars:
   model_key: debug
 
 template: ${select:${vars.model_key}:${yaml:models/vit_solo}}
