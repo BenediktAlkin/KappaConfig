@@ -1,0 +1,4 @@
+vars:
+  params: ${yaml:parameters/test}
+
+batch_size: ${select:batch_size:${vars.params}}

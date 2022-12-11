@@ -76,3 +76,6 @@ class TestComplexYamls(unittest.TestCase):
 
     def test_schedule_warmup_cosine(self):
         self.resolve_yaml("schedules/warmup_cosine.yaml")
+
+    def test_parameters_doesnt_require_template(self):
+        self.resolve_yaml("parameters/doesnt_require_template.yaml")
