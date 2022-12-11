@@ -1,6 +1,3 @@
-when loading floats in scientific notation from nested yaml they are interpreted as str in template: abs_start_value:
-2.0e-6 in main: abs_start_value: ${select:abs_start_value:${vars.params}}
-
 ```
 vars:
   normalization: range

@@ -1,8 +1,10 @@
 from copy import deepcopy
 
+import yaml
+
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
-from ..functional.convert import from_primitive
+from ..functional.convert import from_primitive, to_primitive
 from ..grammar.scalar_grammar import parse_scalar
 
 
@@ -185,7 +187,22 @@ class Resolver:
             return resolve_results[0]
         else:
             # concat as string
-            return "".join(map(str, resolve_results))
+            resolve_results = to_primitive(resolve_results)
+            return "".join(map(Resolver._tostring, resolve_results))
+
+    @staticmethod
+    def _tostring(node):
+        if isinstance(node, dict):
+            child_str = ",".join(f"'{key}':{Resolver._tostring(value)}" for key, value in node.items())
+            return f"{{{child_str}}}"
+        if isinstance(node, list):
+            child_str = ",".join(Resolver._tostring(item) for item in node)
+            return f"[{child_str}]"
+        if isinstance(node, float):
+            # use yaml format instead of python format as otherwise floats are loaded as string later on
+            # yaml.safe_dump has weird behavior when called with plain float (yaml.safe_dump(node) == '1.0e-06\n...\n')
+            return yaml.safe_dump([node])[2:].strip()
+        return str(node)
 
     def pre_process(self, node):
         return self._process(node, self.pre_processors)
