@@ -2,6 +2,7 @@ from copy import deepcopy
 
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
+from ..functional.convert import from_primitive
 from ..grammar.scalar_grammar import parse_scalar
 
 
@@ -110,10 +111,17 @@ class Resolver:
                         from ..errors import recursive_resolving_error
                         raise recursive_resolving_error(trace)
 
-            # resolved value might be a KCObject (e.g. when loading a nested yaml)
             if isinstance(resolve_result, KCObject):
+                # resolved value might be a KCObject (e.g. when loading a nested yaml with resolve_all=False)
                 parent[parent_accessor] = resolve_result
                 self._resolve_collection(resolve_result, root_node=root_node, result=result, trace=trace)
+            elif isinstance(resolve_result, dict):
+                # resolved value might be a dict (e.g. when loading a nested yaml with resolve_all=True)
+                # wrap again into KCDict and process it (otherwise the node '${yaml:...}' node is not replaced
+                # with the loaded dict -> ${select:key:${vars.params}} doesnt work)
+                wrapped_resolve_result = from_primitive(resolve_result)
+                parent[parent_accessor] = wrapped_resolve_result
+                self._resolve_collection(wrapped_resolve_result, root_node=root_node, result=result, trace=trace)
             else:
                 # set value
                 if isinstance(parent_accessor, int) and isinstance(parent, KCList):
