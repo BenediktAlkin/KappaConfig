@@ -1,0 +1,4 @@
+vars:
+  params: ${yaml:parameters/test}
+
+lr: ${select:lr:${vars.params.optim}}

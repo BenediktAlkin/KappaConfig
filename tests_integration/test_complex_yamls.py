@@ -79,3 +79,6 @@ class TestComplexYamls(unittest.TestCase):
 
     def test_parameters_doesnt_require_template(self):
         self.resolve_yaml("parameters/doesnt_require_template.yaml")
+
+    def test_parameters_floats_arent_converted_to_string(self):
+        self.resolve_yaml("parameters/floats_arent_converted_to_string.yaml")
