@@ -1,3 +1,16 @@
+order of resolving matters
+
+```
+# this works
+vars:
+  params: ${yaml:parameters/dino/imagenet1k/og_vitb16}
+  effective_batch_size: ${select:effective_batch_size:${vars.params}}
+# this doesnt works
+vars:
+  effective_batch_size: ${select:effective_batch_size:${vars.params}}
+  params: ${yaml:parameters/dino/imagenet1k/og_vitb16}
+```
+
 ```
 vars:
   normalization: range
