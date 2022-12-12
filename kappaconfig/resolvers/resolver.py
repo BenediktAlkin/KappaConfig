@@ -5,6 +5,7 @@ import yaml
 from ..entities.grammar_tree_nodes import RootNode, FixedNode, InterpolatedNode
 from ..entities.wrappers import KCDict, KCList, KCScalar, KCObject
 from ..functional.convert import from_primitive, to_primitive
+from ..functional.to_string import accessors_to_string
 from ..grammar.scalar_grammar import parse_scalar
 
 
@@ -100,18 +101,7 @@ class Resolver:
             if not isinstance(node.value, str):
                 resolve_result = node.value
             else:
-                resolve_result = node.value
-                # track resolved scalars to avoid endless loops in resolving (e.g. prop: ${prop})
-                scalar_resolver_trace = []
-                while True:
-                    scalar_resolver_trace.append(resolve_result)
-                    resolve_result = self.resolve_scalar(resolve_result, root_node=root_node, trace=trace)
-                    if not isinstance(resolve_result, str) or not self._requires_resolve_scalar(resolve_result):
-                        break
-                    # check for recursive resolving
-                    if resolve_result in scalar_resolver_trace:
-                        from ..errors import recursive_resolving_error
-                        raise recursive_resolving_error(trace)
+                resolve_result = self.resolve_scalar(node.value, root_node=root_node, trace=trace)
 
             if isinstance(resolve_result, KCObject):
                 # resolved value might be a KCObject (e.g. when loading a nested yaml with resolve_all=False)
@@ -145,15 +135,28 @@ class Resolver:
         grammar_tree = parse_scalar(value)
         return len(grammar_tree.children) > 1 or isinstance(grammar_tree.children[0], InterpolatedNode)
 
-    def resolve_scalar(self, value, root_node, trace):
+    def resolve_scalar(self, value, root_node, trace, scalar_resolver_trace=None):
+        scalar_resolver_trace = scalar_resolver_trace or []
         grammar_tree = parse_scalar(value)
-        resolved_scalar = self._resolve_scalar(grammar_tree, root_node=root_node, trace=trace)
+        resolved_scalar = self._resolve_scalar(
+            grammar_tree,
+            root_node=root_node,
+            trace=trace,
+            original_scalar=value,
+            scalar_resolver_trace=scalar_resolver_trace,
+        )
         return resolved_scalar
 
-    def _resolve_scalar(self, grammar_node, root_node, trace):
+    def _resolve_scalar(self, grammar_node, root_node, trace, original_scalar, scalar_resolver_trace):
         if isinstance(grammar_node, RootNode):
             resolve_results = [
-                self._resolve_scalar(child, root_node=root_node, trace=trace)
+                self._resolve_scalar(
+                    child,
+                    root_node=root_node,
+                    trace=trace,
+                    original_scalar=original_scalar,
+                    scalar_resolver_trace=scalar_resolver_trace,
+                )
                 for child in grammar_node.children
             ]
             return self._merge_scalar_resolve_results(resolve_results)
@@ -162,10 +165,17 @@ class Resolver:
         elif isinstance(grammar_node, InterpolatedNode):
             # resolve children
             resolve_results = [
-                self._resolve_scalar(child, root_node=root_node, trace=trace)
+                self._resolve_scalar(
+                    child,
+                    root_node=root_node,
+                    trace=trace,
+                    original_scalar=original_scalar,
+                    scalar_resolver_trace=scalar_resolver_trace,
+                )
                 for child in grammar_node.children
             ]
             resolve_result = self._merge_scalar_resolve_results(resolve_results)
+
             # resolve cur node
             if grammar_node.resolver_key not in self.scalar_resolvers:
                 from ..errors import invalid_resolver_key
@@ -175,7 +185,21 @@ class Resolver:
                 )
             scalar_resolver = self.scalar_resolvers[grammar_node.resolver_key]
             resolved_scalar = scalar_resolver.resolve(resolve_result, root_node=root_node, trace=trace)
-            return resolved_scalar
+
+            if not isinstance(resolved_scalar, str) or not self._requires_resolve_scalar(resolved_scalar):
+                return resolved_scalar
+            # check for recursive resolving
+            scalar_resolver_trace.append(accessors_to_string(resolve_results))
+            if resolve_result in scalar_resolver_trace:
+                from ..errors import recursive_resolving_error
+                raise recursive_resolving_error(trace)
+            # resolve recursively
+            return self.resolve_scalar(
+                resolved_scalar,
+                root_node=root_node,
+                trace=trace,
+                scalar_resolver_trace=scalar_resolver_trace,
+            )
         else:
             from ..errors import unexpected_type_error
             raise unexpected_type_error([RootNode, FixedNode, InterpolatedNode], grammar_node)
