@@ -1,4 +1,0 @@
-vars:
-  imagenet1k_samples: 1_269_760 # imagenet actually has 1281169 samples but this is rounded to be divisible by 40960
-  every_n_samples: ${vars.imagenet1k_samples} # ProgressLogger OnlineLossLogger OnlineNNAccuracy
-every_n_samples: ${eval:${vars.every_n_samples}*10}
