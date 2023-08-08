@@ -4,6 +4,7 @@ from .processors.if_post_processor import IfPostProcessor
 from .processors.remove_nones_post_processor import RemoveNonesPostProcessor
 from .processors.remove_vars_post_processor import RemoveVarsPostProcessor
 from .resolver import Resolver
+from .scalar_resolvers.env_resolver import EnvResolver
 from .scalar_resolvers.eval_resolver import EvalResolver
 from .scalar_resolvers.interpolation_resolver import InterpolationResolver
 from .scalar_resolvers.merge_with_dotlist_resolver import MergeWithDotlistResolver
@@ -21,6 +22,7 @@ class DefaultResolver(Resolver):
             ],
             default_scalar_resolver=InterpolationResolver(),
             scalar_resolvers=dict(
+                env=EnvResolver(),
                 eval=EvalResolver(),
                 yaml=NestedYamlResolver(
                     resolve_all=True,

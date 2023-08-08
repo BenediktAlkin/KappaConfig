@@ -173,6 +173,13 @@ def invalid_evaluate_expression(expression, error, trace, source_id=None):
     )
 
 
+def invalid_environment_variable_key(key, error, trace, source_id=None):
+    return ValueError(
+        f"invalid environment variable key '{key}' (raised {type(error).__name__}: {str(error)}) in node "
+        f"'{trace_to_full_accessor(trace)}'{_source_id_str(source_id)}"
+    )
+
+
 def invalid_unpack_operation(full_accessors, scalar_accessors):
     return ValueError(
         f"invalid unpack operation: can't unpack '{accessors_to_string(full_accessors)}' as "
