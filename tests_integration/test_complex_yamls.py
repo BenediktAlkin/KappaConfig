@@ -82,3 +82,6 @@ class TestComplexYamls(unittest.TestCase):
 
     def test_parameters_floats_arent_converted_to_string(self):
         self.resolve_yaml("parameters/floats_arent_converted_to_string.yaml")
+
+    def test_vars_in1k_samples(self):
+        self.resolve_yaml("vars/in1k_samples.yaml")
